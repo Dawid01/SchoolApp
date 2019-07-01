@@ -1,9 +1,15 @@
 package com.szczepaniak.dawid.appezn;
 
+import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
@@ -13,6 +19,9 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.lang.reflect.Method;
+import java.util.HashSet;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -28,6 +37,8 @@ public class LoginActivity extends AppCompatActivity {
     ApiService apiService;
     private ProgressDialog pDialog;
     private Singleton singleton;
+    int PERMISSION_ALL = 1;
+    String[] PERMISSIONS = {Manifest.permission.INTERNET, Manifest.permission.ACCESS_NETWORK_STATE};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,24 +53,32 @@ public class LoginActivity extends AppCompatActivity {
         apiService = RetroClient.getApiService();
         singleton = Singleton.getInstance();
 
+        if (!hasPermissions(this, PERMISSIONS)) {
+            ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
+        }
+
+        HashSet<String> cookies = Methods.getCookies(LoginActivity.this);
+        if(cookies.size() != 0){
+
+            SharedPreferences sharedPreferences = LoginActivity.this.getSharedPreferences("email",Context.MODE_PRIVATE);
+            login(sharedPreferences.getString("email", "null"), "null");
+        }
+
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                login();
+                String email = emailText.getText().toString();
+                String password = passwordText.getText().toString();
+                login(email, password);
             }
         });
     }
 
-    void login() {
-
-        String email = emailText.getText().toString();
-        String password = passwordText.getText().toString();
+    void login(final String email, String password) {
 
         emailInputLayout.setErrorEnabled(false);
         passwordInputLayout.setErrorEnabled(false);
-
-
         if (email.equals("")) {
             emailInputLayout.setError("You need to enter a email");
         } else if (password.equals("")) {
@@ -81,6 +100,9 @@ public class LoginActivity extends AppCompatActivity {
                 public void onResponse(Call<User> call, Response<User> response) {
                     pDialog.dismiss();
                     if (response.isSuccessful()) {
+                        SharedPreferences sharedPreferences = LoginActivity.this.getSharedPreferences("email",Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("email", email).commit();
                         singleton.setCurrentUser(response.body());
                         Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(mainIntent);
@@ -96,5 +118,23 @@ public class LoginActivity extends AppCompatActivity {
                 }
             });
         }
+
+
+    }
+
+
+    public static boolean hasPermissions(Context context, String... permissions)
+    {
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null)
+        {
+            for (String permission : permissions)
+            {
+                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED)
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }
