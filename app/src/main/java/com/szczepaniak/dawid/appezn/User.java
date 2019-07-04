@@ -30,6 +30,10 @@ public class User {
     private String permissions;
 
 
+    @SerializedName("photo")
+    @Expose
+    private String photo;
+
     public Long getId() {
         return id;
     }
@@ -77,4 +81,13 @@ public class User {
     public void setPermissions(String permissions) {
         this.permissions = permissions;
     }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
+
 }
