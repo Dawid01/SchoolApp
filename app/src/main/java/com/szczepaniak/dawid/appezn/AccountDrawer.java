@@ -1,11 +1,15 @@
 package com.szczepaniak.dawid.appezn;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -32,7 +36,23 @@ public class AccountDrawer {
         email = header.findViewById(R.id.email);
         api = RetroClient.getApiService();
         singleton = Singleton.getInstance();
+        final Context c = context;
         loadUser();
+        drawer.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                int id = menuItem.getItemId();
+
+                switch(id){
+                    case R.id.Account:
+                        Intent account = new Intent(c, UserActivity.class);
+                        c.startActivity(account);
+                        break;
+                }
+                return false;
+            }
+        });
+
     }
 
 
@@ -57,5 +77,11 @@ public class AccountDrawer {
                 Log.e("flash", "ERROR", t);
             }
         });
+    }
+
+    public boolean onNavigationItemSelected(MenuItem item) {
+
+
+        return true;
     }
 }

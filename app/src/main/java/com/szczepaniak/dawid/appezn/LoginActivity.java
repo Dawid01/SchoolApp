@@ -16,11 +16,8 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import java.lang.reflect.Method;
 import java.util.HashSet;
 
 import retrofit2.Call;
@@ -45,9 +42,9 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        emailInputLayout = findViewById(R.id.email_layout);
+        emailInputLayout = findViewById(R.id.email);
         emailText = findViewById(R.id.email_text);
-        passwordInputLayout = findViewById(R.id.password_layout);
+        passwordInputLayout = findViewById(R.id.password);
         passwordText = findViewById(R.id.password_text);
         loginButton = findViewById(R.id.login_button);
         apiService = RetroClient.getApiService();
