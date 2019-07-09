@@ -1,5 +1,7 @@
 package com.szczepaniak.dawid.appezn;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -32,7 +34,7 @@ public interface  ApiService {
     @GET("posts")
     Call<PostList> getAllPosts();
 
-    @GET("posts/{id}")
-    Call<PostList> getPosts(@Path("id") Long id);
+//    @GET("posts/{id}")
+//    Call<PostList> getPosts(@Path("id") Long id);
 
 }

@@ -7,7 +7,7 @@ import java.util.List;
 
 public class PostList {
 
-    @SerializedName("content")
+    @SerializedName("posts")
     @Expose
     List<Post> postList;
 

@@ -19,6 +19,11 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+import java.util.jar.Attributes;
+
+import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
+import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -36,12 +41,14 @@ public class MainActivity extends AppCompatActivity {
     private View notifications;
     private DrawerLayout drawerLayout;
     private TextView title;
+    private EmojIconActions emojIconActions;
+    private EmojiconEditText postEditText;
+    private ImageView emojiBtm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         api = RetroClient.getApiService();
         drawer = findViewById(R.id.nav_view);
         postsLayout = findViewById(R.id.PostsLayout);
@@ -52,10 +59,13 @@ public class MainActivity extends AppCompatActivity {
         notifications = findViewById(R.id.Notifications);
         drawerLayout = findViewById(R.id.drawer_layout);
         title = findViewById(R.id.Title);
+        postEditText = findViewById(R.id.post_edit_text);
+        emojiBtm = findViewById(R.id.emojiBtm);
 
         new AccountDrawer(drawer, MainActivity.this);
         loadUser();
         loadPosts();
+        loadEmoji();
         buttonMenuListner();
         logo = findViewById(R.id.logo);
         logo.setOnClickListener(new View.OnClickListener() {
@@ -81,57 +91,18 @@ public class MainActivity extends AppCompatActivity {
 
     void loadPosts(){
 
-        postsLayout.removeAllViews();
+        //postsLayout.removeAllViews();
 
-        retrofit2.Call<User> userCall = api.getCurrentUser();
+        int postLayoutSize = postsLayout.getChildCount();
 
+        for (int i = 0; i < postLayoutSize; i++){
 
-//        retrofit2.Call<PostList> postsCall = api.getAllPosts();
-//
-//        postsCall.enqueue(new Callback<PostList>() {
-//            @Override
-//            public void onResponse(Call<PostList> call, Response<PostList> response) {
-//
-//                if(response.isSuccessful()){
-//
-//                    List<Post> posts = response.body().getPostList();
-//
-//                    if(posts != null) {
-//                        for (Post post : posts) {
-//
-//                            View postLayout = LayoutInflater.from(MainActivity.this).inflate(R.layout.post, null);
-//                            TextView name = postLayout.findViewById(R.id.name);
-//                            //name.setText(post.getUser().getName() + " " + post.getUser().getSurname());
-//                            TextView status = postLayout.findViewById(R.id.status);
-//
-//                            switch (post.getPermission()) {
-//
-//                                case 0:
-//                                    status.setText("Student");
-//                                    break;
-//                                case 1:
-//                                    status.setText("Teacher");
-//                                    break;
-//                            }
-//
-//                            TextView date = postLayout.findViewById(R.id.date);
-//                            date.setText(post.getDateTime());
-//                            TextView content = postLayout.findViewById(R.id.content);
-//                            content.setText(post.getContent());
-//
-//                            postsLayout.addView(postLayout);
-//                        }
-//                    }
-//
-//
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<PostList> call, Throwable t) {
-//
-//            }
-//        });
+            if(i > 0){
+                postsLayout.removeViewAt(i);
+            }
+        }
+
+        //retrofit2.Call<User> userCall = api.getCurrentUser();
 
         retrofit2.Call<Post> postsCall = api.getPost((long)(2));
 
@@ -141,46 +112,46 @@ public class MainActivity extends AppCompatActivity {
 
                 if (response.isSuccessful()) {
                     final Post post = response.body();
-                    final View postLayout = LayoutInflater.from(MainActivity.this).inflate(R.layout.post, null);
-                    final TextView name = postLayout.findViewById(R.id.name);
-                    final ImageView avatar = postLayout.findViewById(R.id.avatar);
+                    retrofit2.Call<User> postUser = api.getUser(post.getUserID());
 
-                    TextView status = postLayout.findViewById(R.id.status);
+                    postUser.enqueue(new Callback<User>() {
+                        @Override
+                        public void onResponse(Call<User> call, Response<User> response) {
 
-                    switch (post.getPermission()) {
+                            if(response.isSuccessful()){
 
-                        case 0:
-                            status.setText("Student");
-                            break;
-                        case 1:
-                            status.setText("Teacher");
-                            break;
-                    }
+                                final View postLayout = LayoutInflater.from(MainActivity.this).inflate(R.layout.post, null);
+                                final TextView name = postLayout.findViewById(R.id.name);
+                                final ImageView avatar = postLayout.findViewById(R.id.avatar);
 
-                    TextView date = postLayout.findViewById(R.id.date);
-                    date.setText(post.getDateTime());
-                    TextView content = postLayout.findViewById(R.id.content);
-                    content.setText(post.getContent());
-                    postsLayout.addView(postLayout);
+                                TextView status = postLayout.findViewById(R.id.status);
 
-//                    retrofit2.Call<User> postUser = api.getUser(post.getUserID());
-//
-//                    postUser.enqueue(new Callback<User>() {
-//                        @Override
-//                        public void onResponse(Call<User> call, Response<User> response) {
-//
-//                            boolean b = response.isSuccessful();
-//                            if(response.isSuccessful()){
-//
-//
-//                            }
-//                        }
-//
-//                        @Override
-//                        public void onFailure(Call<User> call, Throwable t) {
-//
-//                        }
-//                    });
+                                switch (post.getPermission()) {
+
+                                    case 0:
+                                        status.setText("Student");
+                                        break;
+                                    case 1:
+                                        status.setText("Teacher");
+                                        break;
+                                }
+
+                                TextView date = postLayout.findViewById(R.id.date);
+                                date.setText(post.getDateTime());
+                                TextView content = postLayout.findViewById(R.id.content);
+                                content.setText(post.getContent());
+                                name.setText(response.body().getName() + " " + response.body().getSurname());
+                                Picasso.get().load(response.body().getPhoto()).into(avatar);
+                                postsLayout.addView(postLayout);
+
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<User> call, Throwable t) {
+
+                        }
+                    });
 
 
                 }
@@ -252,5 +223,16 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void loadEmoji(){
+
+        emojIconActions = new EmojIconActions(this, drawerLayout, postEditText, emojiBtm);
+        emojIconActions.ShowEmojIcon();
+
+    }
+
 
 }
+
+
+
+
