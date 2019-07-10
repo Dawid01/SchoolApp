@@ -1,11 +1,14 @@
 package com.szczepaniak.dawid.appezn;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -44,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
     private EmojIconActions emojIconActions;
     private EmojiconEditText postEditText;
     private ImageView emojiBtm;
+    private ImageView galleryBtm;
+    private SwipeRefreshLayout refreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,11 +66,17 @@ public class MainActivity extends AppCompatActivity {
         title = findViewById(R.id.Title);
         postEditText = findViewById(R.id.post_edit_text);
         emojiBtm = findViewById(R.id.emojiBtm);
+        emojiBtm.getDrawable().setColorFilter(Color.argb(255, 20, 177, 17), PorterDuff.Mode.MULTIPLY );
+        galleryBtm = findViewById(R.id.gallerybtm);
+        refreshLayout = findViewById(R.id.Posts);
+
 
         new AccountDrawer(drawer, MainActivity.this);
         loadUser();
         loadPosts();
         loadEmoji();
+        refreshPosts();
+        new PopUpGallery(galleryBtm, drawerLayout, MainActivity.this);
         buttonMenuListner();
         logo = findViewById(R.id.logo);
         logo.setOnClickListener(new View.OnClickListener() {
@@ -143,12 +154,14 @@ public class MainActivity extends AppCompatActivity {
                                 name.setText(response.body().getName() + " " + response.body().getSurname());
                                 Picasso.get().load(response.body().getPhoto()).into(avatar);
                                 postsLayout.addView(postLayout);
+                                refreshLayout.setRefreshing(false);
 
                             }
                         }
 
                         @Override
                         public void onFailure(Call<User> call, Throwable t) {
+                            refreshLayout.setRefreshing(false);
 
                         }
                     });
@@ -159,9 +172,10 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Post> call, Throwable t) {
-
+                refreshLayout.setRefreshing(false);
             }
         });
+
 
     }
 
@@ -227,6 +241,24 @@ public class MainActivity extends AppCompatActivity {
 
         emojIconActions = new EmojIconActions(this, drawerLayout, postEditText, emojiBtm);
         emojIconActions.ShowEmojIcon();
+
+    }
+
+    private void refreshPosts(){
+
+        refreshLayout.setColorSchemeColors(
+                getResources().getColor(R.color.colorPrimary),
+                getResources().getColor(R.color.colorPrimaryDark),
+                getResources().getColor(R.color.colorAccent),
+                getResources().getColor(R.color.colorPrimaryDark));
+
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+                loadPosts();
+            }
+        });
 
     }
 

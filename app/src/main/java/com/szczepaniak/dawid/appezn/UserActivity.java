@@ -2,6 +2,7 @@ package com.szczepaniak.dawid.appezn;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
@@ -14,6 +15,7 @@ public class UserActivity extends AppCompatActivity {
 
     private ApiService api;
     private ImageView avatar;
+    private View rootView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +24,7 @@ public class UserActivity extends AppCompatActivity {
 
         api = RetroClient.getApiService();
         avatar = findViewById(R.id.avatar);
+        rootView = findViewById(R.id.root_view);
 
         retrofit2.Call<User> userCall = api.getCurrentUser();
 
@@ -40,6 +43,9 @@ public class UserActivity extends AppCompatActivity {
 
             }
         });
+
+        new PopUpGallery(avatar, rootView,UserActivity.this);
+
 
 
     }
