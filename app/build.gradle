@@ -39,5 +39,4 @@ dependencies {
     implementation 'jp.wasabeef:blurry:2.0.3'
 
 
-
 }

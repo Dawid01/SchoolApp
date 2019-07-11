@@ -2,7 +2,9 @@ package com.szczepaniak.dawid.appezn;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -31,6 +33,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.Target;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -48,8 +51,8 @@ public class PopUpGallery extends AppCompatActivity {
     private View parent;
     private ArrayList<GalleryImage> images;
     private int size;
-    private ArrayList<Integer> selectedImgs;
-
+    private ArrayList<GalleryImage> selectedImgs;
+    private LinearLayout selectedGrid;
 
 
 
@@ -79,8 +82,35 @@ public class PopUpGallery extends AppCompatActivity {
         });
     }
 
+    public PopUpGallery(View btmView,  final View parent,  final Activity activity, LinearLayout selectedGrid) {
 
-    private void createPopUp(Context context, View parent){
+        this.activity = activity;
+        this.parent = parent;
+        this.selectedGrid = selectedGrid;
+        Display display = activity.getWindowManager().getDefaultDisplay();
+        Point s = new Point();
+        display. getSize(s);
+        size = s.x/3;
+
+        btmView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                try {
+                    if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, GALLERY);
+                    } else {
+                        createPopUp(activity, parent);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+
+    private void createPopUp(Context context, final View parent){
         LayoutInflater inflater = LayoutInflater.from(context);
         View popUpView = inflater.inflate(R.layout.gallery_popup, null);
         final PopupWindow popupWindow = new PopupWindow(popUpView, parent.getWidth(), parent.getHeight(), true);
@@ -89,6 +119,8 @@ public class PopUpGallery extends AppCompatActivity {
         gallery = popUpView.findViewById(R.id.gallery);
         loadPhotos(activity);
         TextView close = popUpView.findViewById(R.id.close);
+        TextView next = popUpView.findViewById(R.id.next);
+
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,6 +128,82 @@ public class PopUpGallery extends AppCompatActivity {
                 popupWindow.dismiss();
             }
         });
+
+        if(selectedGrid != null){
+
+            next.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    for (final GalleryImage galleryImage : selectedImgs){
+
+                        ImageView img = new ImageView(activity);
+                        img.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                        img.setLayoutParams(new GridView.LayoutParams(150, 150));
+                        Glide.with(activity).load(galleryImage.getUrl())
+                                .placeholder(R.mipmap.baseline_add_photo_alternate_white_36dp).centerCrop()
+                                .into(img);
+                        selectedGrid.addView(img);
+
+                        img.setOnLongClickListener(new View.OnLongClickListener() {
+                            @Override
+                            public boolean onLongClick(final View v) {
+
+                                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                                        activity);
+
+                                alertDialogBuilder.setTitle("Delete?");
+                                alertDialogBuilder
+                                        .setMessage("Click yes to delete!")
+                                        .setCancelable(false)
+                                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                selectedGrid.removeView(v);
+                                            }
+                                        })
+
+                                        .setNegativeButton("No",new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog,int id) {
+                                                dialog.cancel();
+                                            }
+                                        });
+
+                                AlertDialog alertDialog = alertDialogBuilder.create();
+
+                                alertDialog.show();
+                                return false;
+                            }
+                        });
+
+                        img.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                LayoutInflater inflater = LayoutInflater.from(activity);
+                                View popUpView = inflater.inflate(R.layout.image_viewer, null);
+                                final PopupWindow popupWindow = new PopupWindow(popUpView, parent.getWidth(), parent.getHeight(), true);
+                                popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
+
+                                ImageView imageView = popUpView.findViewById(R.id.image);
+                                imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                                Glide.with(activity).load(galleryImage.getUrl())
+                                        .placeholder(R.mipmap.baseline_add_photo_alternate_white_36dp).centerCrop()
+                                        .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                                        .into(imageView);
+                            }
+                        });
+
+                    }
+                    popupWindow.dismiss();
+
+                }
+            });
+
+        }else {
+            next.setVisibility(View.GONE);
+        }
+
     }
 
     private void loadPhotos(final Activity activity){
@@ -107,18 +215,21 @@ public class PopUpGallery extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                GalleryImage galleryImage = images.get(position);
-                if(!galleryImage.isUsed()){
-                    Blurry.with(activity).capture(view).into((ImageView) view);
-                    galleryImage.setUsed(true);
+                if (selectedGrid != null) {
+                    GalleryImage galleryImage = images.get(position);
+                    if (!galleryImage.isUsed()) {
+                        selectedImgs.add(galleryImage);
+                        Blurry.with(activity).capture(view).into((ImageView) view);
+                        galleryImage.setUsed(true);
 
-                }else {
+                    } else {
+                        selectedImgs.remove(galleryImage.getUrl());
+                        Glide.with(activity).load(galleryImage.getUrl())
+                                .placeholder(R.mipmap.baseline_add_photo_alternate_white_36dp).centerCrop()
+                                .into((ImageView) view);
+                        galleryImage.setUsed(false);
 
-                    Glide.with(activity).load(galleryImage.getUrl())
-                            .placeholder(R.mipmap.baseline_add_photo_alternate_white_36dp).centerCrop()
-                            .into((ImageView)view);
-                    galleryImage.setUsed(false);
-
+                    }
                 }
             }
         });

@@ -16,6 +16,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -50,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView galleryBtm;
     private ImageView photoBtm;
     private SwipeRefreshLayout refreshLayout;
+    private LinearLayout selectedImages;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
         emojiBtm.getDrawable().setColorFilter(Color.argb(255, 20, 177, 17), PorterDuff.Mode.MULTIPLY );
         galleryBtm = findViewById(R.id.gallerybtm);
         photoBtm = findViewById(R.id.photoBtm);
+        selectedImages = findViewById(R.id.selected_images);
         refreshLayout = findViewById(R.id.Posts);
 
 
@@ -78,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         loadPosts();
         loadEmoji();
         refreshPosts();
-        new PopUpGallery(galleryBtm, drawerLayout, MainActivity.this);
+        new PopUpGallery(galleryBtm, drawerLayout, MainActivity.this, selectedImages);
         //new PhotoPopUp(photoBtm, drawerLayout, MainActivity.this);
         buttonMenuListner();
         logo = findViewById(R.id.logo);
@@ -105,7 +108,6 @@ public class MainActivity extends AppCompatActivity {
 
     void loadPosts(){
 
-        //postsLayout.removeAllViews();
 
         int postLayoutSize = postsLayout.getChildCount();
 
@@ -116,7 +118,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        //retrofit2.Call<User> userCall = api.getCurrentUser();
 
         retrofit2.Call<Post> postsCall = api.getPost((long)(2));
 
