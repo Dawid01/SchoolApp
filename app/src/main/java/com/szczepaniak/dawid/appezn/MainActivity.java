@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private EmojiconEditText postEditText;
     private ImageView emojiBtm;
     private ImageView galleryBtm;
+    private ImageView photoBtm;
     private SwipeRefreshLayout refreshLayout;
 
     @Override
@@ -68,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
         emojiBtm = findViewById(R.id.emojiBtm);
         emojiBtm.getDrawable().setColorFilter(Color.argb(255, 20, 177, 17), PorterDuff.Mode.MULTIPLY );
         galleryBtm = findViewById(R.id.gallerybtm);
+        photoBtm = findViewById(R.id.photoBtm);
         refreshLayout = findViewById(R.id.Posts);
 
 
@@ -77,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
         loadEmoji();
         refreshPosts();
         new PopUpGallery(galleryBtm, drawerLayout, MainActivity.this);
+        //new PhotoPopUp(photoBtm, drawerLayout, MainActivity.this);
         buttonMenuListner();
         logo = findViewById(R.id.logo);
         logo.setOnClickListener(new View.OnClickListener() {

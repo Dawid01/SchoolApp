@@ -8,16 +8,21 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.Point;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -30,6 +35,9 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+
+import jp.wasabeef.blurry.Blurry;
 
 public class PopUpGallery extends AppCompatActivity {
 
@@ -38,7 +46,10 @@ public class PopUpGallery extends AppCompatActivity {
     private GridView gallery;
     private static final int GALLERY = 1;
     private View parent;
-    private ArrayList<String> images;
+    private ArrayList<GalleryImage> images;
+    private int size;
+    private ArrayList<Integer> selectedImgs;
+
 
 
 
@@ -46,6 +57,10 @@ public class PopUpGallery extends AppCompatActivity {
 
         this.activity = activity;
         this.parent = parent;
+        Display display = activity.getWindowManager().getDefaultDisplay();
+        Point s = new Point();
+        display. getSize(s);
+        size = s.x/3;
 
         btmView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,8 +83,9 @@ public class PopUpGallery extends AppCompatActivity {
     private void createPopUp(Context context, View parent){
         LayoutInflater inflater = LayoutInflater.from(context);
         View popUpView = inflater.inflate(R.layout.gallery_popup, null);
-        final PopupWindow popupWindow = new PopupWindow(popUpView, parent.getWidth(), parent.getHeight());
+        final PopupWindow popupWindow = new PopupWindow(popUpView, parent.getWidth(), parent.getHeight(), true);
         popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
+        popupWindow.setAnimationStyle(R.style.galeryPopup);
         gallery = popUpView.findViewById(R.id.gallery);
         loadPhotos(activity);
         TextView close = popUpView.findViewById(R.id.close);
@@ -82,10 +98,30 @@ public class PopUpGallery extends AppCompatActivity {
         });
     }
 
-    private void loadPhotos(Activity activity){
+    private void loadPhotos(final Activity activity){
 
-
+        selectedImgs = new ArrayList<>();
         gallery.setAdapter(new ImageAdapter(activity));
+
+        gallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                GalleryImage galleryImage = images.get(position);
+                if(!galleryImage.isUsed()){
+                    Blurry.with(activity).capture(view).into((ImageView) view);
+                    galleryImage.setUsed(true);
+
+                }else {
+
+                    Glide.with(activity).load(galleryImage.getUrl())
+                            .placeholder(R.mipmap.baseline_add_photo_alternate_white_36dp).centerCrop()
+                            .into((ImageView)view);
+                    galleryImage.setUsed(false);
+
+                }
+            }
+        });
 
     }
 
@@ -134,25 +170,35 @@ public class PopUpGallery extends AppCompatActivity {
                 picturesView = new ImageView(context);
                 picturesView.setScaleType(ImageView.ScaleType.FIT_CENTER);
                 picturesView
-                        .setLayoutParams(new GridView.LayoutParams(270, 270));
+                        .setLayoutParams(new GridView.LayoutParams(size, size));
 
             } else {
                 picturesView = (ImageView) convertView;
             }
 
-            Glide.with(context).load(images.get(position))
+            Glide.with(context).load(images.get(position).getUrl())
                     .placeholder(R.mipmap.baseline_add_photo_alternate_white_36dp).centerCrop()
                     .into(picturesView);
+
+            if(Arrays.asList(selectedImgs).contains((int)position)){
+                Blurry.with(activity).capture(picturesView).into(picturesView);
+            }
+
+            if(images.get(position).isUsed()) {
+                try {
+                    Blurry.with(activity).capture(picturesView).into(picturesView);
+                }catch (NullPointerException e){}
+            }
 
             return picturesView;
         }
 
 
-        private ArrayList<String> getAllShownImagesPath(Activity activity) {
+        private ArrayList<GalleryImage> getAllShownImagesPath(Activity activity) {
             Uri uri;
             Cursor cursor;
             int column_index_data, column_index_folder_name;
-            ArrayList<String> listOfAllImages = new ArrayList<String>();
+            ArrayList<GalleryImage> listOfAllImages = new ArrayList<GalleryImage>();
             String absolutePathOfImage = null;
             uri = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
 
@@ -168,7 +214,9 @@ public class PopUpGallery extends AppCompatActivity {
             while (cursor.moveToNext()) {
                 absolutePathOfImage = cursor.getString(column_index_data);
 
-                listOfAllImages.add(absolutePathOfImage);
+                GalleryImage galleryImage = new GalleryImage(absolutePathOfImage, false);
+
+                listOfAllImages.add(galleryImage);
             }
             return listOfAllImages;
         }
