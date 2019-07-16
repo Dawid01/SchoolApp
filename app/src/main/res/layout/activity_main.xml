@@ -112,7 +112,7 @@
                                     android:focusable="true"
                                     android:focusableInTouchMode="true">
 
-                                    <hani.momanii.supernova_emoji_library.Helper.EmojiconEditText
+                                    <com.vanniktech.emoji.EmojiEditText
                                         android:id="@+id/post_edit_text"
                                         android:layout_width="340dp"
                                         android:layout_height="wrap_content"
@@ -121,8 +121,10 @@
                                         android:layout_marginEnd="8dp"
                                         android:layout_marginBottom="8dp"
                                         android:ems="10"
+                                        app:emojiSize="15sp"
                                         android:hint="Write your post"
                                         android:inputType="textMultiLine"
+                                        android:imeOptions="actionSend"
                                         app:layout_constraintBottom_toBottomOf="parent"
                                         app:layout_constraintEnd_toEndOf="parent"
                                         app:layout_constraintHorizontal_bias="0.51"
@@ -174,7 +176,7 @@
                                         app:layout_constraintStart_toEndOf="@+id/photoBtm"
                                         app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView2"
                                         app:layout_constraintVertical_bias="1.0"
-                                        app:srcCompat="@drawable/smiley" />
+                                        app:srcCompat="@drawable/emoji_twitter_category_smileysandpeople" />
 
                                     <ImageView
                                         android:id="@+id/gallerybtm"

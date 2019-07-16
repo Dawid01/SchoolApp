@@ -26,13 +26,15 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.squareup.picasso.Picasso;
+import com.vanniktech.emoji.EmojiEditText;
+import com.vanniktech.emoji.EmojiManager;
+import com.vanniktech.emoji.EmojiPopup;
+import com.vanniktech.emoji.twitter.TwitterEmojiProvider;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.jar.Attributes;
 
-import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
-import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -50,8 +52,8 @@ public class MainActivity extends AppCompatActivity {
     private View notifications;
     private DrawerLayout drawerLayout;
     private TextView title;
-    private EmojIconActions emojIconActions;
-    private EmojiconEditText postEditText;
+    //private EmojIconActions emojIconActions;
+    private EmojiEditText postEditText;
     private ImageView emojiBtm;
     private ImageView galleryBtm;
     private ImageView photoBtm;
@@ -61,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EmojiManager.install(new TwitterEmojiProvider());
         setContentView(R.layout.activity_main);
         api = RetroClient.getApiService();
         drawer = findViewById(R.id.nav_view);
@@ -165,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
                                     content.setText(post.getContent());
                                     name.setText(response.body().getName() + " " + response.body().getSurname());
                                     //Picasso.get().load(response.body().getPhoto()).into(avatar);
-                                    Glide.with(MainActivity.this).load(response.body().getPhoto()).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL)).into(avatar);
+                                    Glide.with(MainActivity.this).load(response.body().getPhoto()).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE)).into(avatar);
                                     postsLayout.addView(postLayout);
                                     refreshLayout.setRefreshing(false);
 
@@ -251,8 +254,20 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadEmoji(){
 
-        emojIconActions = new EmojIconActions(this, drawerLayout, postEditText, emojiBtm);
-        emojIconActions.ShowEmojIcon();
+        final EmojiPopup emojiPopup = EmojiPopup.Builder.fromRootView(drawerLayout).build(postEditText);
+
+        emojiBtm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(emojiPopup.isShowing()){
+                    emojiPopup.dismiss();
+                }else {
+                    emojiPopup.toggle();
+                }
+            }
+        });
+
 
     }
 
