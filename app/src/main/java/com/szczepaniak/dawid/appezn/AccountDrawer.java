@@ -12,6 +12,9 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.squareup.picasso.Picasso;
 
 import retrofit2.Callback;
@@ -68,7 +71,8 @@ public class AccountDrawer {
                     final User user = response.body();
                     info.setText(user.getName() + " " + user.getSurname());
                     email.setText(user.getEmail());
-                    Picasso.get().load(user.getPhoto()).into(avatar);
+                    Glide.with(context).load(user.getPhoto()).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE)).into(avatar);
+                   // Picasso.get().load(user.getPhoto()).into(avatar);
                 }
             }
 

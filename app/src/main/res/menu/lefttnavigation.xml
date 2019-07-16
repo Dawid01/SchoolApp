@@ -6,12 +6,16 @@
         android:icon="@mipmap/baseline_person_black_24dp"
         android:title="Account" />
     <item
+        android:id="@+id/Games"
+        android:icon="@mipmap/baseline_videogame_asset_black_36dp"
+        android:title="Games" />
+    <item
         android:id="@+id/Settings"
-        android:icon="@mipmap/baseline_power_settings_new_black_24dp"
+        android:icon="@mipmap/baseline_settings_black_24dp"
         android:title="Settings" />
     <item
         android:id="@+id/logout"
-        android:icon="@mipmap/baseline_settings_black_24dp"
+        android:icon="@mipmap/baseline_power_settings_new_black_24dp"
         android:title="Logout" />
 
 </menu>

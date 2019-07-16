@@ -3,6 +3,7 @@ package com.szczepaniak.dawid.appezn;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.hardware.Camera;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -21,8 +22,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.jar.Attributes;
 
@@ -82,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         loadEmoji();
         refreshPosts();
         new PopUpGallery(galleryBtm, drawerLayout, MainActivity.this, selectedImages);
-        //new PhotoPopUp(photoBtm, drawerLayout, MainActivity.this);
+        new PhotoPopUp(photoBtm, drawerLayout, MainActivity.this);
         buttonMenuListner();
         logo = findViewById(R.id.logo);
         logo.setOnClickListener(new View.OnClickListener() {
@@ -109,77 +114,79 @@ public class MainActivity extends AppCompatActivity {
     void loadPosts(){
 
 
-        int postLayoutSize = postsLayout.getChildCount();
+        int postLayoutSize = postsLayout.getChildCount() - 1;
 
-        for (int i = 0; i < postLayoutSize; i++){
+        for (int i = postLayoutSize; i > 0; i--) {
 
-            if(i > 0){
-                postsLayout.removeViewAt(i);
-            }
+            postsLayout.removeViewAt(i);
+
         }
 
 
-        retrofit2.Call<Post> postsCall = api.getPost((long)(2));
+        retrofit2.Call<PostList> allPosts = api.getAllPosts("id,desc");
 
-        postsCall.enqueue(new Callback<Post>() {
+        allPosts.enqueue(new Callback<PostList>() {
             @Override
-            public void onResponse(Call<Post> call, Response<Post> response) {
+            public void onResponse(Call<PostList> call, Response<PostList> response) {
 
-                if (response.isSuccessful()) {
-                    final Post post = response.body();
-                    retrofit2.Call<User> postUser = api.getUser(post.getUserID());
+                if(response.isSuccessful()){
 
-                    postUser.enqueue(new Callback<User>() {
-                        @Override
-                        public void onResponse(Call<User> call, Response<User> response) {
+                    List<Post> posts = response.body().getPostList();
 
-                            if(response.isSuccessful()){
+                    for (final Post post : posts){
 
-                                final View postLayout = LayoutInflater.from(MainActivity.this).inflate(R.layout.post, null);
-                                final TextView name = postLayout.findViewById(R.id.name);
-                                final ImageView avatar = postLayout.findViewById(R.id.avatar);
+                        retrofit2.Call<User> postUser = api.getUser(post.getUserID());
 
-                                TextView status = postLayout.findViewById(R.id.status);
+                        postUser.enqueue(new Callback<User>() {
+                            @Override
+                            public void onResponse(Call<User> call, Response<User> response) {
 
-                                switch (post.getPermission()) {
+                                if(response.isSuccessful()){
 
-                                    case 0:
-                                        status.setText("Student");
-                                        break;
-                                    case 1:
-                                        status.setText("Teacher");
-                                        break;
+                                    final View postLayout = LayoutInflater.from(MainActivity.this).inflate(R.layout.post, null);
+                                    final TextView name = postLayout.findViewById(R.id.name);
+                                    final ImageView avatar = postLayout.findViewById(R.id.avatar);
+
+                                    TextView status = postLayout.findViewById(R.id.status);
+
+                                    switch (post.getPermission()) {
+
+                                        case 0:
+                                            status.setText("Student");
+                                            break;
+                                        case 1:
+                                            status.setText("Teacher");
+                                            break;
+                                    }
+
+                                    TextView date = postLayout.findViewById(R.id.date);
+                                    date.setText(post.getDateTime());
+                                    TextView content = postLayout.findViewById(R.id.content);
+                                    content.setText(post.getContent());
+                                    name.setText(response.body().getName() + " " + response.body().getSurname());
+                                    //Picasso.get().load(response.body().getPhoto()).into(avatar);
+                                    Glide.with(MainActivity.this).load(response.body().getPhoto()).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL)).into(avatar);
+                                    postsLayout.addView(postLayout);
+                                    refreshLayout.setRefreshing(false);
+
                                 }
+                            }
 
-                                TextView date = postLayout.findViewById(R.id.date);
-                                date.setText(post.getDateTime());
-                                TextView content = postLayout.findViewById(R.id.content);
-                                content.setText(post.getContent());
-                                name.setText(response.body().getName() + " " + response.body().getSurname());
-                                Picasso.get().load(response.body().getPhoto()).into(avatar);
-                                postsLayout.addView(postLayout);
+                            @Override
+                            public void onFailure(Call<User> call, Throwable t) {
                                 refreshLayout.setRefreshing(false);
 
                             }
-                        }
-
-                        @Override
-                        public void onFailure(Call<User> call, Throwable t) {
-                            refreshLayout.setRefreshing(false);
-
-                        }
-                    });
-
-
+                        });
+                    }
                 }
             }
 
             @Override
-            public void onFailure(Call<Post> call, Throwable t) {
-                refreshLayout.setRefreshing(false);
+            public void onFailure(Call<PostList> call, Throwable t) {
+
             }
         });
-
 
     }
 
@@ -195,7 +202,8 @@ public class MainActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
 
                     final User user = response.body();
-                    Picasso.get().load(user.getPhoto()).into(avatar);
+                    Glide.with(MainActivity.this).load(user.getPhoto()).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE)).into(avatar);
+                    //Picasso.get().load(user.getPhoto()).into(avatar);
                 }
             }
 

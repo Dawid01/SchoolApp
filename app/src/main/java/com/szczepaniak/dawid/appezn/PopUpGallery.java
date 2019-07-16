@@ -111,6 +111,7 @@ public class PopUpGallery extends AppCompatActivity {
 
 
     private void createPopUp(Context context, final View parent){
+        selectedImgs = new ArrayList<>();
         LayoutInflater inflater = LayoutInflater.from(context);
         View popUpView = inflater.inflate(R.layout.gallery_popup, null);
         final PopupWindow popupWindow = new PopupWindow(popUpView, parent.getWidth(), parent.getHeight(), true);
@@ -210,7 +211,6 @@ public class PopUpGallery extends AppCompatActivity {
 
         selectedImgs = new ArrayList<>();
         gallery.setAdapter(new ImageAdapter(activity));
-
         gallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -223,7 +223,7 @@ public class PopUpGallery extends AppCompatActivity {
                         galleryImage.setUsed(true);
 
                     } else {
-                        selectedImgs.remove(galleryImage.getUrl());
+                        selectedImgs.remove(selectedImgs.indexOf(galleryImage));
                         Glide.with(activity).load(galleryImage.getUrl())
                                 .placeholder(R.mipmap.baseline_add_photo_alternate_white_36dp).centerCrop()
                                 .into((ImageView) view);

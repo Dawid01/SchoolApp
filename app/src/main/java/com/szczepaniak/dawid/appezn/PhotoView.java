@@ -12,9 +12,9 @@ public class PhotoView extends SurfaceView implements SurfaceHolder.Callback {
     private SurfaceHolder mHolder;
     private android.hardware.Camera mCamera;
 
-    public PhotoView(Context context, Camera camera) {
+    public PhotoView(Context context, Camera mCamera) {
         super(context);
-        mCamera = camera;
+        this.mCamera = mCamera;
         mHolder = getHolder();
         mHolder.addCallback(this);
         mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);

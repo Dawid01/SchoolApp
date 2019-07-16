@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.GridLayout;
 import android.widget.PopupWindow;
 
 public class PhotoPopUp extends AppCompatActivity {
@@ -19,27 +20,28 @@ public class PhotoPopUp extends AppCompatActivity {
     private Activity activity;
     private View parent;
     private PhotoView photoView;
-    private static final int PHOTO = 1;
+    private static final int PHOTO = 100;
     private Camera camera;
 
 
-    public PhotoPopUp(View btmView, View parent, Camera camera, final Activity activity) {
+    public PhotoPopUp(View btmView, View parent, final Activity activity) {
         this.activity = activity;
         this.parent = parent;
+
 
        btmView.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {
-//               try {
-//                   if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-//                       ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.CAMERA}, PHOTO);
-//                   } else {
-//                       createPopUp(activity);
-//                   }
-//               } catch (Exception e) {
-//                   e.printStackTrace();
-//               }
-               createPopUp(activity);
+               try {
+                   if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                       ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.CAMERA}, PHOTO);
+                   } else {
+                       createPopUp(activity);
+                   }
+               } catch (Exception e) {
+                   e.printStackTrace();
+               }
+               //createPopUp(activity);
            }
        });
     }
@@ -49,9 +51,11 @@ public class PhotoPopUp extends AppCompatActivity {
         final View popUpView = inflater.inflate(R.layout.camera_popup, null);
         final PopupWindow popupWindow = new PopupWindow(popUpView, parent.getWidth(), parent.getHeight(), true);
         ConstraintLayout root = popUpView.findViewById(R.id.root);
-
-        PhotoView photoView = new PhotoView(context, camera);
-        root.addView(photoView);
+        Camera mCamera = Camera.open();
+        mCamera.setDisplayOrientation(90);
+        PhotoView photoView = new PhotoView(activity, mCamera);
+        photoView.setLayoutParams(new ConstraintLayout.LayoutParams(root.getWidth(), root.getHeight()));
+        root.addView(photoView, 0);
 
         popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
         View takePhoto = popUpView.findViewById(R.id.take_photo);
@@ -82,10 +86,9 @@ public class PhotoPopUp extends AppCompatActivity {
         });
     }
 
-
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults)
-    {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case PHOTO:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -95,5 +98,6 @@ public class PhotoPopUp extends AppCompatActivity {
                 break;
         }
     }
+
 
 }
