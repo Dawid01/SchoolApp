@@ -12,6 +12,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -59,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView sendBtm;
     private SwipeRefreshLayout refreshLayout;
     private LinearLayout selectedImages;
+    private RecyclerView recyclerView;
 
 
     @Override
@@ -102,6 +104,15 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://ezn.edu.pl/"));
                 startActivity(browserIntent);
+            }
+        });
+
+        logo.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Intent testScroll = new Intent(MainActivity.this, TestLoadPost.class);
+                startActivity(testScroll);
+                return false;
             }
         });
 

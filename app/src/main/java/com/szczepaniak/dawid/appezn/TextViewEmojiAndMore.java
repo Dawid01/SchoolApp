@@ -16,6 +16,8 @@ import android.view.ViewTreeObserver;
 
 import com.vanniktech.emoji.EmojiTextView;
 
+import java.io.IOException;
+
 public class TextViewEmojiAndMore extends EmojiTextView {
 
     private static final int TRIM_MODE_LINES = 0;
@@ -116,10 +118,15 @@ public class TextViewEmojiAndMore extends EmojiTextView {
                 trimEndIndex = trimLength + 1;
                 break;
         }
-        SpannableStringBuilder s = new SpannableStringBuilder(text, 0, trimEndIndex)
-                .append(ELLIPSIZE)
-                .append(trimCollapsedText);
-        return addClickableSpan(s, trimCollapsedText);
+        try {
+            SpannableStringBuilder s = new SpannableStringBuilder(text, 0, trimEndIndex)
+                    .append(ELLIPSIZE)
+                    .append(trimCollapsedText);
+            return addClickableSpan(s, trimCollapsedText);
+
+        }catch (IndexOutOfBoundsException e){
+            return trimCollapsedText;
+        }
     }
 
     private CharSequence updateExpandedText() {

@@ -31,6 +31,18 @@ public class Post {
     @Expose
     private long userID;
 
+    public Post(Long id, String content, String dateTime, User user, int permission, long userID) {
+        this.id = id;
+        this.content = content;
+        this.dateTime = dateTime;
+        this.user = user;
+        this.permission = permission;
+        this.userID = userID;
+    }
+
+    public Post() {
+    }
+
     public Long getId() {
         return id;
     }
