@@ -108,7 +108,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <com.szczepaniak.dawid.appezn.TextViewMore
+                <com.szczepaniak.dawid.appezn.TextViewEmojiAndMore
                     android:id="@+id/content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

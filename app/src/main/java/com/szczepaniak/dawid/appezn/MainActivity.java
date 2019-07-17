@@ -52,13 +52,14 @@ public class MainActivity extends AppCompatActivity {
     private View notifications;
     private DrawerLayout drawerLayout;
     private TextView title;
-    //private EmojIconActions emojIconActions;
     private EmojiEditText postEditText;
     private ImageView emojiBtm;
     private ImageView galleryBtm;
     private ImageView photoBtm;
+    private ImageView sendBtm;
     private SwipeRefreshLayout refreshLayout;
     private LinearLayout selectedImages;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,12 +83,15 @@ public class MainActivity extends AppCompatActivity {
         photoBtm = findViewById(R.id.photoBtm);
         selectedImages = findViewById(R.id.selected_images);
         refreshLayout = findViewById(R.id.Posts);
+        sendBtm = findViewById(R.id.send);
 
 
         new AccountDrawer(drawer, MainActivity.this);
+
         loadUser();
         loadPosts();
         loadEmoji();
+        postCreatorLisnter();
         refreshPosts();
         new PopUpGallery(galleryBtm, drawerLayout, MainActivity.this, selectedImages);
         new PhotoPopUp(photoBtm, drawerLayout, MainActivity.this);
@@ -192,6 +196,81 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
+    private void postCreatorLisnter(){
+
+        sendBtm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                final Post post = new Post();
+                post.setContent(postEditText.getText().toString());
+                post.setPermission(0);
+                retrofit2.Call<Post> newPost = api.newPost(post);
+
+                newPost.enqueue(new Callback<Post>() {
+                    @Override
+                    public void onResponse(Call<Post> call, Response<Post> response) {
+
+                        if(response.isSuccessful()){
+
+
+                            retrofit2.Call<User> postUser = api.getUser(post.getUserID());
+
+                            postUser.enqueue(new Callback<User>() {
+                                @Override
+                                public void onResponse(Call<User> call, Response<User> response) {
+
+                                    if(response.isSuccessful()){
+
+                                        final View postLayout = LayoutInflater.from(MainActivity.this).inflate(R.layout.post, null);
+                                        final TextView name = postLayout.findViewById(R.id.name);
+                                        final ImageView avatar = postLayout.findViewById(R.id.avatar);
+                                        User user = response.body();
+
+                                        TextView status = postLayout.findViewById(R.id.status);
+
+                                        switch (post.getPermission()) {
+
+                                            case 0:
+                                                status.setText("Student");
+                                                break;
+                                            case 1:
+                                                status.setText("Teacher");
+                                                break;
+                                        }
+
+                                        TextView date = postLayout.findViewById(R.id.date);
+                                        date.setText(post.getDateTime());
+                                        TextView content = postLayout.findViewById(R.id.content);
+                                        content.setText(post.getContent());
+                                        name.setText(user.getName() + " " + user.getSurname());
+                                        //Picasso.get().load(response.body().getPhoto()).into(avatar);
+                                        Glide.with(MainActivity.this).load(user.getPhoto()).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE)).into(avatar);
+                                        postsLayout.addView(postLayout, 1);
+                                        refreshLayout.setRefreshing(false);
+                                        postEditText.setText("");
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<User> call, Throwable t) {
+
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Post> call, Throwable t) {
+
+                    }
+                });
+
+            }
+        });
+    }
+
 
     private void loadUser() {
 

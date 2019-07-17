@@ -7,6 +7,7 @@ import retrofit2.http.Body;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -31,7 +32,10 @@ public interface  ApiService {
     Call<Post> getPost(@Path("id") Long id);
 
     @PUT("posts/{id}")
-    Call<Post> putPost(@Path("id") Long id, @Body User user);
+    Call<Post> putPost(@Path("id") Long id, @Body Post post);
+
+    @POST("posts")
+    Call<Post> newPost(@Body Post post);
 
     @GET("posts")
     Call<PostList> getAllPosts(@Query("sort") String sort);
