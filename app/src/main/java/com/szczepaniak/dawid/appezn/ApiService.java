@@ -43,7 +43,7 @@ public interface  ApiService {
 
 
     @GET("posts")
-    Call<PostList> getAllPosts(@Query("page") int page, @Query("size") int size);
+    Call<PostList> getAllPosts(@Query("page") int page, @Query("size") int size, @Query("sort") String sort);
 //    @GET("posts/{id}")
 //    Call<PostList> getPosts(@Path("id") Long id);
 

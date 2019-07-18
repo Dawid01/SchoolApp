@@ -86,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
         selectedImages = findViewById(R.id.selected_images);
         refreshLayout = findViewById(R.id.Posts);
         sendBtm = findViewById(R.id.send);
+        recyclerView = findViewById(R.id.recicle_view_posts);
 
 
         new AccountDrawer(drawer, MainActivity.this);
@@ -106,16 +107,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(browserIntent);
             }
         });
-
-        logo.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                Intent testScroll = new Intent(MainActivity.this, TestLoadPost.class);
-                startActivity(testScroll);
-                return false;
-            }
-        });
-
+        
         avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -131,80 +123,7 @@ public class MainActivity extends AppCompatActivity {
 
     void loadPosts(){
 
-
-        int postLayoutSize = postsLayout.getChildCount() - 1;
-
-        for (int i = postLayoutSize; i > 0; i--) {
-
-            postsLayout.removeViewAt(i);
-
-        }
-
-
-        retrofit2.Call<PostList> allPosts = api.getAllPosts("id,desc");
-
-        allPosts.enqueue(new Callback<PostList>() {
-            @Override
-            public void onResponse(Call<PostList> call, Response<PostList> response) {
-
-                if(response.isSuccessful()){
-
-                    List<Post> posts = response.body().getPostList();
-
-                    for (final Post post : posts){
-
-                        retrofit2.Call<User> postUser = api.getUser(post.getUserID());
-
-                        postUser.enqueue(new Callback<User>() {
-                            @Override
-                            public void onResponse(Call<User> call, Response<User> response) {
-
-                                if(response.isSuccessful()){
-
-                                    final View postLayout = LayoutInflater.from(MainActivity.this).inflate(R.layout.post, null);
-                                    final TextView name = postLayout.findViewById(R.id.name);
-                                    final ImageView avatar = postLayout.findViewById(R.id.avatar);
-
-                                    TextView status = postLayout.findViewById(R.id.status);
-
-                                    switch (post.getPermission()) {
-
-                                        case 0:
-                                            status.setText("Student");
-                                            break;
-                                        case 1:
-                                            status.setText("Teacher");
-                                            break;
-                                    }
-
-                                    TextView date = postLayout.findViewById(R.id.date);
-                                    date.setText(post.getDateTime());
-                                    TextView content = postLayout.findViewById(R.id.content);
-                                    content.setText(post.getContent());
-                                    name.setText(response.body().getName() + " " + response.body().getSurname());
-                                    //Picasso.get().load(response.body().getPhoto()).into(avatar);
-                                    Glide.with(MainActivity.this).load(response.body().getPhoto()).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE)).into(avatar);
-                                    postsLayout.addView(postLayout);
-                                    refreshLayout.setRefreshing(false);
-
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<User> call, Throwable t) {
-                                refreshLayout.setRefreshing(false);
-
-                            }
-                        });
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<PostList> call, Throwable t) {
-
-            }
-        });
+        new PostLoader(recyclerView, api, refreshLayout,MainActivity.this);
 
     }
 
@@ -214,70 +133,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                final Post post = new Post();
-                post.setContent(postEditText.getText().toString());
-                post.setPermission(0);
-                retrofit2.Call<Post> newPost = api.newPost(post);
-
-                newPost.enqueue(new Callback<Post>() {
-                    @Override
-                    public void onResponse(Call<Post> call, Response<Post> response) {
-
-                        if(response.isSuccessful()){
-
-
-                            retrofit2.Call<User> postUser = api.getUser(post.getUserID());
-
-                            postUser.enqueue(new Callback<User>() {
-                                @Override
-                                public void onResponse(Call<User> call, Response<User> response) {
-
-                                    if(response.isSuccessful()){
-
-                                        final View postLayout = LayoutInflater.from(MainActivity.this).inflate(R.layout.post, null);
-                                        final TextView name = postLayout.findViewById(R.id.name);
-                                        final ImageView avatar = postLayout.findViewById(R.id.avatar);
-                                        User user = response.body();
-
-                                        TextView status = postLayout.findViewById(R.id.status);
-
-                                        switch (post.getPermission()) {
-
-                                            case 0:
-                                                status.setText("Student");
-                                                break;
-                                            case 1:
-                                                status.setText("Teacher");
-                                                break;
-                                        }
-
-                                        TextView date = postLayout.findViewById(R.id.date);
-                                        date.setText(post.getDateTime());
-                                        TextView content = postLayout.findViewById(R.id.content);
-                                        content.setText(post.getContent());
-                                        name.setText(user.getName() + " " + user.getSurname());
-                                        //Picasso.get().load(response.body().getPhoto()).into(avatar);
-                                        Glide.with(MainActivity.this).load(user.getPhoto()).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE)).into(avatar);
-                                        postsLayout.addView(postLayout, 1);
-                                        refreshLayout.setRefreshing(false);
-                                        postEditText.setText("");
-                                    }
-                                }
-
-                                @Override
-                                public void onFailure(Call<User> call, Throwable t) {
-
-                                }
-                            });
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<Post> call, Throwable t) {
-
-                    }
-                });
-
             }
         });
     }
@@ -286,7 +141,6 @@ public class MainActivity extends AppCompatActivity {
     private void loadUser() {
 
         retrofit2.Call<User> userCall = api.getCurrentUser();
-        //retrofit2.Call<User> userCall = api.getUser(singleton.getCurrentUserID());
 
 
         userCall.enqueue(new Callback<User>() {
@@ -295,8 +149,8 @@ public class MainActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
 
                     final User user = response.body();
-                    Glide.with(MainActivity.this).load(user.getPhoto()).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE)).into(avatar);
-                    //Picasso.get().load(user.getPhoto()).into(avatar);
+                    Picasso.get().load(user.getPhoto()).into(avatar);
+                    //Glide.with(MainActivity.this).load(user.getPhoto()).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE)).into(avatar);
                 }
             }
 

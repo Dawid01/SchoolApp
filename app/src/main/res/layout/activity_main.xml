@@ -95,14 +95,14 @@
                         <LinearLayout
                             android:id="@+id/PostsLayout"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:background="@color/background"
                             android:orientation="vertical">
 
                             <android.support.v7.widget.CardView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginBottom="20dp"
+                                android:layout_marginBottom="5dp"
                                 tools:layout_editor_absoluteX="8dp"
                                 tools:layout_editor_absoluteY="91dp">
 
@@ -212,6 +212,16 @@
 
                                 </android.support.constraint.ConstraintLayout>
                             </android.support.v7.widget.CardView>
+
+                            <android.support.v7.widget.RecyclerView
+                                android:id="@+id/recicle_view_posts"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
 
                         </LinearLayout>
                     </ScrollView>

@@ -71,8 +71,8 @@ public class AccountDrawer {
                     final User user = response.body();
                     info.setText(user.getName() + " " + user.getSurname());
                     email.setText(user.getEmail());
-                    Glide.with(context).load(user.getPhoto()).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE)).into(avatar);
-                   // Picasso.get().load(user.getPhoto()).into(avatar);
+                    //Glide.with(context).load(user.getPhoto()).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE)).into(avatar);
+                    Picasso.get().load(user.getPhoto()).into(avatar);
                 }
             }
 

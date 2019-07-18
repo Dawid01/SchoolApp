@@ -5,8 +5,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -52,12 +55,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         return posts == null ? 0 : posts.size();
     }
 
-    /**
-     * The following method decides the type of ViewHolder to display in the RecyclerView
-     *
-     * @param position
-     * @return
-     */
     @Override
     public int getItemViewType(int position) {
         return posts.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
@@ -70,6 +67,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         TextView date;
         TextView status;
         TextView content;
+        ImageView avatar;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -78,6 +76,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             date = itemView.findViewById(R.id.date);
             status = itemView.findViewById(R.id.status);
             content = itemView.findViewById(R.id.content);
+            avatar = itemView.findViewById(R.id.avatar);
 
         }
     }
@@ -102,11 +101,19 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         Post post = posts.get(position);
         User user = post.getUser();
         if(user != null) {
-            viewHolder.name.setText(user.getName());
+            viewHolder.name.setText(user.getName() + " " + user.getSurname());
+            Picasso.get().load(user.getPhoto()).into(viewHolder.avatar);
+            switch (post.getPermission()) {
+                case 0:
+                    viewHolder.status.setText("Student");
+                    break;
+                case 1:
+                    viewHolder.status.setText("Teacher");
+                    break;
+            }
         }
         viewHolder.content.setText(post.getContent());
         viewHolder.date.setText(post.getDateTime());
-        //viewHolder.status.setText(post.getPermission());
 
     }
 
