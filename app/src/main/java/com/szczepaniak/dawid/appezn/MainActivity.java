@@ -6,12 +6,14 @@ import android.graphics.PorterDuff;
 import android.hardware.Camera;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
@@ -61,7 +63,9 @@ public class MainActivity extends AppCompatActivity {
     private SwipeRefreshLayout refreshLayout;
     private LinearLayout selectedImages;
     private RecyclerView recyclerView;
-
+    private ImageView createPostAction;
+    private ConstraintLayout createPostLayaout;
+    private CardView createPostCard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,8 +91,9 @@ public class MainActivity extends AppCompatActivity {
         refreshLayout = findViewById(R.id.Posts);
         sendBtm = findViewById(R.id.send);
         recyclerView = findViewById(R.id.recicle_view_posts);
-
-
+        createPostAction = findViewById(R.id.create_post_action);
+        createPostLayaout = findViewById(R.id.create_post_layout);
+        createPostCard = findViewById(R.id.create_post_card);
         new AccountDrawer(drawer, MainActivity.this);
 
         loadUser();
@@ -107,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(browserIntent);
             }
         });
-        
+
         avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -116,6 +121,21 @@ public class MainActivity extends AppCompatActivity {
                     drawerLayout.closeDrawers();
                 }else {
                     drawerLayout.openDrawer(Gravity.START);
+                }
+            }
+        });
+
+        createPostAction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(createPostLayaout.getVisibility() == View.VISIBLE){
+                    createPostLayaout.setVisibility(View.GONE);
+                    createPostAction.setImageDrawable(MainActivity.this.getResources().getDrawable(R.mipmap.baseline_keyboard_arrow_down_black_24dp));
+                }else {
+                    createPostLayaout.setVisibility(View.VISIBLE);
+                    createPostAction.setImageDrawable(MainActivity.this.getResources().getDrawable(R.mipmap.baseline_keyboard_arrow_up_black_24dp));
+
                 }
             }
         });
@@ -132,6 +152,29 @@ public class MainActivity extends AppCompatActivity {
         sendBtm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                Post newPost = new Post();
+                newPost.setContent(postEditText.getText().toString());
+
+                retrofit2.Call<Post> createPost = api.newPost(newPost);
+
+                createPost.enqueue(new Callback<Post>() {
+                    @Override
+                    public void onResponse(Call<Post> call, Response<Post> response) {
+
+                        if(response.isSuccessful()){
+
+                            loadPosts();
+                            postEditText.setText("");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Post> call, Throwable t) {
+
+                    }
+                });
+
 
             }
         });
@@ -175,18 +218,21 @@ public class MainActivity extends AppCompatActivity {
                         home.setVisibility(View.VISIBLE);
                         plans.setVisibility(View.GONE);
                         notifications.setVisibility(View.GONE);
+                        createPostCard.setVisibility(View.VISIBLE);
                         title.setText("Home");
                         break;
                     case  R.id.navigation_plans:
                         home.setVisibility(View.GONE);
                         plans.setVisibility(View.VISIBLE);
                         notifications.setVisibility(View.GONE);
+                        createPostCard.setVisibility(View.GONE);
                         title.setText("Plans");
                         break;
                     case R.id.navigation_notifications:
                         home.setVisibility(View.GONE);
                         plans.setVisibility(View.GONE);
                         notifications.setVisibility(View.VISIBLE);
+                        createPostCard.setVisibility(View.GONE);
                         title.setText("Notifications");
                         break;
                 }

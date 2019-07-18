@@ -42,7 +42,7 @@ public class PostLoader {
 
     private void initAdapter() {
 
-        recyclerViewAdapter = new RecyclerViewAdapter(rowsArrayList);
+        recyclerViewAdapter = new RecyclerViewAdapter(rowsArrayList, context);
         recyclerView.setAdapter(recyclerViewAdapter);
     }
 

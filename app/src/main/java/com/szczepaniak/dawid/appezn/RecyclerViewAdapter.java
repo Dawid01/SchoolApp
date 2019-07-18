@@ -1,5 +1,6 @@
 package com.szczepaniak.dawid.appezn;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,13 +18,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private final int VIEW_TYPE_ITEM = 0;
     private final int VIEW_TYPE_LOADING = 1;
-
+    private Context context;
     public List<Post> posts;
 
 
-    public RecyclerViewAdapter(List<Post> posts) {
-
+    public RecyclerViewAdapter(List<Post> posts, Context context ) {
         this.posts = posts;
+        this.context = context;
     }
 
     @NonNull
@@ -68,6 +69,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         TextView status;
         TextView content;
         ImageView avatar;
+        ImageView likeIcon;
+        ImageView dislikeIcon;
+        ImageView commentIcon;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -77,6 +81,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             status = itemView.findViewById(R.id.status);
             content = itemView.findViewById(R.id.content);
             avatar = itemView.findViewById(R.id.avatar);
+            likeIcon = itemView.findViewById(R.id.likeIcon);
+            dislikeIcon = itemView.findViewById(R.id.dislikeIcon);
+            commentIcon = itemView.findViewById(R.id.commentIcon);
 
         }
     }
@@ -114,6 +121,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
         viewHolder.content.setText(post.getContent());
         viewHolder.date.setText(post.getDateTime());
+        viewHolder.likeIcon.setColorFilter(context.getResources().getColor(R.color.emoji_gray70));
+        viewHolder.dislikeIcon.setColorFilter(context.getResources().getColor(R.color.emoji_gray70));
+        viewHolder.commentIcon.setColorFilter(context.getResources().getColor(R.color.emoji_gray70));
 
     }
 
