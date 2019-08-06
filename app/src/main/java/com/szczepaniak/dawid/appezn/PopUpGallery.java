@@ -24,6 +24,8 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
@@ -115,8 +117,8 @@ public class PopUpGallery extends AppCompatActivity {
         LayoutInflater inflater = LayoutInflater.from(context);
         View popUpView = inflater.inflate(R.layout.gallery_popup, null);
         final PopupWindow popupWindow = new PopupWindow(popUpView, parent.getWidth(), parent.getHeight(), true);
-        popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
         popupWindow.setAnimationStyle(R.style.galeryPopup);
+        popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
         gallery = popUpView.findViewById(R.id.gallery);
         loadPhotos(activity);
         TextView close = popUpView.findViewById(R.id.close);

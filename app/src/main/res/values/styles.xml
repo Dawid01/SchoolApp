@@ -16,8 +16,8 @@
     </style>
 
     <style name="galeryPopup">
-        <item name="android:windowEnterAnimation">@anim/show_gallery</item>
-        <item name="android:windowExitAnimation">@anim/close_gallery</item>
+        <item name="android:windowExitAnimation">@anim/a_gallery</item>
+        <item name="android:windowEnterAnimation">@anim/b_gallery</item>
     </style>
 
 

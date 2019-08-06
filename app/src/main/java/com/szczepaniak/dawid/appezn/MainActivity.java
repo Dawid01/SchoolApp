@@ -102,7 +102,6 @@ public class MainActivity extends AppCompatActivity {
         postCreatorLisnter();
         refreshPosts();
         new PopUpGallery(galleryBtm, drawerLayout, MainActivity.this, selectedImages);
-        new PhotoPopUp(photoBtm, drawerLayout, MainActivity.this);
         buttonMenuListner();
         logo = findViewById(R.id.logo);
         logo.setOnClickListener(new View.OnClickListener() {
@@ -137,6 +136,16 @@ public class MainActivity extends AppCompatActivity {
                     createPostAction.setImageDrawable(MainActivity.this.getResources().getDrawable(R.mipmap.baseline_keyboard_arrow_up_black_24dp));
 
                 }
+            }
+        });
+
+        photoBtm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent photoActivity = new Intent(MainActivity.this, CameraActivity.class);
+                startActivity(photoActivity);
+                overridePendingTransition( R.anim.slide_in_up, R.anim.none );
             }
         });
     }
