@@ -22,15 +22,9 @@ public class CameraActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_camera);
+        hideSystemUI();
 
-        View mDecorView = this.getWindow().getDecorView();
-        mDecorView.setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_IMMERSIVE);
+
         photoView = findViewById(R.id.photoView);
         takePhoto = findViewById(R.id.take_photo);
         back = findViewById(R.id.back);
@@ -53,7 +47,7 @@ public class CameraActivity extends AppCompatActivity {
         switchCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                photoView.switchCamera();
             }
         });
 
@@ -63,5 +57,24 @@ public class CameraActivity extends AppCompatActivity {
     public void finish() {
         super.finish();
         overridePendingTransition(R.anim.none, R.anim.slide_out_down);
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+            hideSystemUI();
+        }
+    }
+
+    private void hideSystemUI() {
+        View mDecorView = this.getWindow().getDecorView();
+        mDecorView.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE);
     }
 }

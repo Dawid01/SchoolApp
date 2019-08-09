@@ -31,13 +31,18 @@ public class Post {
     @Expose
     private long userID;
 
-    public Post(Long id, String content, String dateTime, User user, int permission, long userID) {
+    @SerializedName("photos")
+    @Expose
+    private String[] photos;
+
+    public Post(Long id, String content, String dateTime, User user, int permission, long userID, String[] photos) {
         this.id = id;
         this.content = content;
         this.dateTime = dateTime;
         this.user = user;
         this.permission = permission;
         this.userID = userID;
+        this.photos = photos;
     }
 
     public Post() {
@@ -89,5 +94,13 @@ public class Post {
 
     public void setUserID(long userID) {
         this.userID = userID;
+    }
+
+    public String[] getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(String[] photos) {
+        this.photos = photos;
     }
 }

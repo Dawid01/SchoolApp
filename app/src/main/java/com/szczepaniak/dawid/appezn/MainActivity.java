@@ -1,5 +1,6 @@
 package com.szczepaniak.dawid.appezn;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -27,7 +28,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
+import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.squareup.picasso.Picasso;
 import com.vanniktech.emoji.EmojiEditText;
 import com.vanniktech.emoji.EmojiManager;
@@ -48,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView logo;
     private ImageView avatar;
     private ApiService api;
-    private LinearLayout postsLayout;
+   // private LinearLayout postsLayout;
     private BottomNavigationView bottonMenu;
     private View home;
     private View plans;
@@ -74,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         api = RetroClient.getApiService();
         drawer = findViewById(R.id.nav_view);
-        postsLayout = findViewById(R.id.PostsLayout);
+        // = findViewById(R.id.PostsLayout);
         avatar = findViewById(R.id.avatar);
         bottonMenu = findViewById(R.id.bottomMenu);
         home = findViewById(R.id.Posts);
@@ -148,6 +152,8 @@ public class MainActivity extends AppCompatActivity {
                 overridePendingTransition( R.anim.slide_in_up, R.anim.none );
             }
         });
+
+        initImageLoader(MainActivity.this);
     }
 
     void loadPosts(){
@@ -288,6 +294,20 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public static void initImageLoader(Context context) {
+
+        Singleton singleton = Singleton.getInstance();
+        ImageLoaderConfiguration.Builder config = new ImageLoaderConfiguration.Builder(context);
+        config.threadPriority(Thread.NORM_PRIORITY - 2);
+        config.denyCacheImageMultipleSizesInMemory();
+        config.diskCacheFileNameGenerator(new Md5FileNameGenerator());
+        config.diskCacheSize(50 * 1024 * 1024); // 50 MiB
+        config.tasksProcessingOrder(QueueProcessingType.LIFO);
+        config.writeDebugLogs(); // Remove for release app
+
+        // Initialize ImageLoader with configuration.
+        ImageLoader.getInstance().init(config.build());
+    }
 
 }
 

@@ -62,9 +62,9 @@ public class TextViewEmojiAndMore extends EmojiTextView {
         typedArray.recycle();
         viewMoreSpan = new TextViewEmojiAndMore.ReadMoreClickableSpan();
         onGlobalLayoutLineEndIndex();
-        setText();
+        setTextMethod();
     }
-    private void setText() {
+    private void setTextMethod() {
         super.setText(getDisplayableText(), bufferType);
         setMovementMethod(LinkMovementMethod.getInstance());
         setHighlightColor(Color.TRANSPARENT);
@@ -74,11 +74,13 @@ public class TextViewEmojiAndMore extends EmojiTextView {
         return getTrimmedText(text);
     }
 
+
     @Override
-    public void setText(CharSequence text, BufferType type) {
-        this.text = text;
+    public void setText(CharSequence rawText, BufferType type) {
+        super.setText(rawText, type);
+        this.text = rawText;
         bufferType = type;
-        setText();
+        setTextMethod();
     }
 
     private CharSequence getTrimmedText(CharSequence text) {
@@ -144,7 +146,7 @@ public class TextViewEmojiAndMore extends EmojiTextView {
 
     public void setTrimLength(int trimLength) {
         this.trimLength = trimLength;
-        setText();
+        setTextMethod();
     }
 
     public void setColorClickableText(int colorClickableText) {
@@ -171,7 +173,7 @@ public class TextViewEmojiAndMore extends EmojiTextView {
         @Override
         public void onClick(View widget) {
             readMore = !readMore;
-            setText();
+            setTextMethod();
         }
 
         @Override
@@ -192,7 +194,7 @@ public class TextViewEmojiAndMore extends EmojiTextView {
                         obs.removeGlobalOnLayoutListener(this);
                     }
                     refreshLineEndIndex();
-                    setText();
+                    setTextMethod();
                 }
             });
         }

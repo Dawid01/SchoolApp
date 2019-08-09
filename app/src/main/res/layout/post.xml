@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="20dp"
@@ -119,6 +120,21 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="1.0" />
         </android.support.constraint.ConstraintLayout>
+
+        <ImageView
+            android:id="@+id/photo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <com.szczepaniak.dawid.appezn.Assymetric.AsymmetricRecyclerView
+            android:id="@+id/photo_album"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fadeScrollbars="false"
+            android:isScrollContainer="false"
+            android:overScrollMode="never"
+            android:scrollbarSize="0dp"
+            app:fastScrollEnabled="false" />
 
         <ImageView
             android:id="@+id/imageView4"

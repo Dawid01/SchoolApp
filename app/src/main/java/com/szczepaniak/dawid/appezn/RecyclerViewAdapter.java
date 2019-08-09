@@ -4,14 +4,22 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.squareup.picasso.Picasso;
+import com.szczepaniak.dawid.appezn.Assymetric.AsymmetricRecyclerView;
+import com.szczepaniak.dawid.appezn.Assymetric.AsymmetricRecyclerViewAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -20,11 +28,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private final int VIEW_TYPE_LOADING = 1;
     private Context context;
     public List<Post> posts;
+    private View parent;
 
-
-    public RecyclerViewAdapter(List<Post> posts, Context context ) {
+    public RecyclerViewAdapter(List<Post> posts, Context context) {
         this.posts = posts;
         this.context = context;
+    }
+
+    public RecyclerViewAdapter(List<Post> posts, Context context, View parent) {
+        this.posts = posts;
+        this.context = context;
+        this.parent = parent;
     }
 
     @NonNull
@@ -72,6 +86,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         ImageView likeIcon;
         ImageView dislikeIcon;
         ImageView commentIcon;
+        ImageView photo;
+        AsymmetricRecyclerView photoAlbum;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -84,6 +100,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             likeIcon = itemView.findViewById(R.id.likeIcon);
             dislikeIcon = itemView.findViewById(R.id.dislikeIcon);
             commentIcon = itemView.findViewById(R.id.commentIcon);
+            photo = itemView.findViewById(R.id.photo);
+            photoAlbum = itemView.findViewById(R.id.photo_album);
 
         }
     }
@@ -105,7 +123,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private void populateItemRows(ItemViewHolder viewHolder, int position) {
 
-        Post post = posts.get(position);
+        final Post post = posts.get(position);
         User user = post.getUser();
         if(user != null) {
             viewHolder.name.setText(user.getName() + " " + user.getSurname());
@@ -125,7 +143,66 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         viewHolder.dislikeIcon.setColorFilter(context.getResources().getColor(R.color.emoji_gray70));
         viewHolder.commentIcon.setColorFilter(context.getResources().getColor(R.color.emoji_gray70));
 
+        AsymmetricRecyclerView album = viewHolder.photoAlbum;
+
+        album.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return false;
+            }
+        });
+
+        if(post.getPhotos() != null) {
+            if (post.getPhotos().length == 1) {
+
+                Glide.with(context).load(post.getPhotos()[0]).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE)).into(viewHolder.photo);
+
+            }else if(post.getPhotos().length > 1){
+
+                List<ItemImage> postImages = new ArrayList<>();
+                boolean isCol2Avail = false;
+
+                for(int i = 0; i < post.getPhotos().length; i++){
+                    String url = post.getPhotos()[i];
+                    ItemImage postImage = new ItemImage(i,url, url);
+                    //int colSpan = Math.random() < 0.2f ? 2 : 1;
+                    int colSpan = 1;
+                    if(i == 0){
+                        colSpan = 2;
+                    }
+
+                    int rowSpan = colSpan;
+                    if(colSpan == 2 && !isCol2Avail)
+                        isCol2Avail = true;
+                    else if(colSpan == 2 && isCol2Avail)
+                        colSpan = 1;
+
+
+                    if(post.getPhotos().length == 4 || post.getPhotos().length == 2){
+
+                        if(i == 1){
+                            colSpan = 2;
+                        }
+                    }
+
+                    postImage.setColumnSpan(colSpan);
+                    postImage.setRowSpan(rowSpan);
+                    postImage.setPosition(i);
+
+
+                    postImages.add(postImage);
+                }
+
+                ChildAdapter adapter = new ChildAdapter(postImages,postImages.size(),6);
+                album.setAdapter(new AsymmetricRecyclerViewAdapter(context, album, adapter));
+
+            }
+        }
+
     }
+
+
+
 
 
 }
