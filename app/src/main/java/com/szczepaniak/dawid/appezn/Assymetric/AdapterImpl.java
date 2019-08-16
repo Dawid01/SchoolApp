@@ -2,6 +2,7 @@ package com.szczepaniak.dawid.appezn.Assymetric;
 
 import android.content.Context;
 import android.database.CursorIndexOutOfBoundsException;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
@@ -183,13 +184,9 @@ final class AdapterImpl implements View.OnClickListener, View.OnLongClickListene
     }
 
     LinearLayout layout = new LinearLayout(context, null);
-    if (debugEnabled) {
-     // layout.setBackgroundColor(Color.parseColor("#83F27B"));
-    }
-
     layout.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
-//    layout.setDividerDrawable(
-//        ContextCompat.getDrawable(context, R.drawable.avatar));
+    layout.setDividerDrawable(
+        ContextCompat.getDrawable(context, R.drawable.divider));
 
     AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(
         AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
@@ -246,14 +243,9 @@ final class AdapterImpl implements View.OnClickListener, View.OnLongClickListene
     if (childLayout == null) {
       childLayout = linearLayoutPool.get();
       childLayout.setOrientation(LinearLayout.VERTICAL);
-
-      if (debugEnabled) {
-       // childLayout.setBackgroundColor(Color.parseColor("#837BF2"));
-      }
-
       childLayout.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
-//      childLayout.setDividerDrawable(
-//          ContextCompat.getDrawable(context, R.drawable.avatar));
+      childLayout.setDividerDrawable(
+          ContextCompat.getDrawable(context, R.drawable.divider));
 
       childLayout.setLayoutParams(new AbsListView.LayoutParams(
           AbsListView.LayoutParams.WRAP_CONTENT,

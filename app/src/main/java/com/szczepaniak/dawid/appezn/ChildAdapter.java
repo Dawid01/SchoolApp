@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -54,12 +55,14 @@ class ChildAdapter extends AGVRecyclerViewAdapter<ViewHolder> {
 
 class ViewHolder extends RecyclerView.ViewHolder {
     private final ImageView mImageView;
+    private final TextView mTextCount;
 
     public ViewHolder(ViewGroup parent, int viewType, List<ItemImage> items) {
         super(LayoutInflater.from(parent.getContext()).inflate(
                 R.layout.post_photo, parent, false));
 
         mImageView = itemView.findViewById(R.id.image);
+        mTextCount = itemView.findViewById(R.id.countText);
 
 
 
@@ -75,7 +78,9 @@ class ViewHolder extends RecyclerView.ViewHolder {
 
             if (mTotal > mDisplay) {
                 if (position == mDisplay - 1) {
-                    mImageView.setAlpha(72);
+                    mImageView.setAlpha(120);
+                    String text = "+" + (mTotal - mDisplay);
+                    mTextCount.setText(text);
                 } else {
                     mImageView.setAlpha(255);
                 }

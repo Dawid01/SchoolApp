@@ -2,6 +2,7 @@ package com.szczepaniak.dawid.appezn;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.hardware.Camera;
