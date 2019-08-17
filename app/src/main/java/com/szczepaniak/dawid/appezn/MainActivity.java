@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView createPostAction;
     private ConstraintLayout createPostLayaout;
     private CardView createPostCard;
+    private Singleton singleton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +101,10 @@ public class MainActivity extends AppCompatActivity {
         createPostLayaout = findViewById(R.id.create_post_layout);
         createPostCard = findViewById(R.id.create_post_card);
         new AccountDrawer(drawer, MainActivity.this);
+
+        singleton = Singleton.getInstance();
+        singleton.setMainActivity(MainActivity.this);
+
 
         loadUser();
         loadPosts();

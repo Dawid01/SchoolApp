@@ -193,7 +193,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                             rowSpan = 2;
                         }
                     }
-                    
+
                     postImage.setColumnSpan(colSpan);
                     postImage.setRowSpan(rowSpan);
                     postImage.setPosition(i);
@@ -202,19 +202,24 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 }
 
                 List<ItemImage> photos = new ArrayList<>();
+                String[] photoTable = new String[postImages.size()];
 
                 for(int i = 0; i < postImages.size(); i++){
 
-                    photos.add(postImages.get(i));
-
-                    if(i == 5){
-                        break;
+                    if(i <= 5) {
+                        photos.add(postImages.get(i));
+                        photoTable[i] = postImages.get(i).getImagePath();
                     }
+
+//                    if(i == 5){
+//                        break;
+//                    }
                 }
 
 
                 ChildAdapter adapter = new ChildAdapter(photos,6, postImages.size());
                 album.setAdapter(new AsymmetricRecyclerViewAdapter(context, album, adapter));
+
 
             }
         }

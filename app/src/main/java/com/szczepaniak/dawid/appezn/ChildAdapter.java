@@ -1,9 +1,12 @@
 package com.szczepaniak.dawid.appezn;
 
+import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -69,8 +72,8 @@ class ViewHolder extends RecyclerView.ViewHolder {
     }
 
 
-    public void bind(List<ItemImage> item, int position, int mDisplay, int mTotal) {
-        Singleton singleton = Singleton.getInstance();
+    public void bind(final List<ItemImage> item, int position, int mDisplay, int mTotal) {
+        final Singleton singleton = Singleton.getInstance();
         ImageLoader imageLoader = singleton.getImageLoader();
         ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(MyApplication.getAppContext()));
         if(mImageView != null) {
@@ -88,6 +91,23 @@ class ViewHolder extends RecyclerView.ViewHolder {
                 mImageView.setAlpha(255);
             }
         }
+
+        mImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String[] photos = new String[item.size()];
+
+                for(int i = 0; i < item.size(); i++){
+
+                    photos[i] = item.get(i).getImagePath();
+                }
+
+                singleton.setPhotos(photos);
+                singleton.getMainActivity().startActivity(new Intent(singleton.getMainActivity(), PhotosViewerActivity.class));
+
+
+            }
+        });
 
     }
 }

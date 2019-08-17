@@ -1,5 +1,6 @@
 package com.szczepaniak.dawid.appezn;
 
+import android.app.Activity;
 import android.content.Context;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -16,6 +17,10 @@ public class Singleton {
     private User currentUser;
 
     private ImageLoader imageLoader;
+
+    private String[] photos;
+
+    private Activity mainActivity;
 
     private Singleton() {
     }
@@ -46,5 +51,21 @@ public class Singleton {
 
     public void setImageLoader(ImageLoader imageLoader) {
         this.imageLoader = imageLoader;
+    }
+
+    public String[] getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(String[] photos) {
+        this.photos = photos;
+    }
+
+    public Activity getMainActivity() {
+        return mainActivity;
+    }
+
+    public void setMainActivity(Activity mainActivity) {
+        this.mainActivity = mainActivity;
     }
 }
