@@ -10,7 +10,8 @@ public class RetroClient {
 
     //private static final String ROOT_URL = "http://192.168.0.123:8080/";
     //private static final String ROOT_URL = "http://192.168.56.1:8080/";
-    private static final String ROOT_URL = "http://192.168.0.125:8080/";
+    //private static final String ROOT_URL = "http://192.168.0.125:8080/";
+    private static final String ROOT_URL = "http://192.168.0.110:8080/";
 
 
         private static Retrofit getRetrofitInstance() {

@@ -43,6 +43,7 @@ dependencies {
     implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     implementation 'com.android.support:support-annotations:23.3.0'
     implementation 'org.jetbrains:annotations-java5:15.0'
+    implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0'
 
 
 }

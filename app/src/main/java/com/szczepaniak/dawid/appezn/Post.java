@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class Post {
 
@@ -34,6 +35,11 @@ public class Post {
     @SerializedName("photos")
     @Expose
     private String[] photos;
+
+    @SerializedName("postReactions")
+    @Expose
+    private List<PostReaction> postReactions;
+
 
     public Post(Long id, String content, String dateTime, User user, int permission, long userID, String[] photos) {
         this.id = id;
@@ -102,5 +108,13 @@ public class Post {
 
     public void setPhotos(String[] photos) {
         this.photos = photos;
+    }
+
+    public List<PostReaction> getPostReactions() {
+        return postReactions;
+    }
+
+    public void setPostReactions(List<PostReaction> postReactions) {
+        this.postReactions = postReactions;
     }
 }

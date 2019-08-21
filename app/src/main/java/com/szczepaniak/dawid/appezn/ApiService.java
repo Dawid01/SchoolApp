@@ -44,7 +44,16 @@ public interface  ApiService {
 
     @GET("posts")
     Call<PostList> getAllPosts(@Query("page") int page, @Query("size") int size, @Query("sort") String sort);
-//    @GET("posts/{id}")
-//    Call<PostList> getPosts(@Path("id") Long id);
+
+
+
+    @POST("reactions")
+    Call<PostReaction> newPostReaction(@Body PostReaction reaction);
+
+    @PUT("reactions/{id}")
+    Call<PostReaction> putPostReaction(@Path("id") Long id, @Body PostReaction reaction);
+
+    @POST("/reactions/post/{id}")
+    Call<PostReaction> addReaction(@Body PostReaction reaction, @Path("id") Long id);
 
 }

@@ -19,16 +19,12 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -38,11 +34,6 @@ import com.vanniktech.emoji.EmojiEditText;
 import com.vanniktech.emoji.EmojiManager;
 import com.vanniktech.emoji.EmojiPopup;
 import com.vanniktech.emoji.twitter.TwitterEmojiProvider;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.jar.Attributes;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -214,6 +205,7 @@ public class MainActivity extends AppCompatActivity {
 
                     final User user = response.body();
                     Picasso.get().load(user.getPhoto()).into(avatar);
+                    Singleton.getInstance().setCurrentUserID(user.getId());
                     //Glide.with(MainActivity.this).load(user.getPhoto()).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE)).into(avatar);
                 }
             }

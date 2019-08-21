@@ -11,6 +11,7 @@ import android.widget.ImageView;
 
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -23,24 +24,22 @@ import com.szczepaniak.dawid.appezn.Assymetric.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final int VIEW_TYPE_ITEM = 0;
     private final int VIEW_TYPE_LOADING = 1;
     private Context context;
     public List<Post> posts;
-    private View parent;
 
     public RecyclerViewAdapter(List<Post> posts, Context context) {
         this.posts = posts;
         this.context = context;
     }
 
-    public RecyclerViewAdapter(List<Post> posts, Context context, View parent) {
-        this.posts = posts;
-        this.context = context;
-        this.parent = parent;
-    }
 
     @NonNull
     @Override
@@ -89,6 +88,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         ImageView commentIcon;
         ImageView photo;
         AsymmetricRecyclerView photoAlbum;
+        TextView likes;
+        TextView dislikes;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -103,6 +104,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             commentIcon = itemView.findViewById(R.id.commentIcon);
             photo = itemView.findViewById(R.id.photo);
             photoAlbum = itemView.findViewById(R.id.photo_album);
+            likes = itemView.findViewById(R.id.likes);
+            dislikes = itemView.findViewById(R.id.dislikes);
 
         }
     }
@@ -122,10 +125,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     }
 
-    private void populateItemRows(ItemViewHolder viewHolder, int position) {
+    private void populateItemRows(final ItemViewHolder viewHolder, int position) {
 
         final Post post = posts.get(position);
-        User user = post.getUser();
+        final User user = post.getUser();
         if(user != null) {
             viewHolder.name.setText(user.getName() + " " + user.getSurname());
             Picasso.get().load(user.getPhoto()).into(viewHolder.avatar);
@@ -143,6 +146,96 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         viewHolder.likeIcon.setColorFilter(context.getResources().getColor(R.color.emoji_gray70));
         viewHolder.dislikeIcon.setColorFilter(context.getResources().getColor(R.color.emoji_gray70));
         viewHolder.commentIcon.setColorFilter(context.getResources().getColor(R.color.emoji_gray70));
+
+
+        int likes = 0;
+        int dislikes = 0;
+
+        final List<PostReaction> postReactions = post.getPostReactions();
+
+
+        if(postReactions != null) {
+            for (PostReaction reaction : postReactions) {
+
+                if (reaction.getReaction() == 0) {
+                    dislikes++;
+                } else if (reaction.getReaction() == 1) {
+                    likes++;
+                }
+
+                if(reaction.getUserID() == Singleton.getInstance().getCurrentUserID()){
+                    int color = context.getResources().getColor(R.color.colorPrimary);
+                    if (reaction.getReaction() == 0) {
+                        viewHolder.dislikes.setTextColor(color);
+                        viewHolder.dislikeIcon.setColorFilter(color);
+                    } else if (reaction.getReaction() == 1) {
+                        viewHolder.likes.setTextColor(color);
+                        viewHolder.likeIcon.setColorFilter(color);
+                    }
+                }
+
+            }
+        }
+
+        viewHolder.likes.setText(likes + " likes");
+        viewHolder.dislikes.setText(dislikes + " dislikes");
+
+        final ApiService api = RetroClient.getApiService();
+
+        viewHolder.likeIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            PostReaction postReaction = new PostReaction(1, user.getId());
+            retrofit2.Call<PostReaction> reactionCall = api.addReaction(postReaction, post.getId());
+
+            reactionCall.enqueue(new Callback<PostReaction>() {
+                @Override
+                public void onResponse(Call<PostReaction> call, Response<PostReaction> response) {
+
+                    //if(response.isSuccessful()){
+
+                        updatePostReactions(post, viewHolder);
+                    //}
+                }
+
+                @Override
+                public void onFailure(Call<PostReaction> call, Throwable t) {
+                    updatePostReactions(post, viewHolder);
+                }
+            });
+
+
+            }
+        });
+
+        viewHolder.dislikeIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                PostReaction postReaction = new PostReaction(0, user.getId());
+                retrofit2.Call<PostReaction> reactionCall = api.addReaction(postReaction, post.getId());
+
+                reactionCall.enqueue(new Callback<PostReaction>() {
+                    @Override
+                    public void onResponse(Call<PostReaction> call, Response<PostReaction> response) {
+
+                       // if(response.isSuccessful()){
+
+                            updatePostReactions(post, viewHolder);
+                       // }
+                    }
+
+                    @Override
+                    public void onFailure(Call<PostReaction> call, Throwable t) {
+                        updatePostReactions(post, viewHolder);
+
+                    }
+                });
+
+            }
+        });
+
 
         AsymmetricRecyclerView album = viewHolder.photoAlbum;
         album.setRequestedColumnCount(3);
@@ -208,16 +301,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                     if(i <= 5) {
                         photos.add(postImages.get(i));
-                        photoTable[i] = postImages.get(i).getImagePath();
                     }
+                    photoTable[i] = postImages.get(i).getImagePath();
 
-//                    if(i == 5){
-//                        break;
-//                    }
                 }
 
 
-                ChildAdapter adapter = new ChildAdapter(photos,6, postImages.size());
+                ChildAdapter adapter = new ChildAdapter(photos,6, postImages.size(),photoTable);
                 album.setAdapter(new AsymmetricRecyclerViewAdapter(context, album, adapter));
 
 
@@ -227,6 +317,68 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
 
+    private void updatePostReactions(Post post, final ItemViewHolder viewHolder){
+
+        ApiService api = RetroClient.getApiService();
+        retrofit2.Call<Post> postCall = api.getPost(post.getId());
+
+        postCall.enqueue(new Callback<Post>() {
+            @Override
+            public void onResponse(Call<Post> call, Response<Post> response) {
+
+                if(response.isSuccessful()){
+
+                    int c = context.getResources().getColor(R.color.emoji_gray70);
+                    viewHolder.dislikes.setTextColor(c);
+                    viewHolder.dislikeIcon.setColorFilter(c);
+                    viewHolder.likes.setTextColor(c);
+                    viewHolder.likeIcon.setColorFilter(c);
+
+                    int likes = 0;
+                    int dislikes = 0;
+
+                    Post post = response.body();
+
+                    final List<PostReaction> postReactions = post.getPostReactions();
+
+
+                    if(postReactions != null) {
+                        for (PostReaction reaction : postReactions) {
+
+                            if (reaction.getReaction() == 0) {
+                                dislikes++;
+                            } else if (reaction.getReaction() == 1) {
+                                likes++;
+                            }
+
+                            if(reaction.getUserID() == Singleton.getInstance().getCurrentUserID()){
+                                int color = context.getResources().getColor(R.color.colorPrimary);
+                                if (reaction.getReaction() == 0) {
+                                    viewHolder.dislikes.setTextColor(color);
+                                    viewHolder.dislikeIcon.setColorFilter(color);
+                                } else if (reaction.getReaction() == 1) {
+                                    viewHolder.likes.setTextColor(color);
+                                    viewHolder.likeIcon.setColorFilter(color);
+                                }
+                            }
+
+                        }
+                    }
+
+                    viewHolder.likes.setText(likes + " likes");
+                    viewHolder.dislikes.setText(dislikes + " dislikes");
+
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Post> call, Throwable t) {
+
+            }
+        });
+
+    }
 
 
 

@@ -21,20 +21,22 @@ import java.util.List;
 
 class ChildAdapter extends AGVRecyclerViewAdapter<ViewHolder> {
     private final List<ItemImage> items;
+    private final String[] photosList;
     private int mDisplay = 0;
     private int mTotal = 0;
 
-    public ChildAdapter(List<ItemImage> items,int mDisplay, int mTotal) {
+    public ChildAdapter(List<ItemImage> items,int mDisplay, int mTotal, String[] photosList) {
         this.items = items;
         this.mDisplay = mDisplay;
         this.mTotal = mTotal;
+        this.photosList = photosList;
 
     }
 
 
     @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Log.d("RecyclerViewActivity", "onCreateView");
-        return new ViewHolder(parent, viewType,items);
+        return new ViewHolder(parent, viewType,items, photosList);
     }
 
     @Override public void onBindViewHolder(ViewHolder holder, int position) {
@@ -59,10 +61,12 @@ class ChildAdapter extends AGVRecyclerViewAdapter<ViewHolder> {
 class ViewHolder extends RecyclerView.ViewHolder {
     private final ImageView mImageView;
     private final TextView mTextCount;
+    private final String[] photosList;
 
-    public ViewHolder(ViewGroup parent, int viewType, List<ItemImage> items) {
+    public ViewHolder(ViewGroup parent, int viewType, List<ItemImage> items, String[] photosList) {
         super(LayoutInflater.from(parent.getContext()).inflate(
                 R.layout.post_photo, parent, false));
+        this.photosList = photosList;
 
         mImageView = itemView.findViewById(R.id.image);
         mTextCount = itemView.findViewById(R.id.countText);
@@ -102,7 +106,7 @@ class ViewHolder extends RecyclerView.ViewHolder {
                     photos[i] = item.get(i).getImagePath();
                 }
 
-                singleton.setPhotos(photos);
+                singleton.setPhotos(photosList);
                 singleton.getMainActivity().startActivity(new Intent(singleton.getMainActivity(), PhotosViewerActivity.class));
 
 

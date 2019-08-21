@@ -16,6 +16,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -35,7 +36,11 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.transition.Transition;
+import com.davemorrissey.labs.subscaleview.ImageSource;
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -112,7 +117,7 @@ public class PopUpGallery extends AppCompatActivity {
     }
 
 
-    private void createPopUp(Context context, final View parent){
+    private void createPopUp(final Context context, final View parent){
         selectedImgs = new ArrayList<>();
         LayoutInflater inflater = LayoutInflater.from(context);
         View popUpView = inflater.inflate(R.layout.gallery_popup, null);
@@ -188,12 +193,17 @@ public class PopUpGallery extends AppCompatActivity {
                                 final PopupWindow popupWindow = new PopupWindow(popUpView, parent.getWidth(), parent.getHeight(), true);
                                 popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
 
-                                ImageView imageView = popUpView.findViewById(R.id.image);
-                                imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-                                Glide.with(activity).load(galleryImage.getUrl())
-                                        .placeholder(R.mipmap.baseline_add_photo_alternate_white_36dp).centerCrop()
-                                        .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
-                                        .into(imageView);
+                                final SubsamplingScaleImageView imageView = popUpView.findViewById(R.id.image);
+                                Glide.with(context)
+                                        .asBitmap()
+                                        .load(galleryImage.getUrl())
+                                        .into(new SimpleTarget<Bitmap>() {
+                                            @Override
+                                            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                                imageView.setImage(ImageSource.bitmap(resource));
+
+                                            }
+                                        });
                             }
                         });
 
