@@ -1,4 +1,4 @@
-package com.szczepaniak.dawid.appezn;
+package com.szczepaniak.dawid.appezn.Activities;
 
 import android.Manifest;
 import android.app.ProgressDialog;
@@ -17,6 +17,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.szczepaniak.dawid.appezn.ApiService;
+import com.szczepaniak.dawid.appezn.Methods;
+import com.szczepaniak.dawid.appezn.Models.User;
+import com.szczepaniak.dawid.appezn.R;
+import com.szczepaniak.dawid.appezn.RetroClient;
+import com.szczepaniak.dawid.appezn.Singleton;
 
 import java.util.HashSet;
 

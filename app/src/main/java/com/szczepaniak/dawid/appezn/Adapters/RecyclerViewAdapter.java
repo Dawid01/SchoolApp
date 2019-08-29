@@ -1,6 +1,8 @@
-package com.szczepaniak.dawid.appezn;
+package com.szczepaniak.dawid.appezn.Adapters;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,15 +13,25 @@ import android.widget.ImageView;
 
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.squareup.picasso.Picasso;
+import com.szczepaniak.dawid.appezn.Activities.CommentsActivity;
+import com.szczepaniak.dawid.appezn.ApiService;
 import com.szczepaniak.dawid.appezn.Assymetric.AsymmetricRecyclerView;
 import com.szczepaniak.dawid.appezn.Assymetric.AsymmetricRecyclerViewAdapter;
 import com.szczepaniak.dawid.appezn.Assymetric.Utils;
+import com.szczepaniak.dawid.appezn.ItemImage;
+import com.szczepaniak.dawid.appezn.Models.Comment;
+import com.szczepaniak.dawid.appezn.Models.Post;
+import com.szczepaniak.dawid.appezn.Models.PostReaction;
+import com.szczepaniak.dawid.appezn.Models.User;
+import com.szczepaniak.dawid.appezn.R;
+import com.szczepaniak.dawid.appezn.RetroClient;
+import com.szczepaniak.dawid.appezn.Singleton;
+import com.szczepaniak.dawid.appezn.SpacesItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,6 +102,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         AsymmetricRecyclerView photoAlbum;
         TextView likes;
         TextView dislikes;
+        TextView comments;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -106,6 +119,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             photoAlbum = itemView.findViewById(R.id.photo_album);
             likes = itemView.findViewById(R.id.likes);
             dislikes = itemView.findViewById(R.id.dislikes);
+            comments = itemView.findViewById(R.id.comments);
 
         }
     }
@@ -146,6 +160,29 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         viewHolder.likeIcon.setColorFilter(context.getResources().getColor(R.color.emoji_gray70));
         viewHolder.dislikeIcon.setColorFilter(context.getResources().getColor(R.color.emoji_gray70));
         viewHolder.commentIcon.setColorFilter(context.getResources().getColor(R.color.emoji_gray70));
+
+        final List<Comment> comments = post.getComments();
+
+        if(comments != null) {
+            if (comments.size() == 0) {
+                viewHolder.comments.setText(post.getComments().size() + " comment");
+            } else {
+                viewHolder.comments.setText(post.getComments().size() + " comments");
+            }
+        }
+
+        viewHolder.commentIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Singleton.getInstance().setComments(comments);
+                Singleton.getInstance().setPost(post);
+                Activity activity = Singleton.getInstance().getMainActivity();
+                Intent commentsIntent = new Intent(activity, CommentsActivity.class);
+                activity.startActivity(commentsIntent);
+
+            }
+        });
 
 
         int likes = 0;

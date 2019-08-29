@@ -1,9 +1,14 @@
 package com.szczepaniak.dawid.appezn;
 
 import android.app.Activity;
-import android.content.Context;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.szczepaniak.dawid.appezn.Models.Comment;
+import com.szczepaniak.dawid.appezn.Models.Post;
+import com.szczepaniak.dawid.appezn.Models.User;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Singleton {
     private static final Singleton ourInstance = new Singleton();
@@ -21,6 +26,10 @@ public class Singleton {
     private String[] photos;
 
     private Activity mainActivity;
+
+    private List<Comment> comments = new ArrayList<>();
+
+    private Post post;
 
     private Singleton() {
     }
@@ -67,5 +76,21 @@ public class Singleton {
 
     public void setMainActivity(Activity mainActivity) {
         this.mainActivity = mainActivity;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public Post getPost() {
+        return post;
+    }
+
+    public void setPost(Post post) {
+        this.post = post;
     }
 }

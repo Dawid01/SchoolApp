@@ -2,19 +2,17 @@ package com.szczepaniak.dawid.appezn;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.squareup.picasso.Picasso;
+import com.szczepaniak.dawid.appezn.Activities.UserActivity;
+import com.szczepaniak.dawid.appezn.Models.User;
 
 import retrofit2.Callback;
 import retrofit2.Response;

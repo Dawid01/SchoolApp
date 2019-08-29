@@ -1,4 +1,4 @@
-package com.szczepaniak.dawid.appezn;
+package com.szczepaniak.dawid.appezn.Adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -16,6 +16,7 @@ import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+import com.szczepaniak.dawid.appezn.R;
 
 public class PhotoPagerAdapter extends PagerAdapter {
 

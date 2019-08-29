@@ -1,4 +1,4 @@
-package com.szczepaniak.dawid.appezn;
+package com.szczepaniak.dawid.appezn.Activities;
 
 import android.app.Application;
 import android.content.Context;

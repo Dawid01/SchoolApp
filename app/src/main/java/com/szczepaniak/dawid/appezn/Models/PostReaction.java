@@ -1,9 +1,7 @@
-package com.szczepaniak.dawid.appezn;
+package com.szczepaniak.dawid.appezn.Models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
-import retrofit2.http.POST;
 
 public class PostReaction {
 

@@ -1,7 +1,5 @@
-package com.szczepaniak.dawid.appezn;
+package com.szczepaniak.dawid.appezn.Adapters;
 
-import android.app.Application;
-import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,8 +12,13 @@ import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.szczepaniak.dawid.appezn.Activities.MyApplication;
+import com.szczepaniak.dawid.appezn.Activities.PhotosViewerActivity;
 import com.szczepaniak.dawid.appezn.Assymetric.AGVRecyclerViewAdapter;
 import com.szczepaniak.dawid.appezn.Assymetric.AsymmetricItem;
+import com.szczepaniak.dawid.appezn.ItemImage;
+import com.szczepaniak.dawid.appezn.R;
+import com.szczepaniak.dawid.appezn.Singleton;
 
 import java.util.List;
 

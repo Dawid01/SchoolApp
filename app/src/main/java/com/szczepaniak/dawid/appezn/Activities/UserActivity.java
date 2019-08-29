@@ -1,4 +1,4 @@
-package com.szczepaniak.dawid.appezn;
+package com.szczepaniak.dawid.appezn.Activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -6,6 +6,11 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
+import com.szczepaniak.dawid.appezn.ApiService;
+import com.szczepaniak.dawid.appezn.Models.User;
+import com.szczepaniak.dawid.appezn.PopUpGallery;
+import com.szczepaniak.dawid.appezn.R;
+import com.szczepaniak.dawid.appezn.RetroClient;
 
 import retrofit2.Call;
 import retrofit2.Callback;

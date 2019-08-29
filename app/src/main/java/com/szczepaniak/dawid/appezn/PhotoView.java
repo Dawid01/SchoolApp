@@ -26,18 +26,20 @@ public class PhotoView extends SurfaceView implements SurfaceHolder.Callback {
     Camera.Size mPreviewSize;
     int currentCameraId = Camera.CameraInfo.CAMERA_FACING_BACK;
 
+
     public PhotoView(Context context, AttributeSet attrs){
         super(context, attrs);
         this.context = context;
+
+    }
+
+    public void startCamera(){
         Camera mCamera = Camera.open();
         this.mCamera = mCamera;
         mHolder = getHolder();
         mHolder.addCallback(this);
         mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
         mSupportedPreviewSizes = mCamera.getParameters().getSupportedPreviewSizes();
-
-
-
     }
 
     @Override

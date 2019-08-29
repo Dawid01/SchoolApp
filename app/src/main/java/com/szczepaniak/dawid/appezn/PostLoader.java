@@ -7,6 +7,10 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import com.szczepaniak.dawid.appezn.Adapters.RecyclerViewAdapter;
+import com.szczepaniak.dawid.appezn.Models.Post;
+import com.szczepaniak.dawid.appezn.Models.PostList;
+
 import java.util.ArrayList;
 
 import retrofit2.Call;

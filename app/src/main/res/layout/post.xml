@@ -242,7 +242,7 @@
                 app:layout_constraintStart_toEndOf="@+id/likeIcon"
                 app:layout_constraintTop_toTopOf="parent" />
         </android.support.constraint.ConstraintLayout>
-        
+
     </LinearLayout>
 
 </android.support.v7.widget.CardView>

@@ -1,11 +1,9 @@
-package com.szczepaniak.dawid.appezn;
+package com.szczepaniak.dawid.appezn.Activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.hardware.Camera;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -30,6 +28,15 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.squareup.picasso.Picasso;
+import com.szczepaniak.dawid.appezn.AccountDrawer;
+import com.szczepaniak.dawid.appezn.ApiService;
+import com.szczepaniak.dawid.appezn.Models.Post;
+import com.szczepaniak.dawid.appezn.Models.User;
+import com.szczepaniak.dawid.appezn.PopUpGallery;
+import com.szczepaniak.dawid.appezn.PostLoader;
+import com.szczepaniak.dawid.appezn.R;
+import com.szczepaniak.dawid.appezn.RetroClient;
+import com.szczepaniak.dawid.appezn.Singleton;
 import com.vanniktech.emoji.EmojiEditText;
 import com.vanniktech.emoji.EmojiManager;
 import com.vanniktech.emoji.EmojiPopup;

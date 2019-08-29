@@ -1,5 +1,9 @@
-package com.szczepaniak.dawid.appezn;
+package com.szczepaniak.dawid.appezn.Activities;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.SurfaceView;
@@ -8,12 +12,17 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
+import com.szczepaniak.dawid.appezn.PhotoView;
+import com.szczepaniak.dawid.appezn.R;
+
 public class CameraActivity extends AppCompatActivity {
 
     private PhotoView photoView;
     private ImageView takePhoto;
     private ImageView back;
     private ImageView switchCamera;
+    private static final int CAMERA = 1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,11 +33,20 @@ public class CameraActivity extends AppCompatActivity {
         setContentView(R.layout.activity_camera);
         hideSystemUI();
 
-
         photoView = findViewById(R.id.photoView);
         takePhoto = findViewById(R.id.take_photo);
         back = findViewById(R.id.back);
         switchCamera = findViewById(R.id.switch_camera);
+
+        try {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.CAMERA}, CAMERA);
+            } else {
+                photoView.startCamera();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         takePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,5 +94,19 @@ public class CameraActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_IMMERSIVE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults)
+    {
+        switch (requestCode) {
+            case CAMERA:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    photoView.startCamera();
+                } else {
+                    finish();
+                }
+                break;
+        }
     }
 }

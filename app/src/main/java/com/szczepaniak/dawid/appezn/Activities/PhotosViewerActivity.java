@@ -1,4 +1,4 @@
-package com.szczepaniak.dawid.appezn;
+package com.szczepaniak.dawid.appezn.Activities;
 
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +7,10 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
+
+import com.szczepaniak.dawid.appezn.Adapters.PhotoPagerAdapter;
+import com.szczepaniak.dawid.appezn.R;
+import com.szczepaniak.dawid.appezn.Singleton;
 
 public class PhotosViewerActivity extends AppCompatActivity {
 

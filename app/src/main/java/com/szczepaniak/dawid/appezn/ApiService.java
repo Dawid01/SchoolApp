@@ -1,10 +1,14 @@
 package com.szczepaniak.dawid.appezn;
 
-import java.util.List;
+import com.szczepaniak.dawid.appezn.Models.Comment;
+import com.szczepaniak.dawid.appezn.Models.CommentList;
+import com.szczepaniak.dawid.appezn.Models.Post;
+import com.szczepaniak.dawid.appezn.Models.PostList;
+import com.szczepaniak.dawid.appezn.Models.PostReaction;
+import com.szczepaniak.dawid.appezn.Models.User;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
-import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
@@ -55,5 +59,12 @@ public interface  ApiService {
 
     @POST("/reactions/post/{id}")
     Call<PostReaction> addReaction(@Body PostReaction reaction, @Path("id") Long id);
+
+
+    @POST("comments")
+    Call<Comment> newComment(@Body Comment comment);
+
+    @GET("comments/post/{id}")
+    Call<CommentList> getCommentsByPost(@Path("id") Long id);
 
 }

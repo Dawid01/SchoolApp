@@ -1,6 +1,8 @@
 package com.szczepaniak.dawid.appezn;
 import android.util.Log;
 
+import com.szczepaniak.dawid.appezn.Activities.MyApplication;
+
 import java.io.IOException;
 import java.util.HashSet;
 import okhttp3.Interceptor;

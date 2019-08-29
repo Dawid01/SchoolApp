@@ -1,9 +1,8 @@
-package com.szczepaniak.dawid.appezn;
+package com.szczepaniak.dawid.appezn.Models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class Post {
@@ -39,6 +38,10 @@ public class Post {
     @SerializedName("postReactions")
     @Expose
     private List<PostReaction> postReactions;
+
+    @SerializedName("comments")
+    @Expose
+    private List<Comment> comments;
 
 
     public Post(Long id, String content, String dateTime, User user, int permission, long userID, String[] photos) {
@@ -116,5 +119,13 @@ public class Post {
 
     public void setPostReactions(List<PostReaction> postReactions) {
         this.postReactions = postReactions;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 }
