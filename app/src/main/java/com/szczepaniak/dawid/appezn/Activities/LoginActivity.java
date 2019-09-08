@@ -16,6 +16,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.szczepaniak.dawid.appezn.ApiService;
@@ -37,6 +38,7 @@ public class LoginActivity extends AppCompatActivity {
     private TextInputEditText emailText;
     private TextInputLayout passwordInputLayout;
     private TextInputEditText passwordText;
+    private TextView guest;
     private Button loginButton;
     ApiService apiService;
     private ProgressDialog pDialog;
@@ -56,6 +58,7 @@ public class LoginActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.login_button);
         apiService = RetroClient.getApiService();
         singleton = Singleton.getInstance();
+        guest = findViewById(R.id.guest);
 
         if (!hasPermissions(this, PERMISSIONS)) {
             ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
@@ -65,7 +68,7 @@ public class LoginActivity extends AppCompatActivity {
         if(cookies.size() != 0){
 
             SharedPreferences sharedPreferences = LoginActivity.this.getSharedPreferences("email",Context.MODE_PRIVATE);
-            login(sharedPreferences.getString("email", "null"), "null");
+            login(sharedPreferences.getString("email", "null"), "null", true);
         }
 
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -74,12 +77,20 @@ public class LoginActivity extends AppCompatActivity {
 
                 String email = emailText.getText().toString();
                 String password = passwordText.getText().toString();
-                login(email, password);
+                login(email, password, true);
+            }
+        });
+
+        guest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                login("guest@ezn.pl", "guest", false);
             }
         });
     }
 
-    void login(final String email, String password) {
+    void login(final String email, String password, final boolean save) {
 
         emailInputLayout.setErrorEnabled(false);
         passwordInputLayout.setErrorEnabled(false);
@@ -104,9 +115,11 @@ public class LoginActivity extends AppCompatActivity {
                 public void onResponse(Call<User> call, Response<User> response) {
                     pDialog.dismiss();
                     if (response.isSuccessful()) {
-                        SharedPreferences sharedPreferences = LoginActivity.this.getSharedPreferences("email",Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putString("email", email).commit();
+                        if(save) {
+                            SharedPreferences sharedPreferences = LoginActivity.this.getSharedPreferences("email", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString("email", email).commit();
+                        }
                         singleton.setCurrentUser(response.body());
                         Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(mainIntent);

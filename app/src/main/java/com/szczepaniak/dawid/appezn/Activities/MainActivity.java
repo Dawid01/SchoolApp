@@ -211,8 +211,12 @@ public class MainActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
 
                     final User user = response.body();
-                    Picasso.get().load(user.getPhoto()).into(avatar);
                     Singleton.getInstance().setCurrentUserID(user.getId());
+                    if(user.getEmail().equals("guest@ezn.pl")){
+                        createPostCard.setVisibility(View.GONE);
+                    }else {
+                        Picasso.get().load(user.getPhoto()).into(avatar);
+                    }
                     //Glide.with(MainActivity.this).load(user.getPhoto()).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE)).into(avatar);
                 }
             }

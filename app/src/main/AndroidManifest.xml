@@ -9,6 +9,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.VIBRATE"/>
+
 
     <application
         android:name=".Activities.MyApplication"
@@ -20,7 +22,8 @@
         android:supportsRtl="true"
         android:theme="@style/LightTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Activities.CommentsActivity"></activity>
+        <activity android:name=".Activities.BinaryGame"></activity>
+        <activity android:name=".Activities.CommentsActivity" />
         <activity android:name=".Activities.PhotosViewerActivity" />
         <activity android:name=".Activities.CameraActivity" />
         <activity android:name=".Activities.LoginActivity">

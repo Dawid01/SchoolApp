@@ -27,7 +27,7 @@ public class User {
 
     @SerializedName("permissions")
     @Expose
-    private String permissions;
+    private int permissions;
 
 
     @SerializedName("photo")
@@ -74,11 +74,11 @@ public class User {
         this.password = password;
     }
 
-    public String getPermissions() {
+    public int getPermissions() {
         return permissions;
     }
 
-    public void setPermissions(String permissions) {
+    public void setPermissions(int permissions) {
         this.permissions = permissions;
     }
 

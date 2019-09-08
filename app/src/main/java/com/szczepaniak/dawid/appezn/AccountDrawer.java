@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+import com.szczepaniak.dawid.appezn.Activities.BinaryGame;
 import com.szczepaniak.dawid.appezn.Activities.UserActivity;
 import com.szczepaniak.dawid.appezn.Models.User;
 
@@ -48,6 +49,10 @@ public class AccountDrawer {
                         Intent account = new Intent(c, UserActivity.class);
                         c.startActivity(account);
                         break;
+                    case R.id.Games:
+                        Intent binaryGame = new Intent(c, BinaryGame.class);
+                        c.startActivity(binaryGame);
+                        break;
                 }
                 return false;
             }
@@ -70,6 +75,12 @@ public class AccountDrawer {
                     email.setText(user.getEmail());
                     //Glide.with(context).load(user.getPhoto()).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE)).into(avatar);
                     Picasso.get().load(user.getPhoto()).into(avatar);
+
+                    if(user.getEmail().equals("guest@ezn.pl")){
+                        info.setVisibility(View.GONE);
+                        email.setVisibility(View.GONE);
+                        avatar.setVisibility(View.GONE);
+                    }
                 }
             }
 
