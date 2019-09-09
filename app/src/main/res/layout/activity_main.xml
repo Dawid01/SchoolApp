@@ -253,6 +253,7 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <android.support.design.widget.TabLayout
+                            android:id="@+id/week_days"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:layout_constraintBottom_toBottomOf="parent"

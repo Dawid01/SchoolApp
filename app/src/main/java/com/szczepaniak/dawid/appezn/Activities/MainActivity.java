@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -30,6 +31,7 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.squareup.picasso.Picasso;
 import com.szczepaniak.dawid.appezn.AccountDrawer;
 import com.szczepaniak.dawid.appezn.ApiService;
+import com.szczepaniak.dawid.appezn.LessonPlanSystem;
 import com.szczepaniak.dawid.appezn.Models.Post;
 import com.szczepaniak.dawid.appezn.Models.User;
 import com.szczepaniak.dawid.appezn.PopUpGallery;
@@ -70,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
     private ConstraintLayout createPostLayaout;
     private CardView createPostCard;
     private Singleton singleton;
+    private RecyclerView lessonsView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +101,9 @@ public class MainActivity extends AppCompatActivity {
         createPostAction = findViewById(R.id.create_post_action);
         createPostLayaout = findViewById(R.id.create_post_layout);
         createPostCard = findViewById(R.id.create_post_card);
+        lessonsView = findViewById(R.id.lessons_view);
+        TabLayout days = findViewById(R.id.week_days);
+        new LessonPlanSystem(lessonsView, days, this);
         new AccountDrawer(drawer, MainActivity.this);
 
         singleton = Singleton.getInstance();

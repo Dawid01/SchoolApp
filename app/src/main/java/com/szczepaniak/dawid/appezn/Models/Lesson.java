@@ -1,14 +1,32 @@
 package com.szczepaniak.dawid.appezn.Models;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 public class Lesson {
 
+    @SerializedName("id")
+    @Expose
     private Long id;
+    @SerializedName("lessonNumber")
+    @Expose
     private int lessonNumber;
+    @SerializedName("subjectName")
+    @Expose
     private String subjectName;
+    @SerializedName("room")
+    @Expose
     private String room;
+    @SerializedName("time")
+    @Expose
     private String time;
+    @SerializedName("weekDay")
+    @Expose
     private int weekDay;
+    @SerializedName("info")
+    @Expose
     private String info;
+
 
     public Long getId() {
         return id;
