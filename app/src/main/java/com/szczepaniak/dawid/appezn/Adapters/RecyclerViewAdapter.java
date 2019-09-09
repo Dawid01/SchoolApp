@@ -108,7 +108,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             super(itemView);
 
             name = itemView.findViewById(R.id.name);
-            date = itemView.findViewById(R.id.date);
+            date = itemView.findViewById(R.id.time);
             status = itemView.findViewById(R.id.status);
             content = itemView.findViewById(R.id.content);
             avatar = itemView.findViewById(R.id.avatar);

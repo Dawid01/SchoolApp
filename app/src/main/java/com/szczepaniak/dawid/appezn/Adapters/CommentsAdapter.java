@@ -80,7 +80,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
             super(itemView);
             avatar = itemView.findViewById(R.id.avatar);
             content = itemView.findViewById(R.id.content);
-            date = itemView.findViewById(R.id.date);
+            date = itemView.findViewById(R.id.time);
             name = itemView.findViewById(R.id.name);
         }
     }

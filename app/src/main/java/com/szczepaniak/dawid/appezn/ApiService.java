@@ -2,6 +2,7 @@ package com.szczepaniak.dawid.appezn;
 
 import com.szczepaniak.dawid.appezn.Models.Comment;
 import com.szczepaniak.dawid.appezn.Models.CommentList;
+import com.szczepaniak.dawid.appezn.Models.LessonList;
 import com.szczepaniak.dawid.appezn.Models.Post;
 import com.szczepaniak.dawid.appezn.Models.PostList;
 import com.szczepaniak.dawid.appezn.Models.PostReaction;
@@ -66,5 +67,9 @@ public interface  ApiService {
 
     @GET("comments/post/{id}")
     Call<CommentList> getCommentsByPost(@Path("id") Long id);
+
+
+    @GET("lessons")
+    Call<LessonList> getLessons();
 
 }
