@@ -208,6 +208,8 @@ public class PopUpGallery extends AppCompatActivity {
                         });
 
                     }
+
+                    Singleton.getInstance().setGalleryImages(selectedImgs);
                     popupWindow.dismiss();
 
                 }

@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
@@ -43,9 +44,17 @@ import com.vanniktech.emoji.EmojiEditText;
 import com.vanniktech.emoji.EmojiManager;
 import com.vanniktech.emoji.EmojiPopup;
 import com.vanniktech.emoji.twitter.TwitterEmojiProvider;
+
+import java.io.File;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.http.Multipart;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -53,13 +62,13 @@ public class MainActivity extends AppCompatActivity {
     private ImageView logo;
     private ImageView avatar;
     private ApiService api;
-   // private LinearLayout postsLayout;
     private BottomNavigationView bottonMenu;
     private View home;
     private View plans;
     private View notifications;
     private DrawerLayout drawerLayout;
     private TextView title;
+    private Spinner spinner;
     private EmojiEditText postEditText;
     private ImageView emojiBtm;
     private ImageView galleryBtm;
@@ -73,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
     private CardView createPostCard;
     private Singleton singleton;
     private RecyclerView lessonsView;
+    private LessonPlanSystem lessonPlanSystem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
         notifications = findViewById(R.id.Notifications);
         drawerLayout = findViewById(R.id.drawer_layout);
         title = findViewById(R.id.Title);
+        spinner = findViewById(R.id.class_spinner);
         postEditText = findViewById(R.id.post_edit_text);
         emojiBtm = findViewById(R.id.emojiBtm);
         emojiBtm.getDrawable().setColorFilter(Color.argb(255, 20, 177, 17), PorterDuff.Mode.MULTIPLY );
@@ -103,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
         createPostCard = findViewById(R.id.create_post_card);
         lessonsView = findViewById(R.id.lessons_view);
         TabLayout days = findViewById(R.id.week_days);
-        new LessonPlanSystem(lessonsView, days, this);
+        lessonPlanSystem = new LessonPlanSystem(lessonsView, days, spinner,this);
         new AccountDrawer(drawer, MainActivity.this);
 
         singleton = Singleton.getInstance();
@@ -181,27 +192,85 @@ public class MainActivity extends AppCompatActivity {
                 Post newPost = new Post();
                 newPost.setContent(postEditText.getText().toString());
 
-                retrofit2.Call<Post> createPost = api.newPost(newPost);
+                File file = new File(singleton.getGalleryImages().get(0).getUrl());
+                Uri uri = Uri.fromFile(file);
 
-                createPost.enqueue(new Callback<Post>() {
-                    @Override
-                    public void onResponse(Call<Post> call, Response<Post> response) {
+                RequestBody requestFile =
+                        RequestBody.create(
+                                MediaType.parse(getContentResolver().getType(uri)),
+                                file
+                        );
 
-                        if(response.isSuccessful()){
+                MultipartBody.Part body =
+                        MultipartBody.Part.createFormData("file", file.getName(), requestFile);
 
-                            loadPosts();
-                            postEditText.setText("");
+
+                    retrofit2.Call<Post> createPost = api.newPost(newPost);
+
+                    createPost.enqueue(new Callback<Post>() {
+                        @Override
+                        public void onResponse(Call<Post> call, Response<Post> response) {
+
+                            if (response.isSuccessful()) {
+
+                                loadPosts();
+                                postEditText.setText("");
+                                singleton.setPhotos(new String[0]);
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Call<Post> call, Throwable t) {
+                        @Override
+                        public void onFailure(Call<Post> call, Throwable t) {
 
-                    }
-                });
+                        }
+                    });
+                }
 
 
-            }
+//                    retrofit2.Call<ResponseBody> uploadFile = api.uploadFile(body);
+//
+//                    uploadFile.enqueue(new Callback<ResponseBody>() {
+//                        @Override
+//                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+//
+//                            if(response.isSuccessful()){
+//
+//                                Post newPost = new Post();
+//                                newPost.setContent(postEditText.getText().toString());
+//                                String[] photos = new String[1];
+//                                photos[0] = response.body().toString();
+//                                newPost.setPhotos(photos);
+//
+//                                retrofit2.Call<Post> createPost = api.newPost(newPost);
+//
+//                                createPost.enqueue(new Callback<Post>() {
+//                                    @Override
+//                                    public void onResponse(Call<Post> call, Response<Post> response) {
+//
+//                                        if (response.isSuccessful()) {
+//
+//                                            loadPosts();
+//                                            postEditText.setText("");
+//                                            singleton.setPhotos(new String[0]);
+//                                        }
+//                                    }
+//
+//                                    @Override
+//                                    public void onFailure(Call<Post> call, Throwable t) {
+//
+//                                    }
+//                                });
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+//
+//                        }
+//                    });
+//                }
+
+
         });
     }
 
@@ -250,20 +319,29 @@ public class MainActivity extends AppCompatActivity {
                         notifications.setVisibility(View.GONE);
                         createPostCard.setVisibility(View.VISIBLE);
                         title.setText("Home");
+                        spinner.setVisibility(View.GONE);
+                        title.setVisibility(View.VISIBLE);
+                        title.setOnClickListener(null);
                         break;
                     case  R.id.navigation_plans:
                         home.setVisibility(View.GONE);
                         plans.setVisibility(View.VISIBLE);
                         notifications.setVisibility(View.GONE);
                         createPostCard.setVisibility(View.GONE);
-                        title.setText("Plans");
+                        //title.setText("Plans");
+                        spinner.setVisibility(View.VISIBLE);
+                        title.setVisibility(View.GONE);
+                        lessonPlanSystem.loadClasses();
                         break;
                     case R.id.navigation_notifications:
                         home.setVisibility(View.GONE);
                         plans.setVisibility(View.GONE);
                         notifications.setVisibility(View.VISIBLE);
                         createPostCard.setVisibility(View.GONE);
+                        spinner.setVisibility(View.GONE);
+                        title.setVisibility(View.VISIBLE);
                         title.setText("Notifications");
+                        title.setOnClickListener(null);
                         break;
                 }
 

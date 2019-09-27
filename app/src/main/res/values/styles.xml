@@ -20,5 +20,9 @@
         <item name="android:windowEnterAnimation">@anim/b_gallery</item>
     </style>
 
+    <style name="spinnerDropDownItemStyle" parent="android:TextAppearance.Widget.TextView.SpinnerItem">
+
+    </style>
+
 
 </resources>

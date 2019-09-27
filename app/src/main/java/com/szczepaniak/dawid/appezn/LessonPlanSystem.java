@@ -4,12 +4,17 @@ import android.content.Context;
 import android.support.design.widget.TabLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.szczepaniak.dawid.appezn.Adapters.LessonsAdapter;
+import com.szczepaniak.dawid.appezn.Models.Class;
+import com.szczepaniak.dawid.appezn.Models.ClassList;
 import com.szczepaniak.dawid.appezn.Models.Lesson;
 import com.szczepaniak.dawid.appezn.Models.LessonList;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,12 +29,15 @@ public class LessonPlanSystem {
     private ApiService api;
     private TabLayout days;
     private int dayOfWeek = 1;
+    private Spinner spiner;
 
-    public LessonPlanSystem(RecyclerView lessonsView, TabLayout days, Context context) {
+    public LessonPlanSystem(RecyclerView lessonsView, TabLayout days, Spinner spiner, Context context) {
         this.lessonsView = lessonsView;
         this.days = days;
+        this.spiner = spiner;
         this.context = context;
         api = RetroClient.getApiService();
+
         loadLessons();
 
         days.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -53,6 +61,45 @@ public class LessonPlanSystem {
     }
 
 
+    public void loadClasses(){
+
+        retrofit2.Call<ClassList> classListCall = api.getClassList(100);
+
+        classListCall.enqueue(new Callback<ClassList>() {
+            @Override
+            public void onResponse(Call<ClassList> call, Response<ClassList> response) {
+
+                if(response.isSuccessful()){
+
+                    List<Class> classList = response.body().getClasses();
+
+                    if(classList != null){
+
+                        List<String> list = new ArrayList<>();
+                        for(Class c : classList){
+
+                            list.add(c.getName());
+                        }
+
+                        ArrayAdapter<String> adapter = new ArrayAdapter<>(context,
+                                android.R.layout.simple_spinner_dropdown_item, list);
+                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        spiner.setAdapter(adapter);
+
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ClassList> call, Throwable t) {
+
+            }
+        });
+
+
+    }
+
+
     void loadLessons(){
 
         lessonsView.removeAllViews();
@@ -73,6 +120,7 @@ public class LessonPlanSystem {
 
                             for (int i = 0; i < firstLessonNumber; i++) {
                                 Lesson emptyLeson = new Lesson();
+                                emptyLeson.setSubjectName("--------------");
                                 emptyLeson.setLessonNumber((firstLessonNumber - 1) - i);
                                 emptyLeson = setLesonTime(emptyLeson);
                                 lessonList.getLessonList().add(0, emptyLeson);

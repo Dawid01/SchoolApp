@@ -29,6 +29,8 @@ public class Singleton {
 
     private List<Comment> comments = new ArrayList<>();
 
+    private List<GalleryImage> galleryImages = new ArrayList<>();
+
     private Post post;
 
     private Singleton() {
@@ -92,5 +94,13 @@ public class Singleton {
 
     public void setPost(Post post) {
         this.post = post;
+    }
+
+    public List<GalleryImage> getGalleryImages() {
+        return galleryImages;
+    }
+
+    public void setGalleryImages(List<GalleryImage> galleryImages) {
+        this.galleryImages = galleryImages;
     }
 }

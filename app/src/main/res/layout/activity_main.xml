@@ -40,6 +40,15 @@
                     app:civ_border_color="@color/colorPrimary"
                     app:civ_border_width="2dp" />
 
+                <Spinner
+                    android:id="@+id/class_spinner"
+                    android:layout_width="30dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:visibility="gone"
+                    android:layout_marginLeft="60dp"
+                    android:layout_marginRight="60dp"/>
+
                 <TextView
                     android:id="@+id/Title"
                     android:layout_width="150dp"
