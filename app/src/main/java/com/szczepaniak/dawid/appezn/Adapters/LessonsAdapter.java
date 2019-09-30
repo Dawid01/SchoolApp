@@ -6,9 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import com.szczepaniak.dawid.appezn.Models.Lesson;
 import com.szczepaniak.dawid.appezn.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -33,10 +35,10 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHold
         Lesson lesson = lessons.get(position);
 
         holder.index.setText("" + lesson.getLessonNumber());
-        holder.name.setText(lesson.getSubjectName());
-        holder.time.setText(lesson.getTime());
+        holder.name.setText(lesson.getSubject());
+        holder.time.setText(lesson.getPeroid());
         holder.room.setText(lesson.getRoom());
-        holder.info.setText(lesson.getInfo());
+        holder.info.setText(lesson.getTeacher());
 
     }
 

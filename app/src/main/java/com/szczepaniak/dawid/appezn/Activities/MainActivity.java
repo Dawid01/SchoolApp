@@ -45,16 +45,9 @@ import com.vanniktech.emoji.EmojiManager;
 import com.vanniktech.emoji.EmojiPopup;
 import com.vanniktech.emoji.twitter.TwitterEmojiProvider;
 
-import java.io.File;
-
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.http.Multipart;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -68,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
     private View notifications;
     private DrawerLayout drawerLayout;
     private TextView title;
-    private Spinner spinner;
+    private Spinner spinnerClass;
     private EmojiEditText postEditText;
     private ImageView emojiBtm;
     private ImageView galleryBtm;
@@ -99,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
         notifications = findViewById(R.id.Notifications);
         drawerLayout = findViewById(R.id.drawer_layout);
         title = findViewById(R.id.Title);
-        spinner = findViewById(R.id.class_spinner);
+        spinnerClass = findViewById(R.id.class_spinner);
         postEditText = findViewById(R.id.post_edit_text);
         emojiBtm = findViewById(R.id.emojiBtm);
         emojiBtm.getDrawable().setColorFilter(Color.argb(255, 20, 177, 17), PorterDuff.Mode.MULTIPLY );
@@ -114,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
         createPostCard = findViewById(R.id.create_post_card);
         lessonsView = findViewById(R.id.lessons_view);
         TabLayout days = findViewById(R.id.week_days);
-        lessonPlanSystem = new LessonPlanSystem(lessonsView, days, spinner,this);
+        lessonPlanSystem = new LessonPlanSystem(lessonsView, days, spinnerClass,this);
         new AccountDrawer(drawer, MainActivity.this);
 
         singleton = Singleton.getInstance();
@@ -192,17 +185,17 @@ public class MainActivity extends AppCompatActivity {
                 Post newPost = new Post();
                 newPost.setContent(postEditText.getText().toString());
 
-                File file = new File(singleton.getGalleryImages().get(0).getUrl());
-                Uri uri = Uri.fromFile(file);
-
-                RequestBody requestFile =
-                        RequestBody.create(
-                                MediaType.parse(getContentResolver().getType(uri)),
-                                file
-                        );
-
-                MultipartBody.Part body =
-                        MultipartBody.Part.createFormData("file", file.getName(), requestFile);
+//                File file = new File(singleton.getGalleryImages().get(0).getUrl());
+//                Uri uri = Uri.fromFile(file);
+//
+//                RequestBody requestFile =
+//                        RequestBody.create(
+//                                MediaType.parse(getContentResolver().getType(uri)),
+//                                file
+//                        );
+//
+//                MultipartBody.Part body =
+//                        MultipartBody.Part.createFormData("file", file.getName(), requestFile);
 
 
                     retrofit2.Call<Post> createPost = api.newPost(newPost);
@@ -319,7 +312,7 @@ public class MainActivity extends AppCompatActivity {
                         notifications.setVisibility(View.GONE);
                         createPostCard.setVisibility(View.VISIBLE);
                         title.setText("Home");
-                        spinner.setVisibility(View.GONE);
+                        spinnerClass.setVisibility(View.GONE);
                         title.setVisibility(View.VISIBLE);
                         title.setOnClickListener(null);
                         break;
@@ -329,7 +322,7 @@ public class MainActivity extends AppCompatActivity {
                         notifications.setVisibility(View.GONE);
                         createPostCard.setVisibility(View.GONE);
                         //title.setText("Plans");
-                        spinner.setVisibility(View.VISIBLE);
+                        spinnerClass.setVisibility(View.VISIBLE);
                         title.setVisibility(View.GONE);
                         lessonPlanSystem.loadClasses();
                         break;
@@ -338,7 +331,7 @@ public class MainActivity extends AppCompatActivity {
                         plans.setVisibility(View.GONE);
                         notifications.setVisibility(View.VISIBLE);
                         createPostCard.setVisibility(View.GONE);
-                        spinner.setVisibility(View.GONE);
+                        spinnerClass.setVisibility(View.GONE);
                         title.setVisibility(View.VISIBLE);
                         title.setText("Notifications");
                         title.setOnClickListener(null);

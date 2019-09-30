@@ -9,17 +9,13 @@ public class LessonList {
 
     @SerializedName("content")
     @Expose
-    List<Lesson> lessonList;
+    private List<Lesson> lessons;
 
-    public LessonList(List<Lesson> lessonList) {
-        this.lessonList = lessonList;
+    public List<Lesson> getLessons() {
+        return lessons;
     }
 
-    public List<Lesson> getLessonList() {
-        return lessonList;
-    }
-
-    public void setLessonList(List<Lesson> lessonList) {
-        this.lessonList = lessonList;
+    public void setLessons(List<Lesson> lessons) {
+        this.lessons = lessons;
     }
 }

@@ -9,8 +9,6 @@ import com.szczepaniak.dawid.appezn.Models.PostList;
 import com.szczepaniak.dawid.appezn.Models.PostReaction;
 import com.szczepaniak.dawid.appezn.Models.User;
 
-import java.io.File;
-
 import okhttp3.MultipartBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -53,10 +51,8 @@ public interface  ApiService {
     Call<PostList> getAllPosts(@Query("sort") String sort);
 
 
-
     @GET("posts")
     Call<PostList> getAllPosts(@Query("page") int page, @Query("size") int size, @Query("sort") String sort);
-
 
 
     @POST("reactions")
@@ -76,15 +72,14 @@ public interface  ApiService {
     Call<CommentList> getCommentsByPost(@Path("id") Long id);
 
 
-    @GET("lessons")
-    Call<LessonList> getLessons();
-
-
     @Multipart
     @POST("uploadFile")
     Call<ResponseBody> uploadFile(@Part MultipartBody.Part file);
 
     @GET("classes")
     Call<ClassList> getClassList(@Query("size") int size);
+
+    @GET("cards/classname/{class}/{day}")
+    Call<LessonList> getLessons(@Path("class") String c, @Path("day") String day, @Query("size") int size, @Query("sort") String sort);
 
 }

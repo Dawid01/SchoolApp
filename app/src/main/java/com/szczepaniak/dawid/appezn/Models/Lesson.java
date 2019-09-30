@@ -1,32 +1,41 @@
 package com.szczepaniak.dawid.appezn.Models;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-
 public class Lesson {
 
-    @SerializedName("id")
-    @Expose
     private Long id;
-    @SerializedName("lessonNumber")
-    @Expose
-    private int lessonNumber;
-    @SerializedName("subjectName")
-    @Expose
-    private String subjectName;
-    @SerializedName("room")
-    @Expose
-    private String room;
-    @SerializedName("time")
-    @Expose
-    private String time;
-    @SerializedName("weekDay")
-    @Expose
-    private int weekDay;
-    @SerializedName("info")
-    @Expose
-    private String info;
 
+    private String externalID;
+
+    private String peroid;
+
+    private String teacher;
+
+    private String day;
+
+    private String subject;
+
+    private String week;
+
+    private String className;
+
+    private String lessonNumber;
+
+    private String room;
+
+    public Lesson() {
+    }
+
+    public Lesson(String externalID, String peroid, String teacher, String day, String subject, String week, String className, String lessonNumber, String room) {
+        this.externalID = externalID;
+        this.peroid = peroid;
+        this.teacher = teacher;
+        this.day = day;
+        this.subject = subject;
+        this.week = week;
+        this.className = className;
+        this.lessonNumber = lessonNumber;
+        this.room = room;
+    }
 
     public Long getId() {
         return id;
@@ -36,20 +45,68 @@ public class Lesson {
         this.id = id;
     }
 
-    public int getLessonNumber() {
+    public String getExternalID() {
+        return externalID;
+    }
+
+    public void setExternalID(String externalID) {
+        this.externalID = externalID;
+    }
+
+    public String getPeroid() {
+        return peroid;
+    }
+
+    public void setPeroid(String peroid) {
+        this.peroid = peroid;
+    }
+
+    public String getTeacher() {
+        return teacher;
+    }
+
+    public void setTeacher(String teacher) {
+        this.teacher = teacher;
+    }
+
+    public String getDay() {
+        return day;
+    }
+
+    public void setDay(String day) {
+        this.day = day;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+    public String getWeek() {
+        return week;
+    }
+
+    public void setWeek(String week) {
+        this.week = week;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
+    }
+
+    public String getLessonNumber() {
         return lessonNumber;
     }
 
-    public void setLessonNumber(int lessonNumber) {
+    public void setLessonNumber(String lessonNumber) {
         this.lessonNumber = lessonNumber;
-    }
-
-    public String getSubjectName() {
-        return subjectName;
-    }
-
-    public void setSubjectName(String subjectName) {
-        this.subjectName = subjectName;
     }
 
     public String getRoom() {
@@ -58,29 +115,5 @@ public class Lesson {
 
     public void setRoom(String room) {
         this.room = room;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
-    }
-
-    public int getWeekDay() {
-        return weekDay;
-    }
-
-    public void setWeekDay(int weekDay) {
-        this.weekDay = weekDay;
-    }
-
-    public String getInfo() {
-        return info;
-    }
-
-    public void setInfo(String info) {
-        this.info = info;
     }
 }
