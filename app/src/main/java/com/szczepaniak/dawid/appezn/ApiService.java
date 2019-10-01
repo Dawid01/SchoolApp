@@ -4,6 +4,8 @@ import com.szczepaniak.dawid.appezn.Models.ClassList;
 import com.szczepaniak.dawid.appezn.Models.Comment;
 import com.szczepaniak.dawid.appezn.Models.CommentList;
 import com.szczepaniak.dawid.appezn.Models.LessonList;
+import com.szczepaniak.dawid.appezn.Models.Period;
+import com.szczepaniak.dawid.appezn.Models.PeriodList;
 import com.szczepaniak.dawid.appezn.Models.Post;
 import com.szczepaniak.dawid.appezn.Models.PostList;
 import com.szczepaniak.dawid.appezn.Models.PostReaction;
@@ -81,5 +83,8 @@ public interface  ApiService {
 
     @GET("cards/classname/{class}/{day}")
     Call<LessonList> getLessons(@Path("class") String c, @Path("day") String day, @Query("size") int size, @Query("sort") String sort);
+
+    @GET("periods")
+    Call<PeriodList> getPeriods();
 
 }

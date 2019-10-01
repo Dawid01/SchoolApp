@@ -14,6 +14,7 @@ import com.szczepaniak.dawid.appezn.Models.Class;
 import com.szczepaniak.dawid.appezn.Models.ClassList;
 import com.szczepaniak.dawid.appezn.Models.Lesson;
 import com.szczepaniak.dawid.appezn.Models.LessonList;
+import com.szczepaniak.dawid.appezn.Models.PeriodList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -138,7 +139,7 @@ public class LessonPlanSystem {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context);
         lessonsView.setLayoutManager(layoutManager);
 
-        String c = "3 G";
+        String c = "1 AG";
 
         try{
             c= spiner.getSelectedItem().toString();
@@ -152,9 +153,11 @@ public class LessonPlanSystem {
 
                 if(response.isSuccessful()){
 
-                    List<Lesson> lessons = response.body().getLessons();
+                    final List<Lesson> lessons = response.body().getLessons();
+
                     LessonsAdapter lessonsAdapter = new LessonsAdapter(lessons, context);
                     lessonsView.setAdapter(lessonsAdapter);
+
                 }
             }
 
