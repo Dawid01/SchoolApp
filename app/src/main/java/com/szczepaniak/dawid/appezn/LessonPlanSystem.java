@@ -12,6 +12,7 @@ import android.widget.Spinner;
 import com.szczepaniak.dawid.appezn.Adapters.LessonsAdapter;
 import com.szczepaniak.dawid.appezn.Models.Class;
 import com.szczepaniak.dawid.appezn.Models.ClassList;
+import com.szczepaniak.dawid.appezn.Models.DoubleLesson;
 import com.szczepaniak.dawid.appezn.Models.Lesson;
 import com.szczepaniak.dawid.appezn.Models.LessonList;
 import com.szczepaniak.dawid.appezn.Models.PeriodList;
@@ -155,7 +156,7 @@ public class LessonPlanSystem {
 
                     final List<Lesson> lessons = response.body().getLessons();
 
-                    LessonsAdapter lessonsAdapter = new LessonsAdapter(lessons, context);
+                    LessonsAdapter lessonsAdapter = new LessonsAdapter(converLessons(lessons), context);
                     lessonsView.setAdapter(lessonsAdapter);
 
                 }
@@ -172,6 +173,51 @@ public class LessonPlanSystem {
     }
 
 
+    List<Lesson> converLessons(List<Lesson> lessons){
+
+        int count = lessons.size();
+
+        for(int i = 0; i < count; i++) {
+
+            Lesson lesson = lessons.get(i);
+            int lessonNumber = lesson.getLessonNumber();
+
+            if (i + 1 != lessons.size()) {
+
+                Lesson lesson2 = lessons.get(i + 1);
+
+                if (lesson2.getLessonNumber() == lessonNumber) {
+
+                    lesson.setClassName2(lesson2.getClassName());
+                    lesson.setGroupName2(lesson2.getGroupName());
+                    lesson.setPeroid2(lesson2.getPeroid());
+                    lesson.setTeacher2(lesson2.getTeacher());
+                    lesson.setSubject2(lesson2.getSubject());
+                    lesson.setRoom2(lesson2.getRoom());
+                    lessons.remove(lesson2);
+                    count--;
+                }
+
+            }
+        }
+
+//        try {
+//            int index = lessons.get(0).getLessonNumber();
+//            if (index != 0){
+//
+//                for(int i = 0; i < index; i++){
+//
+//                    Lesson lesson =  new Lesson();
+//                    lesson.setSubject("---------");
+//                    lesson.setLessonNumber(i);
+//                    lessons.add(i, lesson);
+//                }
+//            }
+//        }catch (IndexOutOfBoundsException e){}
+
+        return lessons;
+
+    }
 
 
 }

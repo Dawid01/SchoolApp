@@ -18,14 +18,28 @@ public class Lesson {
 
     private String className;
 
-    private String lessonNumber;
+    private int lessonNumber;
 
     private String room;
+
+    private String groupName;
+
+    private String peroid2;
+
+    private String teacher2;
+
+    private String subject2;
+
+    private String className2;
+
+    private String room2;
+
+    private String groupName2;
 
     public Lesson() {
     }
 
-    public Lesson(String externalID, String peroid, String teacher, String day, String subject, String week, String className, String lessonNumber, String room) {
+    public Lesson(String externalID, String peroid, String teacher, String day, String subject, String week, String className, int lessonNumber, String room, String groupName) {
         this.externalID = externalID;
         this.peroid = peroid;
         this.teacher = teacher;
@@ -35,6 +49,7 @@ public class Lesson {
         this.className = className;
         this.lessonNumber = lessonNumber;
         this.room = room;
+        this.groupName = groupName;
     }
 
     public Long getId() {
@@ -101,11 +116,11 @@ public class Lesson {
         this.className = className;
     }
 
-    public String getLessonNumber() {
+    public int getLessonNumber() {
         return lessonNumber;
     }
 
-    public void setLessonNumber(String lessonNumber) {
+    public void setLessonNumber(int lessonNumber) {
         this.lessonNumber = lessonNumber;
     }
 
@@ -115,5 +130,61 @@ public class Lesson {
 
     public void setRoom(String room) {
         this.room = room;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
+
+    public String getPeroid2() {
+        return peroid2;
+    }
+
+    public void setPeroid2(String peroid2) {
+        this.peroid2 = peroid2;
+    }
+
+    public String getTeacher2() {
+        return teacher2;
+    }
+
+    public void setTeacher2(String teacher2) {
+        this.teacher2 = teacher2;
+    }
+
+    public String getSubject2() {
+        return subject2;
+    }
+
+    public void setSubject2(String subject2) {
+        this.subject2 = subject2;
+    }
+
+    public String getClassName2() {
+        return className2;
+    }
+
+    public void setClassName2(String className2) {
+        this.className2 = className2;
+    }
+
+    public String getRoom2() {
+        return room2;
+    }
+
+    public void setRoom2(String room2) {
+        this.room2 = room2;
+    }
+
+    public String getGroupName2() {
+        return groupName2;
+    }
+
+    public void setGroupName2(String groupName2) {
+        this.groupName2 = groupName2;
     }
 }
