@@ -2,29 +2,17 @@ package com.szczepaniak.dawid.appezn.Adapters;
 
 import android.content.Context;
 import android.support.constraint.ConstraintLayout;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.szczepaniak.dawid.appezn.ApiService;
-import com.szczepaniak.dawid.appezn.Models.DoubleLesson;
 import com.szczepaniak.dawid.appezn.Models.Lesson;
-import com.szczepaniak.dawid.appezn.Models.Period;
-import com.szczepaniak.dawid.appezn.Models.PeriodList;
 import com.szczepaniak.dawid.appezn.R;
-import com.szczepaniak.dawid.appezn.RetroClient;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 
 public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHolder>{
@@ -41,9 +29,10 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHold
 
     @Override
     public LessonsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.double_plan, parent, false);
+
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.lesson, parent, false);
         return new LessonsAdapter.ViewHolder(v);
-    }
+}
 
     @Override
     public void onBindViewHolder(final LessonsAdapter.ViewHolder holder, int position) {
@@ -73,6 +62,17 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHold
         holder.room.setText(lesson.getRoom());
         holder.info.setText(lesson.getTeacher());
 
+        try{
+
+            if(position != lessons.size() - 1) {
+                Lesson l = lessons.get(position + 1);
+                String nexTime = l.getStartTime();
+                String firstTime = lesson.getEndTime();
+                holder.pause.setVisibility(View.VISIBLE);
+                holder.pause.setText(getPauseTime(firstTime, nexTime));
+            }
+        }catch (IndexOutOfBoundsException e){}
+
     }
 
     @Override public int getItemCount() {
@@ -95,6 +95,8 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHold
         public ConstraintLayout lesson2;
         public ImageView line;
 
+        public TextView pause;
+
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -112,7 +114,25 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHold
 
             lesson2 = itemView.findViewById(R.id.lesson2);
             line = itemView.findViewById(R.id.line);
+            pause = itemView.findViewById(R.id.pause);
 
         }
+    }
+
+    private String getPauseTime(String s1, String s2){
+
+        String s1h = s1.substring(0,2);
+        s1h = s1h.replace(":", "");
+        String s1m = s1.substring(Math.max(s1.length() - 2, 0));
+        int t1 = Integer.parseInt(s1h) * 60 + Integer.parseInt(s1m);
+
+        String s2h = s2.substring(0,2);
+        s2h = s2h.replace(":", "");
+        String s2m = s2.substring(Math.max(s2.length() - 2, 0));
+        int t2 = Integer.parseInt(s2h) * 60 + Integer.parseInt(s2m);
+
+        int t = t2 - t1;
+
+        return "Przerwa: " + t + " min";
     }
 }

@@ -34,7 +34,7 @@ public class LessonPlanSystem {
     private Spinner spiner;
     private String day = "10000";
 
-    public LessonPlanSystem(RecyclerView lessonsView, TabLayout days, Spinner spiner, Context context) {
+    public LessonPlanSystem(final RecyclerView lessonsView, TabLayout days, Spinner spiner, Context context) {
         this.lessonsView = lessonsView;
         this.days = days;
         this.spiner = spiner;
@@ -83,6 +83,8 @@ public class LessonPlanSystem {
 
 
     public void loadClasses(){
+
+        lessonsView.removeAllViews();
 
         retrofit2.Call<ClassList> classListCall = api.getClassList(100);
 
