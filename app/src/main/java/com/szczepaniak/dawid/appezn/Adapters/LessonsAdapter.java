@@ -73,6 +73,8 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHold
             }
         }catch (IndexOutOfBoundsException e){}
 
+        holder.setIsRecyclable(false);
+
     }
 
     @Override public int getItemCount() {
