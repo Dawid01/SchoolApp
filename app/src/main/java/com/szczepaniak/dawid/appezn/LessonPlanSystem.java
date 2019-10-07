@@ -14,6 +14,8 @@ import com.szczepaniak.dawid.appezn.Models.Class;
 import com.szczepaniak.dawid.appezn.Models.ClassList;
 import com.szczepaniak.dawid.appezn.Models.Lesson;
 import com.szczepaniak.dawid.appezn.Models.LessonList;
+import com.szczepaniak.dawid.appezn.Models.Room;
+import com.szczepaniak.dawid.appezn.Models.RoomList;
 import com.szczepaniak.dawid.appezn.Models.Teacher;
 import com.szczepaniak.dawid.appezn.Models.TeacherList;
 
@@ -47,6 +49,7 @@ public class LessonPlanSystem {
 
         spinnerTypeItems.add("Klasy");
         spinnerTypeItems.add("Nauczyciele");
+        spinnerTypeItems.add("Sale");
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(context,
                 android.R.layout.simple_spinner_dropdown_item, spinnerTypeItems);
@@ -63,8 +66,11 @@ public class LessonPlanSystem {
                     loadClasses();
                     loadLessons();
 
-                }else{
+                }else if(s.equals("Nauczyciele")){
                     loadTeachers();
+                    loadLessons();
+                }else {
+                    loadRooms();
                     loadLessons();
                 }
             }
@@ -75,13 +81,19 @@ public class LessonPlanSystem {
 
         });
 
-        if(typeSpinner.getSelectedItem().toString().equals("Klasy")){
+        String s = typeSpinner.getSelectedItem().toString();
+
+        if(s.equals("Klasy")){
 
             loadClasses();
             loadLessons();
 
-        }else{
+        }else if(s.equals("Nauczyciele")){
             loadTeachers();
+            loadLessons();
+        }else {
+            loadRooms();
+            loadLessons();
         }
 
         days.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -227,6 +239,58 @@ public class LessonPlanSystem {
             }
         });
 
+    }
+
+
+    public void loadRooms(){
+
+        lessonsView.removeAllViews();
+
+        retrofit2.Call<RoomList> roomsCall = api.getRooms(100);
+
+        roomsCall.enqueue(new Callback<RoomList>() {
+            @Override
+            public void onResponse(Call<RoomList> call, Response<RoomList> response) {
+
+                if(response.isSuccessful()){
+
+                    List<Room> RoomsList = response.body().getRooms();
+
+                    if (RoomsList != null) {
+
+                        List<String> list = new ArrayList<>();
+                        for (Room r : RoomsList) {
+
+                            list.add(r.getName());
+                        }
+
+                        ArrayAdapter<String> adapter = new ArrayAdapter<>(context,
+                                android.R.layout.simple_spinner_dropdown_item, list);
+                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        spinner.setAdapter(adapter);
+
+
+                        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                                loadLessons();
+
+                            }
+
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parentView) {
+                            }
+
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RoomList> call, Throwable t) {
+
+            }
+        });
 
 
     }
@@ -246,11 +310,14 @@ public class LessonPlanSystem {
 
 
         retrofit2.Call<LessonList> lessonListCall;
-
-        if(typeSpinner.getSelectedItem().toString().equals("Klasy")){
+        String s = typeSpinner.getSelectedItem().toString();
+        if(s.equals("Klasy")){
             lessonListCall = api.getLessons(c,day,100, "lessonNumber,asc");
-        }else {
+        }else if(s.equals("nauczyciele")){
             lessonListCall = api.getLessonsByTeacher(c,day,100, "lessonNumber,asc");
+        }else {
+            lessonListCall = api.getLessonsByRoom(c,day,100, "lessonNumber,asc");
+
         }
 
         //retrofit2.Call<LessonList> lessonListCall = api.getLessons(c,day,100, "lessonNumber,asc");
@@ -276,10 +343,8 @@ public class LessonPlanSystem {
 
             }
         });
-
-
-
     }
+
 
 
     List<Lesson> converLessons(List<Lesson> lessons){
