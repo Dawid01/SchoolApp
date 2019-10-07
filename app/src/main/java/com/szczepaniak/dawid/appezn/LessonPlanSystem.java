@@ -12,10 +12,10 @@ import android.widget.Spinner;
 import com.szczepaniak.dawid.appezn.Adapters.LessonsAdapter;
 import com.szczepaniak.dawid.appezn.Models.Class;
 import com.szczepaniak.dawid.appezn.Models.ClassList;
-import com.szczepaniak.dawid.appezn.Models.DoubleLesson;
 import com.szczepaniak.dawid.appezn.Models.Lesson;
 import com.szczepaniak.dawid.appezn.Models.LessonList;
-import com.szczepaniak.dawid.appezn.Models.PeriodList;
+import com.szczepaniak.dawid.appezn.Models.Teacher;
+import com.szczepaniak.dawid.appezn.Models.TeacherList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,17 +31,56 @@ public class LessonPlanSystem {
     private ApiService api;
     private TabLayout days;
     private int dayOfWeek = 1;
-    private Spinner spiner;
+    private Spinner spinner;
+    private Spinner typeSpinner;
     private String day = "10000";
 
-    public LessonPlanSystem(final RecyclerView lessonsView, TabLayout days, Spinner spiner, Context context) {
+    private  ArrayList<String> spinnerTypeItems = new ArrayList<>();
+
+    public LessonPlanSystem(final RecyclerView lessonsView, TabLayout days, Spinner spiner, final Spinner typeSpinner, Context context) {
         this.lessonsView = lessonsView;
         this.days = days;
-        this.spiner = spiner;
+        this.spinner = spiner;
+        this.typeSpinner = typeSpinner;
         this.context = context;
         api = RetroClient.getApiService();
 
-        loadLessons();
+        spinnerTypeItems.add("Klasy");
+        spinnerTypeItems.add("Nauczyciele");
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(context,
+                android.R.layout.simple_spinner_dropdown_item, spinnerTypeItems);
+        typeSpinner.setAdapter(adapter);
+
+        typeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+
+                String s = typeSpinner.getSelectedItem().toString();
+
+                if(s.equals("Klasy")){
+
+                    loadClasses();
+                    loadLessons();
+
+                }else{
+                    loadTeachers();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+            }
+
+        });
+
+        if(typeSpinner.getSelectedItem().toString().equals("Klasy")){
+
+            loadLessons();
+
+        }else{
+            loadTeachers();
+        }
 
         days.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -107,10 +146,10 @@ public class LessonPlanSystem {
                         ArrayAdapter<String> adapter = new ArrayAdapter<>(context,
                                 android.R.layout.simple_spinner_dropdown_item, list);
                         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        spiner.setAdapter(adapter);
+                        spinner.setAdapter(adapter);
 
 
-                        spiner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
                             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                                 loadLessons();
@@ -136,6 +175,60 @@ public class LessonPlanSystem {
     }
 
 
+    public void loadTeachers(){
+
+        lessonsView.removeAllViews();
+
+        retrofit2.Call<TeacherList> teachersCall = api.getTeachers(100);
+
+        teachersCall.enqueue(new Callback<TeacherList>() {
+            @Override
+            public void onResponse(Call<TeacherList> call, Response<TeacherList> response) {
+
+                if(response.isSuccessful()) {
+
+                    List<Teacher> teracherList = response.body().getTeachers();
+
+                    if (teracherList != null) {
+
+                        List<String> list = new ArrayList<>();
+                        for (Teacher t : teracherList) {
+
+                            list.add(t.getName());
+                        }
+
+                        ArrayAdapter<String> adapter = new ArrayAdapter<>(context,
+                                android.R.layout.simple_spinner_dropdown_item, list);
+                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        spinner.setAdapter(adapter);
+
+
+                        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+
+                            }
+
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parentView) {
+                            }
+
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<TeacherList> call, Throwable t) {
+
+            }
+        });
+
+
+
+    }
+
+
     void loadLessons(){
 
         lessonsView.removeAllViews();
@@ -145,7 +238,7 @@ public class LessonPlanSystem {
         String c = "1 AG";
 
         try{
-            c= spiner.getSelectedItem().toString();
+            c= spinner.getSelectedItem().toString();
         }catch (NullPointerException e){}
 
         retrofit2.Call<LessonList> lessonListCall = api.getLessons(c,day,100, "lessonNumber,asc");

@@ -9,6 +9,7 @@ import com.szczepaniak.dawid.appezn.Models.PeriodList;
 import com.szczepaniak.dawid.appezn.Models.Post;
 import com.szczepaniak.dawid.appezn.Models.PostList;
 import com.szczepaniak.dawid.appezn.Models.PostReaction;
+import com.szczepaniak.dawid.appezn.Models.TeacherList;
 import com.szczepaniak.dawid.appezn.Models.User;
 
 import okhttp3.MultipartBody;
@@ -86,5 +87,8 @@ public interface  ApiService {
 
     @GET("periods")
     Call<PeriodList> getPeriods();
+
+    @GET("teachers")
+    Call<TeacherList> getTeachers(@Query("size") int size);
 
 }

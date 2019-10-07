@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private TextView title;
     private Spinner spinnerClass;
+    private Spinner spinnerTypes;
     private EmojiEditText postEditText;
     private ImageView emojiBtm;
     private ImageView galleryBtm;
@@ -93,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout = findViewById(R.id.drawer_layout);
         title = findViewById(R.id.Title);
         spinnerClass = findViewById(R.id.class_spinner);
+        spinnerTypes = findViewById(R.id.type_spinner);
         postEditText = findViewById(R.id.post_edit_text);
         emojiBtm = findViewById(R.id.emojiBtm);
         emojiBtm.getDrawable().setColorFilter(Color.argb(255, 20, 177, 17), PorterDuff.Mode.MULTIPLY );
@@ -107,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
         createPostCard = findViewById(R.id.create_post_card);
         lessonsView = findViewById(R.id.lessons_view);
         TabLayout days = findViewById(R.id.week_days);
-        lessonPlanSystem = new LessonPlanSystem(lessonsView, days, spinnerClass,this);
+        lessonPlanSystem = new LessonPlanSystem(lessonsView, days, spinnerClass, spinnerTypes,this);
         new AccountDrawer(drawer, MainActivity.this);
 
         singleton = Singleton.getInstance();
@@ -313,6 +315,7 @@ public class MainActivity extends AppCompatActivity {
                         createPostCard.setVisibility(View.VISIBLE);
                         title.setText("Home");
                         spinnerClass.setVisibility(View.GONE);
+                        spinnerTypes.setVisibility(View.GONE);
                         title.setVisibility(View.VISIBLE);
                         title.setOnClickListener(null);
                         break;
@@ -323,6 +326,7 @@ public class MainActivity extends AppCompatActivity {
                         createPostCard.setVisibility(View.GONE);
                         //title.setText("Plans");
                         spinnerClass.setVisibility(View.VISIBLE);
+                        spinnerTypes.setVisibility(View.VISIBLE);
                         title.setVisibility(View.GONE);
                         lessonPlanSystem.loadClasses();
                         break;
@@ -332,6 +336,7 @@ public class MainActivity extends AppCompatActivity {
                         notifications.setVisibility(View.VISIBLE);
                         createPostCard.setVisibility(View.GONE);
                         spinnerClass.setVisibility(View.GONE);
+                        spinnerTypes.setVisibility(View.GONE);
                         title.setVisibility(View.VISIBLE);
                         title.setText("Notifications");
                         title.setOnClickListener(null);
