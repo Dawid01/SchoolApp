@@ -19,10 +19,12 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHold
 
     private List<Lesson> lessons;
     private Context context;
+    private  boolean addClassNamae;
 
 
-    public LessonsAdapter(List<Lesson> Lessons, Context context) {
+    public LessonsAdapter(List<Lesson> Lessons, boolean addClassNamae, Context context) {
         this.lessons = Lessons;
+        this.addClassNamae = addClassNamae;
         this.context = context;
 
     }
@@ -61,6 +63,11 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHold
         holder.time.setText(lesson.getPeroid());
         holder.room.setText(lesson.getRoom());
         holder.info.setText(lesson.getTeacher());
+
+        if (addClassNamae) {
+
+            holder.name.setText(lesson.getClassName() + " " + holder.name.getText());
+        }
 
         try{
 

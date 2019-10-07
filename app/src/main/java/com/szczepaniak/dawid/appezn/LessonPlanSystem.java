@@ -65,6 +65,7 @@ public class LessonPlanSystem {
 
                 }else{
                     loadTeachers();
+                    loadLessons();
                 }
             }
 
@@ -76,6 +77,7 @@ public class LessonPlanSystem {
 
         if(typeSpinner.getSelectedItem().toString().equals("Klasy")){
 
+            loadClasses();
             loadLessons();
 
         }else{
@@ -206,6 +208,7 @@ public class LessonPlanSystem {
                         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
                             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                                loadLessons();
 
                             }
 
@@ -241,7 +244,16 @@ public class LessonPlanSystem {
             c= spinner.getSelectedItem().toString();
         }catch (NullPointerException e){}
 
-        retrofit2.Call<LessonList> lessonListCall = api.getLessons(c,day,100, "lessonNumber,asc");
+
+        retrofit2.Call<LessonList> lessonListCall;
+
+        if(typeSpinner.getSelectedItem().toString().equals("Klasy")){
+            lessonListCall = api.getLessons(c,day,100, "lessonNumber,asc");
+        }else {
+            lessonListCall = api.getLessonsByTeacher(c,day,100, "lessonNumber,asc");
+        }
+
+        //retrofit2.Call<LessonList> lessonListCall = api.getLessons(c,day,100, "lessonNumber,asc");
 
         lessonListCall.enqueue(new Callback<LessonList>() {
             @Override
@@ -251,7 +263,9 @@ public class LessonPlanSystem {
 
                     final List<Lesson> lessons = response.body().getLessons();
 
-                    LessonsAdapter lessonsAdapter = new LessonsAdapter(converLessons(lessons), context);
+                    boolean addClassNamae = typeSpinner.getSelectedItem().toString().equals("Klasy");
+
+                    LessonsAdapter lessonsAdapter = new LessonsAdapter(converLessons(lessons), !addClassNamae, context);
                     lessonsView.setAdapter(lessonsAdapter);
 
                 }

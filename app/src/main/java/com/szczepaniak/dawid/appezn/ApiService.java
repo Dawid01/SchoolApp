@@ -85,6 +85,9 @@ public interface  ApiService {
     @GET("cards/classname/{class}/{day}")
     Call<LessonList> getLessons(@Path("class") String c, @Path("day") String day, @Query("size") int size, @Query("sort") String sort);
 
+    @GET("cards/teachername/{teacherName}/{day}")
+    Call<LessonList> getLessonsByTeacher(@Path("teacherName") String teacher, @Path("day") String day, @Query("size") int size, @Query("sort") String sort);
+
     @GET("periods")
     Call<PeriodList> getPeriods();
 
