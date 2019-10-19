@@ -268,12 +268,12 @@
                             app:layout_constraintTop_toBottomOf="@+id/week_days"
                             app:layout_constraintVertical_bias="0.0">
 
-                            <ImageButton
+                            <ImageView
                                 android:id="@+id/week_next"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                app:srcCompat="@android:drawable/ic_media_previous" />
+                                app:srcCompat="@mipmap/left" />
 
                             <Spinner
                                 android:id="@+id/spinner_weeks"
@@ -281,12 +281,12 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1" />
 
-                            <ImageButton
+                            <ImageView
                                 android:id="@+id/week_back"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                app:srcCompat="@android:drawable/ic_media_next" />
+                                app:srcCompat="@mipmap/right" />
 
                         </LinearLayout>
 
@@ -304,7 +304,7 @@
                             app:tabIndicatorColor="@android:color/background_light"
                             app:tabMode="scrollable"
                             app:tabSelectedTextColor="@android:color/background_light"
-                            app:tabTextColor="@color/colorPrimaryDark">
+                            app:tabTextColor="#005856">
 
                             <android.support.design.widget.TabItem
                                 android:id="@+id/monday"

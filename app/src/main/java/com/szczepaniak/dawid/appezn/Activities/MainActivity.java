@@ -78,8 +78,8 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView lessonsView;
     private LessonPlanSystem lessonPlanSystem;
     private Spinner weekSpinner;
-    private View next;
-    private View back;
+    private ImageView next;
+    private ImageView back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

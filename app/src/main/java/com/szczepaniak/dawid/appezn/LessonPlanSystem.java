@@ -353,12 +353,7 @@ public class LessonPlanSystem {
 
                 if(response.isSuccessful()){
 
-                   // final List<Lesson> lessons = response.body().getLessons();
                     loadPeplacements(response.body().getLessons());
-
-//                    boolean addClassNamae = typeSpinner.getSelectedItem().toString().equals("Klasy");
-//                    LessonsAdapter lessonsAdapter = new LessonsAdapter(converLessons(lessons), !addClassNamae, context);
-//                    lessonsView.setAdapter(lessonsAdapter);
 
                 }
             }
@@ -394,6 +389,7 @@ public class LessonPlanSystem {
 
                                     l.setRoom(r.getRoom());
                                     l.setSubject(r.getSubject());
+                                    l.setTeacher(r.getTeacher());
                                     newLessons.set(newLessons.indexOf(l), l);
                                 }
                             }
