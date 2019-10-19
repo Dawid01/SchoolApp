@@ -1,6 +1,7 @@
 package com.szczepaniak.dawid.appezn;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.design.widget.TabLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -35,21 +36,32 @@ public class LessonPlanSystem {
     private int dayOfWeek = 1;
     private Spinner spinner;
     private Spinner typeSpinner;
+    private View next;
+    private View back;
+    private Spinner spinnerWeeks;
     private String day = "10000";
+
+    private SharedPreferences planPreferences;
+
 
     private  ArrayList<String> spinnerTypeItems = new ArrayList<>();
 
-    public LessonPlanSystem(final RecyclerView lessonsView, TabLayout days, Spinner spiner, final Spinner typeSpinner, Context context) {
+    public LessonPlanSystem(final RecyclerView lessonsView, TabLayout days, Spinner spiner, final Spinner typeSpinner,  View next,  View back, Spinner spinnerWeeks, Context context) {
         this.lessonsView = lessonsView;
         this.days = days;
         this.spinner = spiner;
         this.typeSpinner = typeSpinner;
         this.context = context;
+        this.spinnerWeeks = spinnerWeeks;
+
+        new WeekSelector(next,back, spinnerWeeks, context);
+
         api = RetroClient.getApiService();
 
         spinnerTypeItems.add("Klasy");
         spinnerTypeItems.add("Nauczyciele");
         spinnerTypeItems.add("Sale");
+        planPreferences = context.getSharedPreferences("LessonPLan", Context.MODE_PRIVATE);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(context,
                 android.R.layout.simple_spinner_dropdown_item, spinnerTypeItems);
@@ -301,7 +313,6 @@ public class LessonPlanSystem {
         lessonsView.removeAllViews();
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context);
         lessonsView.setLayoutManager(layoutManager);
-
         String c = "1 AG";
 
         try{
@@ -313,7 +324,7 @@ public class LessonPlanSystem {
         String s = typeSpinner.getSelectedItem().toString();
         if(s.equals("Klasy")){
             lessonListCall = api.getLessons(c,day,100, "lessonNumber,asc");
-        }else if(s.equals("nauczyciele")){
+        }else if(s.equals("Nauczyciele")){
             lessonListCall = api.getLessonsByTeacher(c,day,100, "lessonNumber,asc");
         }else {
             lessonListCall = api.getLessonsByRoom(c,day,100, "lessonNumber,asc");
@@ -392,6 +403,7 @@ public class LessonPlanSystem {
         return lessons;
 
     }
+
 
 
 }

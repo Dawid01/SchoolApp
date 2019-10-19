@@ -77,6 +77,9 @@ public class MainActivity extends AppCompatActivity {
     private Singleton singleton;
     private RecyclerView lessonsView;
     private LessonPlanSystem lessonPlanSystem;
+    private Spinner weekSpinner;
+    private View next;
+    private View back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +112,10 @@ public class MainActivity extends AppCompatActivity {
         createPostCard = findViewById(R.id.create_post_card);
         lessonsView = findViewById(R.id.lessons_view);
         TabLayout days = findViewById(R.id.week_days);
-        lessonPlanSystem = new LessonPlanSystem(lessonsView, days, spinnerClass, spinnerTypes,this);
+        weekSpinner = findViewById(R.id.spinner_weeks);
+        next = findViewById(R.id.week_next);
+        back = findViewById(R.id.week_back);
+        lessonPlanSystem = new LessonPlanSystem(lessonsView, days, spinnerClass, spinnerTypes,next, back,weekSpinner, this);
         new AccountDrawer(drawer, MainActivity.this);
 
         singleton = Singleton.getInstance();
