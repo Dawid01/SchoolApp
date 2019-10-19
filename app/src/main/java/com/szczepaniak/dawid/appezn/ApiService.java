@@ -9,6 +9,7 @@ import com.szczepaniak.dawid.appezn.Models.PeriodList;
 import com.szczepaniak.dawid.appezn.Models.Post;
 import com.szczepaniak.dawid.appezn.Models.PostList;
 import com.szczepaniak.dawid.appezn.Models.PostReaction;
+import com.szczepaniak.dawid.appezn.Models.ReplacementList;
 import com.szczepaniak.dawid.appezn.Models.RoomList;
 import com.szczepaniak.dawid.appezn.Models.TeacherList;
 import com.szczepaniak.dawid.appezn.Models.User;
@@ -100,5 +101,9 @@ public interface  ApiService {
 
     @GET("classrooms")
     Call<RoomList> getRooms(@Query("size") int size);
+
+    @GET("replacements/{week}/{day}/{className}")
+    Call<ReplacementList> getReplecements(@Path("week") String week, @Path("day") String day, @Path("className") String className);
+
 
 }

@@ -15,6 +15,8 @@ import com.szczepaniak.dawid.appezn.Models.Class;
 import com.szczepaniak.dawid.appezn.Models.ClassList;
 import com.szczepaniak.dawid.appezn.Models.Lesson;
 import com.szczepaniak.dawid.appezn.Models.LessonList;
+import com.szczepaniak.dawid.appezn.Models.Replacement;
+import com.szczepaniak.dawid.appezn.Models.ReplacementList;
 import com.szczepaniak.dawid.appezn.Models.Room;
 import com.szczepaniak.dawid.appezn.Models.RoomList;
 import com.szczepaniak.dawid.appezn.Models.Teacher;
@@ -85,6 +87,18 @@ public class LessonPlanSystem {
                     loadRooms();
                     loadLessons();
                 }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+            }
+
+        });
+
+        spinnerWeeks.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                loadLessons();
             }
 
             @Override
@@ -339,12 +353,12 @@ public class LessonPlanSystem {
 
                 if(response.isSuccessful()){
 
-                    final List<Lesson> lessons = response.body().getLessons();
+                   // final List<Lesson> lessons = response.body().getLessons();
+                    loadPeplacements(response.body().getLessons());
 
-                    boolean addClassNamae = typeSpinner.getSelectedItem().toString().equals("Klasy");
-
-                    LessonsAdapter lessonsAdapter = new LessonsAdapter(converLessons(lessons), !addClassNamae, context);
-                    lessonsView.setAdapter(lessonsAdapter);
+//                    boolean addClassNamae = typeSpinner.getSelectedItem().toString().equals("Klasy");
+//                    LessonsAdapter lessonsAdapter = new LessonsAdapter(converLessons(lessons), !addClassNamae, context);
+//                    lessonsView.setAdapter(lessonsAdapter);
 
                 }
             }
@@ -354,6 +368,60 @@ public class LessonPlanSystem {
 
             }
         });
+    }
+
+
+    void loadPeplacements(final List<Lesson> lessons){
+
+
+        try{
+            retrofit2.Call<ReplacementList> replacementListCall = api.getReplecements(spinnerWeeks.getSelectedItem().toString(), day, spinner.getSelectedItem().toString());
+
+            replacementListCall.enqueue(new Callback<ReplacementList>() {
+                @Override
+                public void onResponse(Call<ReplacementList> call, Response<ReplacementList> response) {
+
+                    if(response.isSuccessful()){
+
+                        List<Replacement> replacements = response.body().getReplacementList();
+                        List<Lesson> newLessons = lessons;
+
+                        for(Replacement r : replacements){
+
+                            for(Lesson l : newLessons){
+
+                                if(l.getLessonNumber() == r.getLessonNumber()){
+
+                                    l.setRoom(r.getRoom());
+                                    l.setSubject(r.getSubject());
+                                    newLessons.set(newLessons.indexOf(l), l);
+                                }
+                            }
+                        }
+
+                        boolean addClassNamae = typeSpinner.getSelectedItem().toString().equals("Klasy");
+                        LessonsAdapter lessonsAdapter = new LessonsAdapter(converLessons(newLessons), !addClassNamae, context);
+                        lessonsView.setAdapter(lessonsAdapter);
+
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ReplacementList> call, Throwable t) {
+
+                    boolean addClassNamae = typeSpinner.getSelectedItem().toString().equals("Klasy");
+                    LessonsAdapter lessonsAdapter = new LessonsAdapter(converLessons(lessons), !addClassNamae, context);
+                    lessonsView.setAdapter(lessonsAdapter);
+                }
+            });
+
+        }catch (NullPointerException e){
+
+            boolean addClassNamae = typeSpinner.getSelectedItem().toString().equals("Klasy");
+            LessonsAdapter lessonsAdapter = new LessonsAdapter(converLessons(lessons), !addClassNamae, context);
+            lessonsView.setAdapter(lessonsAdapter);
+        }
+
     }
 
 

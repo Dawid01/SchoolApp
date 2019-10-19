@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
         weekSpinner = findViewById(R.id.spinner_weeks);
         next = findViewById(R.id.week_next);
         back = findViewById(R.id.week_back);
-        lessonPlanSystem = new LessonPlanSystem(lessonsView, days, spinnerClass, spinnerTypes,next, back,weekSpinner, this);
+        lessonPlanSystem = new LessonPlanSystem(lessonsView, days, spinnerClass, spinnerTypes, next, back, weekSpinner, this);
         new AccountDrawer(drawer, MainActivity.this);
 
         singleton = Singleton.getInstance();
