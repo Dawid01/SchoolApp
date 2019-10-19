@@ -5,8 +5,6 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
-
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -14,15 +12,11 @@ import java.util.Calendar;
 
 public class WeekSelector {
 
-    private View back;
-    private View next;
     private Spinner week;
     private ArrayList<String> weeks;
     Context context;
 
     public WeekSelector(View back, View next, final Spinner week, Context context) {
-        this.back = back;
-        this.next = next;
         this.week = week;
         this.context = context;
         weeks = new ArrayList<>();
@@ -65,7 +59,7 @@ public class WeekSelector {
             weeks.add(time);
 
         }
-        
+
         ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, weeks);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         week.setAdapter(adapter);
