@@ -24,6 +24,8 @@ public class Replacement {
 
     private String room;
 
+    private String status;
+
     public Replacement() {
     }
 
@@ -113,5 +115,13 @@ public class Replacement {
 
     public void setRoom(String room) {
         this.room = room;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

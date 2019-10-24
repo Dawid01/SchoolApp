@@ -387,10 +387,16 @@ public class LessonPlanSystem {
 
                                 if(l.getLessonNumber() == r.getLessonNumber()){
 
-                                    l.setRoom(r.getRoom());
-                                    l.setSubject(r.getSubject());
-                                    l.setTeacher(r.getTeacher());
-                                    newLessons.set(newLessons.indexOf(l), l);
+                                    if(l.getGroupName().equals(r.getGroupName())) {
+                                        if(!r.getStatus().equals("odwołane")) {
+                                            l.setRoom(r.getRoom());
+                                            l.setSubject(r.getSubject());
+                                            l.setTeacher(r.getTeacher());
+                                        }
+                                        l.setStatus1(r.getStatus());
+
+                                        newLessons.set(newLessons.indexOf(l), l);
+                                    }
                                 }
                             }
                         }

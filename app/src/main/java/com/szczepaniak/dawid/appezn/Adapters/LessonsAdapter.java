@@ -63,6 +63,8 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHold
         holder.time.setText(lesson.getPeroid());
         holder.room.setText(lesson.getRoom());
         holder.info.setText(lesson.getTeacher());
+        holder.status.setText(lesson.getStatus1());
+        holder.status2.setText(lesson.getStatus2());
 
         if (addClassNamae) {
 
@@ -106,6 +108,9 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHold
 
         public TextView pause;
 
+        public TextView status;
+        public TextView status2;
+
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -124,6 +129,9 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.ViewHold
             lesson2 = itemView.findViewById(R.id.lesson2);
             line = itemView.findViewById(R.id.line);
             pause = itemView.findViewById(R.id.pause);
+
+            status = itemView.findViewById(R.id.status);
+            status2 = itemView.findViewById(R.id.status2);
 
         }
     }
