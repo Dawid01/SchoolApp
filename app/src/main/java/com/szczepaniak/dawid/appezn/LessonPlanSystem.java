@@ -394,12 +394,14 @@ public class LessonPlanSystem {
                                             l.setTeacher(r.getTeacher());
                                         }
                                         l.setStatus1(r.getStatus());
-
+                                        l.setStatus2(r.getStatus());
                                         newLessons.set(newLessons.indexOf(l), l);
                                     }
+
                                 }
                             }
                         }
+                        
 
                         boolean addClassNamae = typeSpinner.getSelectedItem().toString().equals("Klasy");
                         LessonsAdapter lessonsAdapter = new LessonsAdapter(converLessons(newLessons), !addClassNamae, context);
@@ -449,6 +451,7 @@ public class LessonPlanSystem {
                     lesson.setTeacher2(lesson2.getTeacher());
                     lesson.setSubject2(lesson2.getSubject());
                     lesson.setRoom2(lesson2.getRoom());
+                    lesson.setStatus2(lesson2.getStatus2());
                     lessons.remove(lesson2);
                     count--;
                 }
