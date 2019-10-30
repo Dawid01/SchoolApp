@@ -4,8 +4,10 @@ import android.content.Context;
 import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -116,6 +118,8 @@ public class BinaryGame extends AppCompatActivity {
         s.setText("" + scoreValue);
         TextView best = popUpView.findViewById(R.id.best);
         Button playAgain = popUpView.findViewById(R.id.playAgain);
+        final Button ranking = popUpView.findViewById(R.id.ranking);
+        final ConstraintLayout rankingLayout = popUpView.findViewById(R.id.ranking_layout);
 
 
         playAgain.setOnClickListener(new View.OnClickListener() {
@@ -129,6 +133,20 @@ public class BinaryGame extends AppCompatActivity {
                 scoreValue = 0;
                 score.setText("score: " + scoreValue);
                 popupWindow.dismiss();
+            }
+        });
+
+        ranking.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(rankingLayout.getVisibility() == View.GONE) {
+                    rankingLayout.setVisibility(View.VISIBLE);
+                    ranking.setText("back");
+                }else {
+                    rankingLayout.setVisibility(View.GONE);
+                    ranking.setText("ranking");
+                }
             }
         });
     }

@@ -401,7 +401,7 @@ public class LessonPlanSystem {
                                 }
                             }
                         }
-                        
+
 
                         boolean addClassNamae = typeSpinner.getSelectedItem().toString().equals("Klasy");
                         LessonsAdapter lessonsAdapter = new LessonsAdapter(converLessons(newLessons), !addClassNamae, context);

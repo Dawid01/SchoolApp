@@ -122,20 +122,22 @@
         app:layout_constraintVertical_bias="1.0" />
 
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/ranking"
+        android:id="@+id/ranking_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="400dp"
         android:background="@android:color/background_light"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/ranking"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/background_light" />
+            android:background="@color/background"
+            tools:layout_editor_absoluteY="-77dp" />
     </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>
