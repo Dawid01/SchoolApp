@@ -15,9 +15,11 @@ import com.szczepaniak.dawid.appezn.Models.TeacherList;
 import com.szczepaniak.dawid.appezn.Models.User;
 
 import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Multipart;
@@ -80,6 +82,7 @@ public interface  ApiService {
     @Multipart
     @POST("uploadFile")
     Call<ResponseBody> uploadFile(@Part MultipartBody.Part file);
+
 
     @GET("classes")
     Call<ClassList> getClassList(@Query("size") int size);

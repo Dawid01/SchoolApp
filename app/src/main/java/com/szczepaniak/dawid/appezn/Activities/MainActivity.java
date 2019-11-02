@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.net.Uri;
+import android.os.Debug;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.BottomNavigationView;
@@ -25,6 +26,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.gson.JsonObject;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -45,6 +47,16 @@ import com.vanniktech.emoji.EmojiManager;
 import com.vanniktech.emoji.EmojiPopup;
 import com.vanniktech.emoji.twitter.TwitterEmojiProvider;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.IOException;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -190,12 +202,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Post newPost = new Post();
-                newPost.setContent(postEditText.getText().toString());
+                final File file = new File(singleton.getGalleryImages().get(0).getUrl());
+                Uri uri = Uri.fromFile(file);
 
-//                File file = new File(singleton.getGalleryImages().get(0).getUrl());
-//                Uri uri = Uri.fromFile(file);
-//
+                RequestBody fileReqBody = RequestBody.create(MediaType.parse("image/*"), file);
+                MultipartBody.Part part = MultipartBody.Part.createFormData("file", file.getName(), fileReqBody);
+                RequestBody description = RequestBody.create(MediaType.parse("text/plain"), "image-type");
+
+
 //                RequestBody requestFile =
 //                        RequestBody.create(
 //                                MediaType.parse(getContentResolver().getType(uri)),
@@ -206,25 +220,68 @@ public class MainActivity extends AppCompatActivity {
 //                        MultipartBody.Part.createFormData("file", file.getName(), requestFile);
 
 
-                    retrofit2.Call<Post> createPost = api.newPost(newPost);
 
-                    createPost.enqueue(new Callback<Post>() {
-                        @Override
-                        public void onResponse(Call<Post> call, Response<Post> response) {
+                Call<ResponseBody> uploadFileCall = api.uploadFile(part);
 
-                            if (response.isSuccessful()) {
+                uploadFileCall.enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
-                                loadPosts();
-                                postEditText.setText("");
-                                singleton.setPhotos(new String[0]);
-                            }
+                        if(response.isSuccessful()){
+
+
+                            String body = response.body().toString();
+
+                            String[] photos = new String[1];
+//                            try {
+//                                JSONObject json = new JSONObject(response.body().toString());
+//                                String fileUri = json.get("fileDownloadUri").toString();
+//                                photos[0] = fileUri;
+//
+//                            }catch (JSONException e){
+//
+//                            }
+
+                            photos[0] = "http://192.168.0.110:8080/downloadFile/" + file.getName();
+                            Post newPost = new Post();
+                            newPost.setContent(postEditText.getText().toString());
+                            newPost.setPhotos(photos);
+
+                            retrofit2.Call<Post> createPost = api.newPost(newPost);
+
+                            createPost.enqueue(new Callback<Post>() {
+                                @Override
+                                public void onResponse(Call<Post> call, Response<Post> response) {
+
+                                    if (response.isSuccessful()) {
+
+                                        loadPosts();
+                                        postEditText.setText("");
+                                        singleton.setPhotos(new String[0]);
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<Post> call, Throwable t) {
+
+                                }
+                            });
+                        }else{
+
+                            Log.i("UploadFile", response.message());
+
                         }
+                    }
 
-                        @Override
-                        public void onFailure(Call<Post> call, Throwable t) {
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
 
-                        }
-                    });
+                        Log.i("UploadFile", t.getMessage());
+                    }
+                });
+
+
+
                 }
 
 

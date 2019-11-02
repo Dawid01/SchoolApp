@@ -47,6 +47,8 @@ public class PostLoader {
     private void initAdapter() {
 
         recyclerViewAdapter = new RecyclerViewAdapter(rowsArrayList, context);
+        //recyclerViewAdapter.setHasStableIds(true);
+        recyclerView.getRecycledViewPool().setMaxRecycledViews(0, 0);
         recyclerView.setAdapter(recyclerViewAdapter);
     }
 
@@ -76,9 +78,9 @@ public class PostLoader {
     }
 
     private void loadMore() {
+
         rowsArrayList.add(null);
         recyclerViewAdapter.notifyItemInserted(rowsArrayList.size() - 1);
-
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -90,6 +92,7 @@ public class PostLoader {
                 page++;
                 setPostList(page);
 
+
             }
         }, 2000);
 
@@ -99,6 +102,7 @@ public class PostLoader {
 
     private void setPostList(int page){
         retrofit2.Call<PostList> allPosts = api.getAllPosts(page, 4,"id,desc");
+
 
         allPosts.enqueue(new Callback<PostList>() {
             @Override

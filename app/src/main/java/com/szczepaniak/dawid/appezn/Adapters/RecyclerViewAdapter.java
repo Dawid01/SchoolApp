@@ -69,7 +69,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
 
         if (viewHolder instanceof ItemViewHolder) {
-
             populateItemRows((ItemViewHolder) viewHolder, position);
         } else if (viewHolder instanceof LoadingViewHolder) {
             showLoadingView((LoadingViewHolder) viewHolder, position);
@@ -103,6 +102,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         TextView likes;
         TextView dislikes;
         TextView comments;
+        boolean used = false;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
