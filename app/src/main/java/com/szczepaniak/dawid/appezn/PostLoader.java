@@ -47,8 +47,9 @@ public class PostLoader {
     private void initAdapter() {
 
         recyclerViewAdapter = new RecyclerViewAdapter(rowsArrayList, context);
+        recyclerViewAdapter.setHasStableIds(true);
         //recyclerViewAdapter.setHasStableIds(true);
-        recyclerView.getRecycledViewPool().setMaxRecycledViews(0, 0);
+       // recyclerView.getRecycledViewPool().setMaxRecycledViews(1, 3);
         recyclerView.setAdapter(recyclerViewAdapter);
     }
 
@@ -81,6 +82,7 @@ public class PostLoader {
 
         rowsArrayList.add(null);
         recyclerViewAdapter.notifyItemInserted(rowsArrayList.size() - 1);
+       // recyclerViewAdapter.notifyDataSetChanged();
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {

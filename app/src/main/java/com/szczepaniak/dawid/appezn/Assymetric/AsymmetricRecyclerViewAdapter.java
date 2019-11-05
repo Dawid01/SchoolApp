@@ -31,7 +31,6 @@ public final class AsymmetricRecyclerViewAdapter<T extends RecyclerView.ViewHold
   }
 
   @Override public int getItemCount() {
-    // This is the row count for RecyclerView display purposes, not the actual item count
     return adapterImpl.getRowCount();
   }
 

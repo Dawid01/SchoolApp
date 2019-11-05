@@ -68,13 +68,19 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
 
+        viewHolder.setIsRecyclable(true);
         if (viewHolder instanceof ItemViewHolder) {
-            populateItemRows((ItemViewHolder) viewHolder, position);
+            populateItemRows((ItemViewHolder) viewHolder, viewHolder.getAdapterPosition());
         } else if (viewHolder instanceof LoadingViewHolder) {
-            showLoadingView((LoadingViewHolder) viewHolder, position);
+            showLoadingView((LoadingViewHolder) viewHolder, viewHolder.getAdapterPosition());
         }
 
     }
+
+//    @Override
+//    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+//        super.onDetachedFromRecyclerView(recyclerView);
+//    }
 
     @Override
     public int getItemCount() {
@@ -86,6 +92,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         return posts.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
     }
 
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
 
     private class ItemViewHolder extends RecyclerView.ViewHolder {
 
@@ -230,10 +241,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 @Override
                 public void onResponse(Call<PostReaction> call, Response<PostReaction> response) {
 
-                    //if(response.isSuccessful()){
+                    if(response.isSuccessful()){
 
                         updatePostReactions(post, viewHolder);
-                    //}
+                    }
                 }
 
                 @Override

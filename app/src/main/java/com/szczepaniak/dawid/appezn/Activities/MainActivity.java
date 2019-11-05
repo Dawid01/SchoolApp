@@ -52,6 +52,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -202,47 +203,36 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                final File file = new File(singleton.getGalleryImages().get(0).getUrl());
-                Uri uri = Uri.fromFile(file);
+                final MultipartBody.Part[] parts = new MultipartBody.Part[singleton.getGalleryImages().size()];
+                final ArrayList<String> names = new ArrayList<>();
 
-                RequestBody fileReqBody = RequestBody.create(MediaType.parse("image/*"), file);
-                MultipartBody.Part part = MultipartBody.Part.createFormData("file", file.getName(), fileReqBody);
-                RequestBody description = RequestBody.create(MediaType.parse("text/plain"), "image-type");
+                for(int i = 0; i < parts.length; i++){
 
+                    File file = new File(singleton.getGalleryImages().get(i).getUrl());
 
-//                RequestBody requestFile =
-//                        RequestBody.create(
-//                                MediaType.parse(getContentResolver().getType(uri)),
-//                                file
-//                        );
-//
-//                MultipartBody.Part body =
-//                        MultipartBody.Part.createFormData("file", file.getName(), requestFile);
+                    RequestBody fileReqBody = RequestBody.create(MediaType.parse("image/*"), file);
+                    names.add(file.getName());
+                    MultipartBody.Part part = MultipartBody.Part.createFormData("files", file.getName(), fileReqBody);
+                    parts[i] = part;
+
+                }
 
 
+                Call<ResponseBody> uploadFilesCall = api.uploadFiles(parts);
 
-                Call<ResponseBody> uploadFileCall = api.uploadFile(part);
-
-                uploadFileCall.enqueue(new Callback<ResponseBody>() {
+                uploadFilesCall.enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
                         if(response.isSuccessful()){
 
+                            String[] photos = new String[names.size()];
 
-                            String body = response.body().toString();
+                            for(int i = 0; i < names.size(); i++){
 
-                            String[] photos = new String[1];
-//                            try {
-//                                JSONObject json = new JSONObject(response.body().toString());
-//                                String fileUri = json.get("fileDownloadUri").toString();
-//                                photos[0] = fileUri;
-//
-//                            }catch (JSONException e){
-//
-//                            }
+                                photos[i] = "http://192.168.0.110:8080/downloadFile/" + names.get(i);
+                            }
 
-                            photos[0] = "http://192.168.0.110:8080/downloadFile/" + file.getName();
                             Post newPost = new Post();
                             newPost.setContent(postEditText.getText().toString());
                             newPost.setPhotos(photos);
@@ -266,9 +256,6 @@ public class MainActivity extends AppCompatActivity {
 
                                 }
                             });
-                        }else{
-
-                            Log.i("UploadFile", response.message());
 
                         }
                     }
@@ -276,58 +263,10 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(Call<ResponseBody> call, Throwable t) {
 
-                        Log.i("UploadFile", t.getMessage());
                     }
                 });
 
-
-
                 }
-
-
-//                    retrofit2.Call<ResponseBody> uploadFile = api.uploadFile(body);
-//
-//                    uploadFile.enqueue(new Callback<ResponseBody>() {
-//                        @Override
-//                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-//
-//                            if(response.isSuccessful()){
-//
-//                                Post newPost = new Post();
-//                                newPost.setContent(postEditText.getText().toString());
-//                                String[] photos = new String[1];
-//                                photos[0] = response.body().toString();
-//                                newPost.setPhotos(photos);
-//
-//                                retrofit2.Call<Post> createPost = api.newPost(newPost);
-//
-//                                createPost.enqueue(new Callback<Post>() {
-//                                    @Override
-//                                    public void onResponse(Call<Post> call, Response<Post> response) {
-//
-//                                        if (response.isSuccessful()) {
-//
-//                                            loadPosts();
-//                                            postEditText.setText("");
-//                                            singleton.setPhotos(new String[0]);
-//                                        }
-//                                    }
-//
-//                                    @Override
-//                                    public void onFailure(Call<Post> call, Throwable t) {
-//
-//                                    }
-//                                });
-//                            }
-//                        }
-//
-//                        @Override
-//                        public void onFailure(Call<ResponseBody> call, Throwable t) {
-//
-//                        }
-//                    });
-//                }
-
 
         });
     }

@@ -14,6 +14,8 @@ import com.szczepaniak.dawid.appezn.Models.RoomList;
 import com.szczepaniak.dawid.appezn.Models.TeacherList;
 import com.szczepaniak.dawid.appezn.Models.User;
 
+import java.util.List;
+
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -83,6 +85,9 @@ public interface  ApiService {
     @POST("uploadFile")
     Call<ResponseBody> uploadFile(@Part MultipartBody.Part file);
 
+    @Multipart
+    @POST("uploadMultipleFiles")
+    Call<ResponseBody> uploadFiles(@Part MultipartBody.Part[] files);
 
     @GET("classes")
     Call<ClassList> getClassList(@Query("size") int size);
