@@ -47,6 +47,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private Context context;
     public List<Post> posts;
 
+
     public RecyclerViewAdapter(List<Post> posts, Context context) {
         this.posts = posts;
         this.context = context;
@@ -68,12 +69,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
 
-        viewHolder.setIsRecyclable(true);
+       // viewHolder.setIsRecyclable(true);
         if (viewHolder instanceof ItemViewHolder) {
-            populateItemRows((ItemViewHolder) viewHolder, viewHolder.getAdapterPosition());
+            populateItemRows((ItemViewHolder) viewHolder, position);
         } else if (viewHolder instanceof LoadingViewHolder) {
-            showLoadingView((LoadingViewHolder) viewHolder, viewHolder.getAdapterPosition());
+            showLoadingView((LoadingViewHolder) viewHolder, position);
         }
+
 
     }
 
@@ -113,8 +115,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         TextView likes;
         TextView dislikes;
         TextView comments;
-        boolean used = false;
-
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -133,6 +133,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             comments = itemView.findViewById(R.id.comments);
 
         }
+
     }
 
     private class LoadingViewHolder extends RecyclerView.ViewHolder {
@@ -286,6 +287,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
 
         AsymmetricRecyclerView album = viewHolder.photoAlbum;
+        album.setItemViewCacheSize(10);
         album.setRequestedColumnCount(3);
         album.setRequestedHorizontalSpacing(Utils.dpToPx(context, 1));
         album.addItemDecoration(new SpacesItemDecoration(context.getResources().getDimensionPixelSize(R.dimen.asymetric_grid_offset)));
