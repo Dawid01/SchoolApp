@@ -1,11 +1,11 @@
 package com.szczepaniak.dawid.appezn.Activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.net.Uri;
-import android.os.Debug;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.BottomNavigationView;
@@ -26,7 +26,6 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.google.gson.JsonObject;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -34,6 +33,7 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.squareup.picasso.Picasso;
 import com.szczepaniak.dawid.appezn.AccountDrawer;
 import com.szczepaniak.dawid.appezn.ApiService;
+import com.szczepaniak.dawid.appezn.GalleryImage;
 import com.szczepaniak.dawid.appezn.LessonPlanSystem;
 import com.szczepaniak.dawid.appezn.Models.Post;
 import com.szczepaniak.dawid.appezn.Models.User;
@@ -47,11 +47,7 @@ import com.vanniktech.emoji.EmojiManager;
 import com.vanniktech.emoji.EmojiPopup;
 import com.vanniktech.emoji.twitter.TwitterEmojiProvider;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import okhttp3.MediaType;
@@ -83,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView sendBtm;
     private SwipeRefreshLayout refreshLayout;
     private LinearLayout selectedImages;
-    private RecyclerView recyclerView;
+    private RecyclerView postsRecyclerView;
     private ImageView createPostAction;
     private ConstraintLayout createPostLayaout;
     private CardView createPostCard;
@@ -101,7 +97,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         api = RetroClient.getApiService();
         drawer = findViewById(R.id.nav_view);
-        // = findViewById(R.id.PostsLayout);
         avatar = findViewById(R.id.avatar);
         bottonMenu = findViewById(R.id.bottomMenu);
         home = findViewById(R.id.Posts);
@@ -119,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
         selectedImages = findViewById(R.id.selected_images);
         refreshLayout = findViewById(R.id.Posts);
         sendBtm = findViewById(R.id.send);
-        recyclerView = findViewById(R.id.recicle_view_posts);
+        postsRecyclerView = findViewById(R.id.recicle_view_posts);
         createPostAction = findViewById(R.id.create_post_action);
         createPostLayaout = findViewById(R.id.create_post_layout);
         createPostCard = findViewById(R.id.create_post_card);
@@ -193,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
 
     void loadPosts(){
 
-        new PostLoader(recyclerView, api, refreshLayout,MainActivity.this);
+        new PostLoader(postsRecyclerView, api, refreshLayout,MainActivity.this);
 
     }
 
@@ -205,27 +200,35 @@ public class MainActivity extends AppCompatActivity {
 
                 final MultipartBody.Part[] parts = new MultipartBody.Part[singleton.getGalleryImages().size()];
                 final ArrayList<String> names = new ArrayList<>();
+                String photosInfo = "";
 
                 for(int i = 0; i < parts.length; i++){
 
                     File file = new File(singleton.getGalleryImages().get(i).getUrl());
-
                     RequestBody fileReqBody = RequestBody.create(MediaType.parse("image/*"), file);
                     names.add(file.getName());
                     MultipartBody.Part part = MultipartBody.Part.createFormData("files", file.getName(), fileReqBody);
                     parts[i] = part;
-
                 }
 
+                if(parts.length != 0){
+                    photosInfo = " with " + parts.length + " photo";
+                    if(parts.length > 1){
+                        photosInfo = photosInfo + "s";
+                    }
+                }
 
                 Call<ResponseBody> uploadFilesCall = api.uploadFiles(parts);
+
+                final ProgressDialog uploadDialog = ProgressDialog.show(MainActivity.this, "Loading...",
+                        "Upload post"+ photosInfo, true);
+
 
                 uploadFilesCall.enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
                         if(response.isSuccessful()){
-
                             String[] photos = new String[names.size()];
 
                             for(int i = 0; i < names.size(); i++){
@@ -243,8 +246,13 @@ public class MainActivity extends AppCompatActivity {
                                 @Override
                                 public void onResponse(Call<Post> call, Response<Post> response) {
 
-                                    if (response.isSuccessful()) {
+                                    uploadDialog.dismiss();
+                                    createPostLayaout.setVisibility(View.GONE);
+                                    LinearLayout photosLayout = createPostLayaout.findViewById(R.id.selected_images);
+                                    photosLayout.removeAllViews();
+                                    Singleton.getInstance().setGalleryImages(new ArrayList<GalleryImage>());
 
+                                    if (response.isSuccessful()) {
                                         loadPosts();
                                         postEditText.setText("");
                                         singleton.setPhotos(new String[0]);
@@ -253,7 +261,7 @@ public class MainActivity extends AppCompatActivity {
 
                                 @Override
                                 public void onFailure(Call<Post> call, Throwable t) {
-
+                                    uploadDialog.dismiss();
                                 }
                             });
 
@@ -262,7 +270,7 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<ResponseBody> call, Throwable t) {
-
+                        uploadDialog.dismiss();
                     }
                 });
 
@@ -289,7 +297,6 @@ public class MainActivity extends AppCompatActivity {
                     }else {
                         Picasso.get().load(user.getPhoto()).into(avatar);
                     }
-                    //Glide.with(MainActivity.this).load(user.getPhoto()).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE)).into(avatar);
                 }
             }
 

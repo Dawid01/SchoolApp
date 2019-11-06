@@ -1,15 +1,19 @@
 package com.szczepaniak.dawid.appezn;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.design.widget.TabLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import com.szczepaniak.dawid.appezn.Activities.MainActivity;
 import com.szczepaniak.dawid.appezn.Adapters.LessonsAdapter;
 import com.szczepaniak.dawid.appezn.Models.Class;
 import com.szczepaniak.dawid.appezn.Models.ClassList;
@@ -42,6 +46,7 @@ public class LessonPlanSystem {
     private View back;
     private Spinner spinnerWeeks;
     private String day = "10000";
+    private int animation = 0;
 
     private SharedPreferences planPreferences;
 
@@ -353,7 +358,12 @@ public class LessonPlanSystem {
 
                 if(response.isSuccessful()){
 
-                    loadPeplacements(response.body().getLessons());
+                    if(animation != 0) {
+                        loadPeplacements(response.body().getLessons());
+                    }else {
+                        animation = 1;
+                    }
+                    runLayoutAnimation(lessonsView);
 
                 }
             }
@@ -363,6 +373,7 @@ public class LessonPlanSystem {
 
             }
         });
+
     }
 
 
@@ -372,12 +383,15 @@ public class LessonPlanSystem {
         try{
             retrofit2.Call<ReplacementList> replacementListCall = api.getReplecements(spinnerWeeks.getSelectedItem().toString(), day, spinner.getSelectedItem().toString());
 
+//            final ProgressDialog lessonDialog = ProgressDialog.show(context, "Loading...",
+//                    "Load lessons", true);
             replacementListCall.enqueue(new Callback<ReplacementList>() {
                 @Override
                 public void onResponse(Call<ReplacementList> call, Response<ReplacementList> response) {
 
                     if(response.isSuccessful()){
 
+                        //lessonDialog.dismiss();
                         List<Replacement> replacements = response.body().getReplacementList();
                         List<Lesson> newLessons = lessons;
 
@@ -416,6 +430,7 @@ public class LessonPlanSystem {
                     boolean addClassNamae = typeSpinner.getSelectedItem().toString().equals("Klasy");
                     LessonsAdapter lessonsAdapter = new LessonsAdapter(converLessons(lessons), !addClassNamae, context);
                     lessonsView.setAdapter(lessonsAdapter);
+                    //lessonDialog.dismiss();
                 }
             });
 
@@ -459,22 +474,13 @@ public class LessonPlanSystem {
             }
         }
 
-//        try {
-//            int index = lessons.get(0).getLessonNumber();
-//            if (index != 0){
-//
-//                for(int i = 0; i < index; i++){
-//
-//                    Lesson lesson =  new Lesson();
-//                    lesson.setSubject("---------");
-//                    lesson.setLessonNumber(i);
-//                    lessons.add(i, lesson);
-//                }
-//            }
-//        }catch (IndexOutOfBoundsException e){}
-
         return lessons;
 
+    }
+
+    private void runLayoutAnimation(final RecyclerView recyclerView) {
+        final LayoutAnimationController controller = AnimationUtils.loadLayoutAnimation(context, R.anim.layout_animation);
+        recyclerView.setLayoutAnimation(controller);
     }
 
 

@@ -269,10 +269,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     @Override
                     public void onResponse(Call<PostReaction> call, Response<PostReaction> response) {
 
-                       // if(response.isSuccessful()){
-
+                        if(response.isSuccessful()){
                             updatePostReactions(post, viewHolder);
-                       // }
+                       }
                     }
 
                     @Override
@@ -287,7 +286,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
 
         AsymmetricRecyclerView album = viewHolder.photoAlbum;
-        album.setItemViewCacheSize(10);
+        album.setItemViewCacheSize(500);
         album.setRequestedColumnCount(3);
         album.setRequestedHorizontalSpacing(Utils.dpToPx(context, 1));
         album.addItemDecoration(new SpacesItemDecoration(context.getResources().getDimensionPixelSize(R.dimen.asymetric_grid_offset)));
