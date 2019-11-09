@@ -224,55 +224,87 @@ public class MainActivity extends AppCompatActivity {
                         "Upload post"+ photosInfo, true);
 
 
-                uploadFilesCall.enqueue(new Callback<ResponseBody>() {
-                    @Override
-                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if(parts.length != 0) {
+                    uploadFilesCall.enqueue(new Callback<ResponseBody>() {
+                        @Override
+                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
-                        if(response.isSuccessful()){
-                            String[] photos = new String[names.size()];
+                            if (response.isSuccessful()) {
+                                String[] photos = new String[names.size()];
 
-                            for(int i = 0; i < names.size(); i++){
+                                for (int i = 0; i < names.size(); i++) {
 
-                                photos[i] = "http://192.168.0.110:8080/downloadFile/" + names.get(i);
-                            }
+                                    photos[i] = "http://192.168.0.110:8080/downloadFile/" + names.get(i);
+                                }
 
-                            Post newPost = new Post();
-                            newPost.setContent(postEditText.getText().toString());
-                            newPost.setPhotos(photos);
+                                Post newPost = new Post();
+                                newPost.setContent(postEditText.getText().toString());
+                                newPost.setPhotos(photos);
 
-                            retrofit2.Call<Post> createPost = api.newPost(newPost);
+                                retrofit2.Call<Post> createPost = api.newPost(newPost);
 
-                            createPost.enqueue(new Callback<Post>() {
-                                @Override
-                                public void onResponse(Call<Post> call, Response<Post> response) {
+                                createPost.enqueue(new Callback<Post>() {
+                                    @Override
+                                    public void onResponse(Call<Post> call, Response<Post> response) {
 
-                                    uploadDialog.dismiss();
-                                    createPostLayaout.setVisibility(View.GONE);
-                                    LinearLayout photosLayout = createPostLayaout.findViewById(R.id.selected_images);
-                                    photosLayout.removeAllViews();
-                                    Singleton.getInstance().setGalleryImages(new ArrayList<GalleryImage>());
+                                        uploadDialog.dismiss();
+                                        createPostLayaout.setVisibility(View.GONE);
+                                        LinearLayout photosLayout = createPostLayaout.findViewById(R.id.selected_images);
+                                        photosLayout.removeAllViews();
+                                        Singleton.getInstance().setGalleryImages(new ArrayList<GalleryImage>());
 
-                                    if (response.isSuccessful()) {
-                                        loadPosts();
-                                        postEditText.setText("");
-                                        singleton.setPhotos(new String[0]);
+                                        if (response.isSuccessful()) {
+                                            loadPosts();
+                                            postEditText.setText("");
+                                            singleton.setPhotos(new String[0]);
+                                        }
                                     }
-                                }
 
-                                @Override
-                                public void onFailure(Call<Post> call, Throwable t) {
-                                    uploadDialog.dismiss();
-                                }
-                            });
+                                    @Override
+                                    public void onFailure(Call<Post> call, Throwable t) {
+                                        uploadDialog.dismiss();
+                                    }
+                                });
 
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        uploadDialog.dismiss();
-                    }
-                });
+                        @Override
+                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+                            uploadDialog.dismiss();
+                        }
+                    });
+
+                }else {
+
+                    Post newPost = new Post();
+                    newPost.setContent(postEditText.getText().toString());
+
+                    retrofit2.Call<Post> createPost = api.newPost(newPost);
+
+                    createPost.enqueue(new Callback<Post>() {
+                        @Override
+                        public void onResponse(Call<Post> call, Response<Post> response) {
+
+                            uploadDialog.dismiss();
+                            createPostLayaout.setVisibility(View.GONE);
+                            LinearLayout photosLayout = createPostLayaout.findViewById(R.id.selected_images);
+                            photosLayout.removeAllViews();
+                            Singleton.getInstance().setGalleryImages(new ArrayList<GalleryImage>());
+
+                            if (response.isSuccessful()) {
+                                loadPosts();
+                                postEditText.setText("");
+                                singleton.setPhotos(new String[0]);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Post> call, Throwable t) {
+                            uploadDialog.dismiss();
+                        }
+                    });
+                }
 
                 }
 
@@ -401,11 +433,9 @@ public class MainActivity extends AppCompatActivity {
         config.threadPriority(Thread.NORM_PRIORITY - 2);
         config.denyCacheImageMultipleSizesInMemory();
         config.diskCacheFileNameGenerator(new Md5FileNameGenerator());
-        config.diskCacheSize(50 * 1024 * 1024); // 50 MiB
+        config.diskCacheSize(50 * 1024 * 1024);
         config.tasksProcessingOrder(QueueProcessingType.LIFO);
-        config.writeDebugLogs(); // Remove for release app
-
-        // Initialize ImageLoader with configuration.
+        config.writeDebugLogs();
         ImageLoader.getInstance().init(config.build());
     }
 

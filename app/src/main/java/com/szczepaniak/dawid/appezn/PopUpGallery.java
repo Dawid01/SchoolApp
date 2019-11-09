@@ -46,6 +46,7 @@ import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import jp.wasabeef.blurry.Blurry;
 
@@ -58,7 +59,7 @@ public class PopUpGallery extends AppCompatActivity {
     private View parent;
     private ArrayList<GalleryImage> images;
     private int size;
-    private ArrayList<GalleryImage> selectedImgs;
+    private List<GalleryImage> selectedImgs;
     private LinearLayout selectedGrid;
 
 
@@ -118,7 +119,10 @@ public class PopUpGallery extends AppCompatActivity {
 
 
     private void createPopUp(final Context context, final View parent){
-        selectedImgs = new ArrayList<>();
+        selectedImgs = Singleton.getInstance().getGalleryImages();
+        if(selectedImgs == null) {
+            selectedImgs = new ArrayList<>();
+        }
         LayoutInflater inflater = LayoutInflater.from(context);
         View popUpView = inflater.inflate(R.layout.gallery_popup, null);
         final PopupWindow popupWindow = new PopupWindow(popUpView, parent.getWidth(), parent.getHeight(), true);
@@ -143,6 +147,7 @@ public class PopUpGallery extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
 
+                    selectedGrid.removeAllViews();
                     for (final GalleryImage galleryImage : selectedImgs){
 
                         ImageView img = new ImageView(activity);
@@ -167,6 +172,9 @@ public class PopUpGallery extends AppCompatActivity {
                                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
+                                                List<GalleryImage> galleryImages = Singleton.getInstance().getGalleryImages();
+                                                galleryImages.remove(selectedGrid.indexOfChild(v));
+                                                Singleton.getInstance().setGalleryImages(galleryImages);
                                                 selectedGrid.removeView(v);
                                             }
                                         })
@@ -223,7 +231,7 @@ public class PopUpGallery extends AppCompatActivity {
 
     private void loadPhotos(final Activity activity){
 
-        selectedImgs = new ArrayList<>();
+        //selectedImgs = Singleton.getInstance().getGalleryImages();
         gallery.setAdapter(new ImageAdapter(activity));
         gallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
