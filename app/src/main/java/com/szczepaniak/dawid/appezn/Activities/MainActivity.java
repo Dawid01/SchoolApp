@@ -32,6 +32,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.squareup.picasso.Picasso;
 import com.szczepaniak.dawid.appezn.AccountDrawer;
+import com.szczepaniak.dawid.appezn.Adapters.RecyclerViewAdapter;
 import com.szczepaniak.dawid.appezn.ApiService;
 import com.szczepaniak.dawid.appezn.GalleryImage;
 import com.szczepaniak.dawid.appezn.LessonPlanSystem;
@@ -89,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
     private Spinner weekSpinner;
     private ImageView next;
     private ImageView back;
+    private PostLoader postLoader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -188,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
 
     void loadPosts(){
 
-        new PostLoader(postsRecyclerView, api, refreshLayout,MainActivity.this);
+        postLoader = new PostLoader(postsRecyclerView, api, refreshLayout,MainActivity.this);
 
     }
 
@@ -234,10 +236,11 @@ public class MainActivity extends AppCompatActivity {
 
                                 for (int i = 0; i < names.size(); i++) {
 
-                                    photos[i] = "http://192.168.0.110:8080/downloadFile/" + names.get(i);
+                                   //photos[i] = "http://192.168.0.110:8080/downloadFile/" + names.get(i);
+                                   photos[i] = RetroClient.getRootUrl() + "downloadFile/" + names.get(i);
                                 }
 
-                                Post newPost = new Post();
+                                final Post newPost = new Post();
                                 newPost.setContent(postEditText.getText().toString());
                                 newPost.setPhotos(photos);
 
@@ -255,6 +258,9 @@ public class MainActivity extends AppCompatActivity {
 
                                         if (response.isSuccessful()) {
                                             loadPosts();
+//                                            RecyclerViewAdapter recyclerViewAdapter = postLoader.getRecyclerViewAdapter();
+//                                            recyclerViewAdapter.notifyItemChanged(0, newPost);
+//                                            recyclerViewAdapter.notifyDataSetChanged();
                                             postEditText.setText("");
                                             singleton.setPhotos(new String[0]);
                                         }
@@ -277,7 +283,7 @@ public class MainActivity extends AppCompatActivity {
 
                 }else {
 
-                    Post newPost = new Post();
+                    final Post newPost = new Post();
                     newPost.setContent(postEditText.getText().toString());
 
                     retrofit2.Call<Post> createPost = api.newPost(newPost);
@@ -294,6 +300,9 @@ public class MainActivity extends AppCompatActivity {
 
                             if (response.isSuccessful()) {
                                 loadPosts();
+//                                RecyclerViewAdapter recyclerViewAdapter = postLoader.getRecyclerViewAdapter();
+//                                recyclerViewAdapter.notifyItemChanged(0, newPost);
+//                                recyclerViewAdapter.notifyDataSetChanged();
                                 postEditText.setText("");
                                 singleton.setPhotos(new String[0]);
                             }

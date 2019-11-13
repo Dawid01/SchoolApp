@@ -30,6 +30,7 @@ public class CommentsActivity extends AppCompatActivity {
     private ImageView send;
     private EditText commentText;
     private ApiService api;
+    private CommentsAdapter commentsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +44,8 @@ public class CommentsActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         commentsView.setLayoutManager(layoutManager);
-        commentsView.setAdapter(new CommentsAdapter(comments, this));
+        commentsAdapter = new CommentsAdapter(comments, this);
+        commentsView.setAdapter(commentsAdapter);
         send = findViewById(R.id.send);
         commentText = findViewById(R.id.post_edit_text);
 
@@ -53,10 +55,10 @@ public class CommentsActivity extends AppCompatActivity {
 
                 if(!commentText.getText().equals("")){
 
-                    Comment comment = new Comment();
+                    final Comment comment = new Comment();
                     comment.setContent(commentText.getText().toString());
                     comment.setPost(Singleton.getInstance().getPost());
-
+                    comment.setId(Singleton.getInstance().getCurrentUserID());
                     retrofit2.Call<Comment> commentCall = api.newComment(comment);
 
                     commentCall.enqueue(new Callback<Comment>() {
@@ -66,7 +68,10 @@ public class CommentsActivity extends AppCompatActivity {
                             if(response.isSuccessful()){
 
                                 Toast.makeText(CommentsActivity.this, "Comment Send", Toast.LENGTH_SHORT).show();
-                                refreshComments();
+                                comments.add(response.body());
+                                commentsAdapter.setComments(comments);
+                                commentsAdapter.notifyItemInserted(comments.size() - 1);
+                                commentsAdapter.notifyDataSetChanged();
                                 commentText.setText("");
                                 commentText.setActivated(false);
                             }
@@ -82,31 +87,5 @@ public class CommentsActivity extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    void refreshComments(){
-
-        retrofit2.Call<CommentList> commentCall = api.getCommentsByPost(Singleton.getInstance().getPost().getId());
-
-        commentCall.enqueue(new Callback<CommentList>() {
-            @Override
-            public void onResponse(Call<CommentList> call, Response<CommentList> response) {
-
-                if(response.isSuccessful()) {
-                    CommentList commentList = response.body();
-                    List<Comment> comments = commentList.getComments();
-
-                    commentsView.removeAllViews();
-                    commentsView.setAdapter(new CommentsAdapter(comments, CommentsActivity.this));
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<CommentList> call, Throwable t) {
-
-            }
-        });
-
     }
 }

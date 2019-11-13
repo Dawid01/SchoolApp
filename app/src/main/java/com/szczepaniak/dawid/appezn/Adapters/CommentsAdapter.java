@@ -15,6 +15,7 @@ import com.szczepaniak.dawid.appezn.Models.Comment;
 import com.szczepaniak.dawid.appezn.Models.User;
 import com.szczepaniak.dawid.appezn.R;
 import com.szczepaniak.dawid.appezn.RetroClient;
+import com.szczepaniak.dawid.appezn.Singleton;
 
 import java.util.List;
 
@@ -27,11 +28,14 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
     private List<Comment> comments;
     private Context context;
     private ApiService api;
+    private User currentUser;
+
 
     public CommentsAdapter(List<Comment> comments, Context context) {
         this.comments = comments;
         this.context = context;
         api = RetroClient.getApiService();
+        currentUser =  Singleton.getInstance().getCurrentUser();
     }
 
     @Override
@@ -45,6 +49,11 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
         Comment comment = comments.get(position);
         holder.content.setText(comment.getContent());
         holder.date.setText(comment.getDateTime());
+
+//        if(comment.getUserID() == currentUser.getId()){
+//            holder.name.setText(currentUser.getName() + " " + currentUser.getSurname());
+//            Picasso.get().load(currentUser.getPhoto()).into(holder.avatar);
+//        }
 
         retrofit2.Call<User> userCall = api.getUser(comment.getUserID());
 
@@ -83,5 +92,13 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
             date = itemView.findViewById(R.id.time);
             name = itemView.findViewById(R.id.name);
         }
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 }

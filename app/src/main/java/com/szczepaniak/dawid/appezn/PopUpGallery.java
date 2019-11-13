@@ -152,7 +152,7 @@ public class PopUpGallery extends AppCompatActivity {
 
                         ImageView img = new ImageView(activity);
                         img.setScaleType(ImageView.ScaleType.FIT_CENTER);
-                        img.setLayoutParams(new GridView.LayoutParams(150, 150));
+                        img.setLayoutParams(new GridView.LayoutParams(200, 200));
                         Glide.with(activity).load(galleryImage.getUrl())
                                 .placeholder(R.mipmap.baseline_add_photo_alternate_white_36dp).centerCrop()
                                 .into(img);

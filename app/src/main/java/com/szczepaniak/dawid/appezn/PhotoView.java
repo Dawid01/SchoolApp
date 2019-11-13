@@ -15,6 +15,7 @@ import android.view.WindowManager;
 
 import java.io.IOException;
 import java.security.Policy;
+import java.security.PublicKey;
 import java.util.List;
 
 public class PhotoView extends SurfaceView implements SurfaceHolder.Callback {
@@ -128,7 +129,6 @@ public class PhotoView extends SurfaceView implements SurfaceHolder.Callback {
     public void switchCamera(){
 
         mCamera.stopPreview();
-
         mCamera.release();
 
         if(currentCameraId == Camera.CameraInfo.CAMERA_FACING_BACK){
@@ -138,16 +138,24 @@ public class PhotoView extends SurfaceView implements SurfaceHolder.Callback {
             currentCameraId = Camera.CameraInfo.CAMERA_FACING_BACK;
         }
         try {
-            mCamera = Camera.open(currentCameraId);
-            Camera.Parameters parameters = mCamera.getParameters();
-            parameters.setPreviewSize(mPreviewSize.width, mPreviewSize.height);
-            mCamera.setParameters(parameters);
+            try {
+                mCamera = Camera.open(currentCameraId);
+                Camera.Parameters parameters = mCamera.getParameters();
+                parameters.setPreviewSize(mPreviewSize.width, mPreviewSize.height);
+                mCamera.setParameters(parameters);
+            }catch (RuntimeException E){}
             mCamera.setDisplayOrientation(90);
             mCamera.setPreviewDisplay(mHolder);
             mCamera.startPreview();
         }catch (IOException e){
 
         }
+    }
+
+    public void takePhoto(){
+
+
+
     }
 }
 

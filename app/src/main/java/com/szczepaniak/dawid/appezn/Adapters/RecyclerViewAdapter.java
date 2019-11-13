@@ -302,7 +302,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if(post.getPhotos() != null) {
             if (post.getPhotos().length == 1) {
 
-                Glide.with(context).load(post.getPhotos()[0]).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE)).into(viewHolder.photo);
+                Glide.with(context).load(post.getPhotos()[0]).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.AUTOMATIC)).into(viewHolder.photo);
 
             }else if(post.getPhotos().length > 1){
 

@@ -134,4 +134,8 @@ public class PostLoader {
         });
 
     }
+
+    public RecyclerViewAdapter getRecyclerViewAdapter() {
+        return recyclerViewAdapter;
+    }
 }

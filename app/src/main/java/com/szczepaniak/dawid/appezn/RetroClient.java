@@ -33,4 +33,8 @@ public class RetroClient {
         public static ApiService getApiService() {
             return getRetrofitInstance().create(ApiService.class);
         }
+
+    public static String getRootUrl() {
+        return ROOT_URL;
+    }
 }
