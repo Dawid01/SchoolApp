@@ -19,6 +19,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.squareup.picasso.Picasso;
 import com.szczepaniak.dawid.appezn.Activities.CommentsActivity;
+import com.szczepaniak.dawid.appezn.Activities.PhotosViewerActivity;
 import com.szczepaniak.dawid.appezn.ApiService;
 import com.szczepaniak.dawid.appezn.Assymetric.AsymmetricRecyclerView;
 import com.szczepaniak.dawid.appezn.Assymetric.AsymmetricRecyclerViewAdapter;
@@ -79,10 +80,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     }
 
-//    @Override
-//    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
-//        super.onDetachedFromRecyclerView(recyclerView);
-//    }
 
     @Override
     public int getItemCount() {
@@ -172,6 +169,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         viewHolder.likeIcon.setColorFilter(context.getResources().getColor(R.color.emoji_gray70));
         viewHolder.dislikeIcon.setColorFilter(context.getResources().getColor(R.color.emoji_gray70));
         viewHolder.commentIcon.setColorFilter(context.getResources().getColor(R.color.emoji_gray70));
+
+        viewHolder.photo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Singleton.getInstance().setPhotos(post.getPhotos());
+                Singleton.getInstance().getMainActivity().startActivity(new Intent( Singleton.getInstance().getMainActivity(), PhotosViewerActivity.class));
+            }
+        });
+
+
 
         final List<Comment> comments = post.getComments();
 

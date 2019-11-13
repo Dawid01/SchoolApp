@@ -16,6 +16,7 @@ import com.szczepaniak.dawid.appezn.Models.CommentList;
 import com.szczepaniak.dawid.appezn.R;
 import com.szczepaniak.dawid.appezn.RetroClient;
 import com.szczepaniak.dawid.appezn.Singleton;
+import com.vanniktech.emoji.EmojiPopup;
 
 import java.util.List;
 
@@ -31,6 +32,7 @@ public class CommentsActivity extends AppCompatActivity {
     private EditText commentText;
     private ApiService api;
     private CommentsAdapter commentsAdapter;
+    private ImageView emojiBtm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +50,8 @@ public class CommentsActivity extends AppCompatActivity {
         commentsView.setAdapter(commentsAdapter);
         send = findViewById(R.id.send);
         commentText = findViewById(R.id.post_edit_text);
+        emojiBtm = findViewById(R.id.emoji);
+        loadEmoji();
 
         send.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,9 +87,27 @@ public class CommentsActivity extends AppCompatActivity {
                         }
                     });
 
-
                 }
             }
         });
+    }
+
+    private void loadEmoji(){
+
+        final EmojiPopup emojiPopup = EmojiPopup.Builder.fromRootView(commentsView).build(commentText);
+
+        emojiBtm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(emojiPopup.isShowing()){
+                    emojiPopup.dismiss();
+                }else {
+                    emojiPopup.toggle();
+                }
+            }
+        });
+
+
     }
 }
