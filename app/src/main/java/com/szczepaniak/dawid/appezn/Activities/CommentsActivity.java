@@ -2,6 +2,7 @@ package com.szczepaniak.dawid.appezn.Activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -36,6 +37,11 @@ public class CommentsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES){
+            setTheme(R.style.DarkTheme);
+        }else {
+            setTheme(R.style.LightTheme);
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comments);
 

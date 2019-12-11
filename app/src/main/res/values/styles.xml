@@ -1,15 +1,20 @@
 <resources>
-
     <style name="LightTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="background">@color/background</item>
+
     </style>
 
-    <style name="DarkTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="DarkTheme" parent="ThemeOverlay.AppCompat.Dark">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="background">@color/background2</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:background">@color/background2</item>
+
     </style>
 
     <style name="galeryPopup">
@@ -19,6 +24,11 @@
 
     <style name="spinnerDropDownItemStyle" parent="android:TextAppearance.Widget.TextView.SpinnerItem">
 
+    </style>
+
+    <style name="WindowsAnimationThemes">
+        <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
     </style>
 
 

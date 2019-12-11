@@ -15,6 +15,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -94,6 +95,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES){
+            setTheme(R.style.DarkTheme);
+        }else {
+            setTheme(R.style.LightTheme);
+        }
         super.onCreate(savedInstanceState);
         EmojiManager.install(new TwitterEmojiProvider());
         setContentView(R.layout.activity_main);
@@ -258,9 +264,6 @@ public class MainActivity extends AppCompatActivity {
 
                                         if (response.isSuccessful()) {
                                             loadPosts();
-//                                            RecyclerViewAdapter recyclerViewAdapter = postLoader.getRecyclerViewAdapter();
-//                                            recyclerViewAdapter.notifyItemChanged(0, newPost);
-//                                            recyclerViewAdapter.notifyDataSetChanged();
                                             postEditText.setText("");
                                             singleton.setPhotos(new String[0]);
                                         }
@@ -300,9 +303,6 @@ public class MainActivity extends AppCompatActivity {
 
                             if (response.isSuccessful()) {
                                 loadPosts();
-//                                RecyclerViewAdapter recyclerViewAdapter = postLoader.getRecyclerViewAdapter();
-//                                recyclerViewAdapter.notifyItemChanged(0, newPost);
-//                                recyclerViewAdapter.notifyDataSetChanged();
                                 postEditText.setText("");
                                 singleton.setPhotos(new String[0]);
                             }
@@ -374,11 +374,9 @@ public class MainActivity extends AppCompatActivity {
                         plans.setVisibility(View.VISIBLE);
                         notifications.setVisibility(View.GONE);
                         createPostCard.setVisibility(View.GONE);
-                        //title.setText("Plans");
                         spinnerClass.setVisibility(View.VISIBLE);
                         spinnerTypes.setVisibility(View.VISIBLE);
                         title.setVisibility(View.GONE);
-                        lessonPlanSystem.loadClasses();
                         break;
                     case R.id.navigation_notifications:
                         home.setVisibility(View.GONE);
@@ -437,7 +435,6 @@ public class MainActivity extends AppCompatActivity {
 
     public static void initImageLoader(Context context) {
 
-        Singleton singleton = Singleton.getInstance();
         ImageLoaderConfiguration.Builder config = new ImageLoaderConfiguration.Builder(context);
         config.threadPriority(Thread.NORM_PRIORITY - 2);
         config.denyCacheImageMultipleSizesInMemory();

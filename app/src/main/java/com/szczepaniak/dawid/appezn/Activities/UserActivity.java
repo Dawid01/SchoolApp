@@ -2,6 +2,7 @@ package com.szczepaniak.dawid.appezn.Activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatDelegate;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -24,6 +25,11 @@ public class UserActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES){
+            setTheme(R.style.DarkTheme);
+        }else {
+            setTheme(R.style.LightTheme);
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
 

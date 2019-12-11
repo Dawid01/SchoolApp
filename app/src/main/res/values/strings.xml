@@ -17,4 +17,38 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+
+
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <string name="pref_title_ringtone">Ringtone</string>
+    <string name="pref_ringtone_silent">Silent</string>
+    <string name="pref_theme">Dark theme</string>
+    <string name="pref_title_notifications">Notifications</string>
+    <string name="summary_choose_ringtone">Choose notification sound</string>
+    <string name="pref_header_about">About</string>
+    <string name="summary_about">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</string>
+    <string name="app_version">1.0</string>
+    <string name="summary_support">We are happy to help!</string>
+    <string name="title_send_feedback">Send Feedback</string>
+    <string name="summary_faq">View frequently asked questions</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="url_privacy">http://ezn.edu.pl/</string>
+    <string name="title_terms">Terms &amp; Conditions</string>
+    <string name="url_terms">http://ezn.edu.pl/</string>
+    <string name="title_version">Version</string>
+    <string name="choose_email_client">Choose email client</string>
+    <string name="title_gallery_storage">Default Storage</string>
+    <string name="title_new_notification_sound">Notification messages</string>
+    <string name="title_vibrate">Vibrate</string>
+    <string name="summary_vibrate">Vibrate on new notification</string>
+    <string name="key_upload_over_wifi">key_upload_over_wifi</string>
+    <string name="key_gallery_name">key_gallery_name</string>
+    <string name="key_upload_quality">key_upload_quality</string>
+    <string name="notifications_new_message">notifications_new_message</string>
+    <string name="key_notifications_new_message_ringtone">key_notifications_new_message_ringtone</string>
+    <string name="key_vibrate">key_vibrate</string>
+    <string name="key_send_feedback">key_send_feedback</string>
+
 </resources>

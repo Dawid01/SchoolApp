@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.szczepaniak.dawid.appezn.Activities.BinaryGame;
+import com.szczepaniak.dawid.appezn.Activities.SettingsActivity;
 import com.szczepaniak.dawid.appezn.Activities.UserActivity;
 import com.szczepaniak.dawid.appezn.Models.User;
 
@@ -52,6 +53,9 @@ public class AccountDrawer {
                     case R.id.Games:
                         Intent binaryGame = new Intent(c, BinaryGame.class);
                         c.startActivity(binaryGame);
+                        break;
+                    case  R.id.Settings:
+                        c.startActivity(new Intent(c, SettingsActivity.class));
                         break;
                 }
                 return false;

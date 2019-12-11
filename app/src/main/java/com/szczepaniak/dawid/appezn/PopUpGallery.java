@@ -46,6 +46,7 @@ import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import jp.wasabeef.blurry.Blurry;
@@ -351,6 +352,7 @@ public class PopUpGallery extends AppCompatActivity {
 
                 listOfAllImages.add(galleryImage);
             }
+            Collections.reverse(listOfAllImages);
             return listOfAllImages;
         }
     }

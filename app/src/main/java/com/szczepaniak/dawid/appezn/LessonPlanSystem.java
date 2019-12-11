@@ -1,6 +1,5 @@
 package com.szczepaniak.dawid.appezn;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.design.widget.TabLayout;
@@ -13,7 +12,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
-import com.szczepaniak.dawid.appezn.Activities.MainActivity;
 import com.szczepaniak.dawid.appezn.Adapters.LessonsAdapter;
 import com.szczepaniak.dawid.appezn.Models.Class;
 import com.szczepaniak.dawid.appezn.Models.ClassList;
@@ -47,13 +45,12 @@ public class LessonPlanSystem {
     private Spinner spinnerWeeks;
     private String day = "10000";
     private int animation = 0;
-
-    private SharedPreferences planPreferences;
-
+    SharedPreferences planPreferences;
+    SharedPreferences.Editor editor;
 
     private  ArrayList<String> spinnerTypeItems = new ArrayList<>();
 
-    public LessonPlanSystem(final RecyclerView lessonsView, TabLayout days, Spinner spiner, final Spinner typeSpinner,  View next,  View back, Spinner spinnerWeeks, Context context) {
+    public LessonPlanSystem(final RecyclerView lessonsView, TabLayout days, final Spinner spiner, final Spinner typeSpinner, View next, View back, Spinner spinnerWeeks, Context context) {
         this.lessonsView = lessonsView;
         this.days = days;
         this.spinner = spiner;
@@ -68,7 +65,10 @@ public class LessonPlanSystem {
         spinnerTypeItems.add("Klasy");
         spinnerTypeItems.add("Nauczyciele");
         spinnerTypeItems.add("Sale");
-        planPreferences = context.getSharedPreferences("LessonPLan", Context.MODE_PRIVATE);
+        planPreferences = context.getSharedPreferences("lesson_plan", Context.MODE_PRIVATE);
+        editor = planPreferences.edit();
+        String type = planPreferences.getString("type", "Klasy");
+        typeSpinner.setSelection(spinnerTypeItems.indexOf(type));
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(context,
                 android.R.layout.simple_spinner_dropdown_item, spinnerTypeItems);
@@ -79,6 +79,7 @@ public class LessonPlanSystem {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
 
                 String s = typeSpinner.getSelectedItem().toString();
+                editor.putString("type", s);
 
                 if(s.equals("Klasy")){
 
@@ -165,6 +166,22 @@ public class LessonPlanSystem {
         });
     }
 
+    public void loadSpinerData(){
+
+        switch (typeSpinner.getSelectedItem().toString()){
+
+            case "KLasy":
+                loadClasses();
+                break;
+            case "Nauczyciele":
+                loadTeachers();
+                break;
+            case "Sale":
+                loadClasses();
+                break;
+        }
+    }
+
 
     public void loadClasses(){
 
@@ -192,11 +209,14 @@ public class LessonPlanSystem {
                                 android.R.layout.simple_spinner_dropdown_item, list);
                         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner.setAdapter(adapter);
-
+                        try {
+                            spinner.setSelection(list.indexOf(planPreferences.getString("Class", list.get(0))));
+                        }catch (IndexOutOfBoundsException e){}
 
                         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
                             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                                editor.putString("Class", spinner.getSelectedItem().toString());
                                 loadLessons();
                             }
 
@@ -246,11 +266,14 @@ public class LessonPlanSystem {
                                 android.R.layout.simple_spinner_dropdown_item, list);
                         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner.setAdapter(adapter);
-
+                        try{
+                            spinner.setSelection(list.indexOf(planPreferences.getString("Teachers", list.get(0))));
+                        }catch (IndexOutOfBoundsException e){}
 
                         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
                             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                                editor.putString("Teachers", spinner.getSelectedItem().toString());
                                 loadLessons();
 
                             }
@@ -289,7 +312,7 @@ public class LessonPlanSystem {
 
                     if (RoomsList != null) {
 
-                        List<String> list = new ArrayList<>();
+                        final List<String> list = new ArrayList<>();
                         for (Room r : RoomsList) {
 
                             list.add(r.getName());
@@ -299,13 +322,15 @@ public class LessonPlanSystem {
                                 android.R.layout.simple_spinner_dropdown_item, list);
                         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner.setAdapter(adapter);
-
+                        try{
+                        spinner.setSelection(list.indexOf(planPreferences.getString("Rooms", list.get(0))));
+                        }catch (IndexOutOfBoundsException e){}
 
                         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
                             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                                editor.putString("Rooms", spinner.getSelectedItem().toString());
                                 loadLessons();
-
                             }
 
                             @Override
@@ -332,7 +357,7 @@ public class LessonPlanSystem {
         lessonsView.removeAllViews();
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context);
         lessonsView.setLayoutManager(layoutManager);
-        String c = "1 AG";
+        String c = "";
 
         try{
             c= spinner.getSelectedItem().toString();
@@ -349,8 +374,6 @@ public class LessonPlanSystem {
             lessonListCall = api.getLessonsByRoom(c,day,100, "lessonNumber,asc");
 
         }
-
-        //retrofit2.Call<LessonList> lessonListCall = api.getLessons(c,day,100, "lessonNumber,asc");
 
         lessonListCall.enqueue(new Callback<LessonList>() {
             @Override
@@ -482,7 +505,6 @@ public class LessonPlanSystem {
         final LayoutAnimationController controller = AnimationUtils.loadLayoutAnimation(context, R.anim.layout_animation);
         recyclerView.setLayoutAnimation(controller);
     }
-
 
 
 }
