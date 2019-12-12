@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
         next = findViewById(R.id.week_next);
         back = findViewById(R.id.week_back);
         lessonPlanSystem = new LessonPlanSystem(lessonsView, days, spinnerClass, spinnerTypes, next, back, weekSpinner, this);
-        new AccountDrawer(drawer, MainActivity.this);
+        new AccountDrawer(drawer, MainActivity.this, this);
 
         singleton = Singleton.getInstance();
         singleton.setMainActivity(MainActivity.this);

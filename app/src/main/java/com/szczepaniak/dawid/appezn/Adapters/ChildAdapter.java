@@ -10,6 +10,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.szczepaniak.dawid.appezn.Activities.MyApplication;
@@ -84,7 +87,9 @@ class ViewHolder extends RecyclerView.ViewHolder {
         ImageLoader imageLoader = singleton.getImageLoader();
         ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(MyApplication.getAppContext()));
         if(mImageView != null) {
-            ImageLoader.getInstance().displayImage(String.valueOf(item.get(position).getImagePath()), mImageView);
+            //ImageLoader.getInstance().displayImage(String.valueOf(item.get(position).getImagePath()), mImageView);
+            Glide.with(MyApplication.getAppContext()).load(item.get(position).getImagePath()).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE)).override(mImageView.getWidth()).into(mImageView);
+
 
             if (mTotal > mDisplay) {
                 if (position == mDisplay - 1) {

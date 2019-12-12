@@ -70,7 +70,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
 
-       // viewHolder.setIsRecyclable(true);
         if (viewHolder instanceof ItemViewHolder) {
             populateItemRows((ItemViewHolder) viewHolder, position);
         } else if (viewHolder instanceof LoadingViewHolder) {
@@ -294,6 +293,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         AsymmetricRecyclerView album = viewHolder.photoAlbum;
         album.setItemViewCacheSize(500);
+        album.setNestedScrollingEnabled(true);
         album.setRequestedColumnCount(3);
         album.setRequestedHorizontalSpacing(Utils.dpToPx(context, 1));
         album.addItemDecoration(new SpacesItemDecoration(context.getResources().getDimensionPixelSize(R.dimen.asymetric_grid_offset)));
@@ -308,8 +308,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         if(post.getPhotos() != null) {
             if (post.getPhotos().length == 1) {
-
-                Glide.with(context).load(post.getPhotos()[0]).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.AUTOMATIC)).into(viewHolder.photo);
+                Glide.with(context).load(post.getPhotos()[0]).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE)).override(viewHolder.photo.getWidth()).into(viewHolder.photo);
 
             }else if(post.getPhotos().length > 1){
 
@@ -340,6 +339,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         if(i == 0){
                             colSpan = 3;
                             rowSpan = 2;
+                        }
+                    }else if(post.getPhotos().length == 5){
+
+                        if(i == 3){
+                            colSpan = 2;
+                            rowSpan = 1;
                         }
                     }
 

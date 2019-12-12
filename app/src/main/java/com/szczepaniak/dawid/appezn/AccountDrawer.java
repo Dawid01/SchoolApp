@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,6 +13,8 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.szczepaniak.dawid.appezn.Activities.BinaryGame;
+import com.szczepaniak.dawid.appezn.Activities.LoginActivity;
+import com.szczepaniak.dawid.appezn.Activities.MainActivity;
 import com.szczepaniak.dawid.appezn.Activities.SettingsActivity;
 import com.szczepaniak.dawid.appezn.Activities.UserActivity;
 import com.szczepaniak.dawid.appezn.Models.User;
@@ -28,10 +31,12 @@ public class AccountDrawer {
     private ImageView avatar;
     private Singleton singleton;
     private Context context;
+    private AppCompatActivity appCompatActivity;
 
-    public AccountDrawer(NavigationView drawer, Context context) {
+    public AccountDrawer(NavigationView drawer, final Context context, AppCompatActivity appCompatActivity) {
         this.drawer = drawer;
         this.context = context;
+        this.appCompatActivity = appCompatActivity;
         View header = drawer.getHeaderView(0);
         info = header.findViewById(R.id.info);
         avatar = header.findViewById(R.id.avatar);
@@ -39,6 +44,7 @@ public class AccountDrawer {
         api = RetroClient.getApiService();
         singleton = Singleton.getInstance();
         final Context c = context;
+        final AppCompatActivity a = appCompatActivity;
         loadUser();
         drawer.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -56,6 +62,11 @@ public class AccountDrawer {
                         break;
                     case  R.id.Settings:
                         c.startActivity(new Intent(c, SettingsActivity.class));
+                        break;
+                    case R.id.logout:
+                        Methods.clearData(c);
+                        c.startActivity(new Intent(c, LoginActivity.class));
+                        a.finish();
                         break;
                 }
                 return false;

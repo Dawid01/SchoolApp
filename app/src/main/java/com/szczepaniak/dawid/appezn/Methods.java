@@ -22,4 +22,12 @@ public class Methods {
         SharedPreferences sharedPreferences = context.getSharedPreferences("cookies",Context.MODE_PRIVATE);
         return sharedPreferences;
     }
+
+    public static void clearData(Context context){
+        SharedPreferences mcpPreferences = getSKSharedPreferences(context);
+        SharedPreferences.Editor editor = mcpPreferences.edit();
+        editor.clear();
+        editor.commit();
+    }
+
 }

@@ -48,7 +48,9 @@ public class PostLoader {
 
         recyclerViewAdapter = new RecyclerViewAdapter(rowsArrayList, context);
         recyclerViewAdapter.setHasStableIds(true);
+       // recyclerView.setHasFixedSize(true);
         recyclerView.setItemViewCacheSize(500);
+        recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setAdapter(recyclerViewAdapter);
     }
 
