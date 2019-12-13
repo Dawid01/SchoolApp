@@ -292,7 +292,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
 
         AsymmetricRecyclerView album = viewHolder.photoAlbum;
-        album.setItemViewCacheSize(500);
+        //album.setItemViewCacheSize(500);
         album.setNestedScrollingEnabled(true);
         album.setRequestedColumnCount(3);
         album.setRequestedHorizontalSpacing(Utils.dpToPx(context, 1));

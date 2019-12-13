@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -63,35 +64,34 @@ public class CommentsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if(!commentText.getText().equals("")){
+                if(!commentText.getText().toString().trim().equals("")) {
 
                     final Comment comment = new Comment();
                     comment.setContent(commentText.getText().toString());
                     comment.setPost(Singleton.getInstance().getPost());
                     comment.setId(Singleton.getInstance().getCurrentUserID());
                     retrofit2.Call<Comment> commentCall = api.newComment(comment);
+                     commentCall.enqueue(new Callback<Comment>() {
+                            @Override
+                            public void onResponse(Call<Comment> call, Response<Comment> response) {
 
-                    commentCall.enqueue(new Callback<Comment>() {
-                        @Override
-                        public void onResponse(Call<Comment> call, Response<Comment> response) {
+                                if (response.isSuccessful()) {
 
-                            if(response.isSuccessful()){
-
-                                Toast.makeText(CommentsActivity.this, "Comment Send", Toast.LENGTH_SHORT).show();
-                                comments.add(response.body());
-                                commentsAdapter.setComments(comments);
-                                commentsAdapter.notifyItemInserted(comments.size() - 1);
-                                commentsAdapter.notifyDataSetChanged();
-                                commentText.setText("");
-                                commentText.setActivated(false);
+                                    Toast.makeText(CommentsActivity.this, "Comment Send", Toast.LENGTH_SHORT).show();
+                                    comments.add(response.body());
+                                    commentsAdapter.setComments(comments);
+                                    commentsAdapter.notifyItemInserted(comments.size() - 1);
+                                    commentsAdapter.notifyDataSetChanged();
+                                    commentText.setText("");
+                                    commentText.setActivated(false);
+                                }
                             }
-                        }
 
-                        @Override
-                        public void onFailure(Call<Comment> call, Throwable t) {
+                            @Override
+                            public void onFailure(Call<Comment> call, Throwable t) {
 
-                        }
-                    });
+                            }
+                        });
 
                 }
             }
