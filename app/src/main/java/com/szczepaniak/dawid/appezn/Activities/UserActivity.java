@@ -8,6 +8,7 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 import com.szczepaniak.dawid.appezn.ApiService;
+import com.szczepaniak.dawid.appezn.GalleryImage;
 import com.szczepaniak.dawid.appezn.Models.User;
 import com.szczepaniak.dawid.appezn.PopUpGallery;
 import com.szczepaniak.dawid.appezn.R;
@@ -22,6 +23,8 @@ public class UserActivity extends AppCompatActivity {
     private ApiService api;
     private ImageView avatar;
     private View rootView;
+    private User user;
+    private PopUpGallery popUpGallery;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +47,10 @@ public class UserActivity extends AppCompatActivity {
             public void onResponse(Call<User> call, Response<User> response) {
 
                 if(response.isSuccessful()){
-
+                    user = response.body();
                     Picasso.get().load(response.body().getPhoto()).into(avatar);
+                    popUpGallery = new PopUpGallery(avatar, rootView,UserActivity.this);
+                    popUpGallery.setOneSelectGallery(true, avatar, user);
                 }
             }
 
@@ -55,7 +60,6 @@ public class UserActivity extends AppCompatActivity {
             }
         });
 
-        new PopUpGallery(avatar, rootView,UserActivity.this);
 
 
 

@@ -82,7 +82,6 @@ public class LessonPlanSystem {
                 editor.putString("type", s);
 
                 if(s.equals("Klasy")){
-
                     loadClasses();
                     loadLessons();
 
