@@ -15,6 +15,7 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -53,6 +54,8 @@ import com.szczepaniak.dawid.appezn.PostLoader;
 import com.szczepaniak.dawid.appezn.R;
 import com.szczepaniak.dawid.appezn.RetroClient;
 import com.szczepaniak.dawid.appezn.Singleton;
+import com.szczepaniak.dawid.appezn.ViewPager.PageAdapter;
+import com.szczepaniak.dawid.appezn.ViewPager.ViewPage;
 import com.vanniktech.emoji.EmojiEditText;
 import com.vanniktech.emoji.EmojiManager;
 import com.vanniktech.emoji.EmojiPopup;
@@ -84,28 +87,21 @@ public class MainActivity extends AppCompatActivity {
     private TextView title;
     private Spinner spinnerClass;
     private Spinner spinnerTypes;
-    private EmojiEditText postEditText;
-    private ImageView emojiBtm;
-    private ImageView galleryBtm;
-    private ImageView photoBtm;
-    private ImageView sendBtm;
-    private SwipeRefreshLayout refreshLayout;
-    private LinearLayout selectedImages;
-    private RecyclerView postsRecyclerView;
-    private ConstraintLayout noticesLayout;
-    private ImageView createPostAction;
-    private ConstraintLayout createPostLayaout;
-    private CardView createPostCard;
+
+
+   // private ConstraintLayout noticesLayout;
+
     private Singleton singleton;
-    private RecyclerView lessonsView;
-    private RecyclerView noticeRecyclerView;
+    //private RecyclerView lessonsView;
+    //private RecyclerView noticeRecyclerView;
     private LessonPlanSystem lessonPlanSystem;
-    private Spinner weekSpinner;
-    private ImageView next;
-    private ImageView back;
+   // private Spinner weekSpinner;
+   // private ImageView next;
+   // private ImageView back;
     private PostLoader postLoader;
     private NotificationManager mNotificationManager;
     private static final String KEY_TEXT_REPLY = "key_text_reply";
+    private ViewPager pager;
 
 
     public static final String NOTIFICATION_CHANNEL_ID = "channel_id";
@@ -131,25 +127,15 @@ public class MainActivity extends AppCompatActivity {
         title = findViewById(R.id.Title);
         spinnerClass = findViewById(R.id.class_spinner);
         spinnerTypes = findViewById(R.id.type_spinner);
-        postEditText = findViewById(R.id.post_edit_text);
-        emojiBtm = findViewById(R.id.emojiBtm);
-        emojiBtm.getDrawable().setColorFilter(Color.argb(255, 20, 177, 17), PorterDuff.Mode.MULTIPLY );
-        galleryBtm = findViewById(R.id.gallerybtm);
-        photoBtm = findViewById(R.id.photoBtm);
-        selectedImages = findViewById(R.id.selected_images);
-        refreshLayout = findViewById(R.id.Posts);
-        sendBtm = findViewById(R.id.send);
-        postsRecyclerView = findViewById(R.id.recicle_view_posts);
-        createPostAction = findViewById(R.id.create_post_action);
-        createPostLayaout = findViewById(R.id.create_post_layout);
-        createPostCard = findViewById(R.id.create_post_card);
-        lessonsView = findViewById(R.id.lessons_view);
+
+
+//        lessonsView = findViewById(R.id.lessons_view);
         TabLayout days = findViewById(R.id.week_days);
-        weekSpinner = findViewById(R.id.spinner_weeks);
-        noticesLayout = findViewById(R.id.notices_view);
-        next = findViewById(R.id.week_next);
-        back = findViewById(R.id.week_back);
-        lessonPlanSystem = new LessonPlanSystem(lessonsView, days, spinnerClass, spinnerTypes, next, back, weekSpinner, this);
+//        weekSpinner = findViewById(R.id.spinner_weeks);
+//        noticesLayout = findViewById(R.id.notices_view);
+//        next = findViewById(R.id.week_next);
+//        back = findViewById(R.id.week_back);
+       // lessonPlanSystem = new LessonPlanSystem(lessonsView, days, spinnerClass, spinnerTypes, next, back, weekSpinner, this);
         new AccountDrawer(drawer, MainActivity.this, this);
 
         singleton = Singleton.getInstance();
@@ -157,11 +143,9 @@ public class MainActivity extends AppCompatActivity {
 
 
         loadUser();
-        loadPosts();
-        loadEmoji();
-        postCreatorLisnter();
-        refreshPosts();
-        new PopUpGallery(galleryBtm, drawerLayout, MainActivity.this, selectedImages);
+
+        pager = findViewById(R.id.pager);
+        pager.setAdapter(new PageAdapter(MainActivity.this));
         buttonMenuListner();
         logo = findViewById(R.id.logo);
         logo.setOnClickListener(new View.OnClickListener() {
@@ -208,45 +192,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        createPostAction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if(createPostLayaout.getVisibility() == View.VISIBLE){
-                    createPostLayaout.setVisibility(View.GONE);
-                    createPostAction.setImageDrawable(MainActivity.this.getResources().getDrawable(R.mipmap.baseline_keyboard_arrow_down_black_24dp));
-                }else {
-                    createPostLayaout.setVisibility(View.VISIBLE);
-                    createPostAction.setImageDrawable(MainActivity.this.getResources().getDrawable(R.mipmap.baseline_keyboard_arrow_up_black_24dp));
-
-                }
-            }
-        });
-
-        photoBtm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent photoActivity = new Intent(MainActivity.this, CameraActivity.class);
-                startActivity(photoActivity);
-                overridePendingTransition( R.anim.slide_in_up, R.anim.none );
-            }
-        });
 
         initImageLoader(MainActivity.this);
     }
+        //new PopUpGallery(galleryBtm, drawerLayout, MainActivity.this, selectedImages);
 
-    void loadPosts(){
 
-        postLoader = new PostLoader(postsRecyclerView, api, refreshLayout,MainActivity.this);
-
-    }
 
     void loadNotices(){
 
-        noticeRecyclerView = findViewById(R.id.recicle_view_notices);
+        //noticeRecyclerView = findViewById(R.id.recicle_view_notices);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
-        noticeRecyclerView.setLayoutManager(layoutManager);
+       // noticeRecyclerView.setLayoutManager(layoutManager);
         NoticeApiService napi = NoticeRetroClient.getApiService();
 
         Call<List<NoticePost>> noticePostListCall = napi.getNoticePosts();
@@ -261,9 +218,9 @@ public class MainActivity extends AppCompatActivity {
 
                     NoticeAdapter noticeAdapter = new NoticeAdapter(noticePostList, MainActivity.this);
                     // recyclerView.setHasFixedSize(true);
-                    noticeRecyclerView.setItemViewCacheSize(500);
-                    noticeRecyclerView.setNestedScrollingEnabled(false);
-                    noticeRecyclerView.setAdapter(noticeAdapter);
+                  //  noticeRecyclcontexterView.setItemViewCacheSize(500);
+                  //  noticeRecyclerView.setNestedScrollingEnabled(false);
+                   // noticeRecyclerView.setAdapter(noticeAdapter);
                 }
             }
 
@@ -296,130 +253,9 @@ public class MainActivity extends AppCompatActivity {
 //        });
 
 
-
-
     }
 
 
-    private void postCreatorLisnter(){
-
-        sendBtm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                final MultipartBody.Part[] parts = new MultipartBody.Part[singleton.getGalleryImages().size()];
-                final ArrayList<String> names = new ArrayList<>();
-                String photosInfo = "";
-
-                for(int i = 0; i < parts.length; i++){
-
-                    File file = new File(singleton.getGalleryImages().get(i).getUrl());
-                    RequestBody fileReqBody = RequestBody.create(MediaType.parse("image/*"), file);
-                    names.add(file.getName());
-                    MultipartBody.Part part = MultipartBody.Part.createFormData("files", file.getName(), fileReqBody);
-                    parts[i] = part;
-                }
-
-                if(parts.length != 0){
-                    photosInfo = " with " + parts.length + " photo";
-                    if(parts.length > 1){
-                        photosInfo = photosInfo + "s";
-                    }
-                }
-
-                Call<ResponseBody> uploadFilesCall = api.uploadFiles(parts);
-
-                final ProgressDialog uploadDialog = ProgressDialog.show(MainActivity.this, "Loading...",
-                        "Upload post"+ photosInfo, true);
-
-
-                if(parts.length != 0) {
-                    uploadFilesCall.enqueue(new Callback<ResponseBody>() {
-                        @Override
-                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
-                            if (response.isSuccessful()) {
-                                String[] photos = new String[names.size()];
-
-                                for (int i = 0; i < names.size(); i++) {
-
-                                   //photos[i] = "http://192.168.0.110:8080/downloadFile/" + names.get(i);
-                                   photos[i] = RetroClient.getRootUrl() + "downloadFile/" + names.get(i);
-                                }
-
-                                final Post newPost = new Post();
-                                newPost.setContent(postEditText.getText().toString());
-                                newPost.setPhotos(photos);
-
-                                retrofit2.Call<Post> createPost = api.newPost(newPost);
-
-                                createPost.enqueue(new Callback<Post>() {
-                                    @Override
-                                    public void onResponse(Call<Post> call, Response<Post> response) {
-
-                                        uploadDialog.dismiss();
-                                        createPostLayaout.setVisibility(View.GONE);
-                                        LinearLayout photosLayout = createPostLayaout.findViewById(R.id.selected_images);
-                                        photosLayout.removeAllViews();
-                                        Singleton.getInstance().setGalleryImages(new ArrayList<GalleryImage>());
-
-                                        if (response.isSuccessful()) {
-                                            loadPosts();
-                                            postEditText.setText("");
-                                            singleton.setPhotos(new String[0]);
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onFailure(Call<Post> call, Throwable t) {
-                                        uploadDialog.dismiss();
-                                    }
-                                });
-
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<ResponseBody> call, Throwable t) {
-                            uploadDialog.dismiss();
-                        }
-                    });
-
-                }else {
-
-                    final Post newPost = new Post();
-                    newPost.setContent(postEditText.getText().toString());
-
-                    retrofit2.Call<Post> createPost = api.newPost(newPost);
-
-                    createPost.enqueue(new Callback<Post>() {
-                        @Override
-                        public void onResponse(Call<Post> call, Response<Post> response) {
-
-                            uploadDialog.dismiss();
-                            createPostLayaout.setVisibility(View.GONE);
-                            LinearLayout photosLayout = createPostLayaout.findViewById(R.id.selected_images);
-                            photosLayout.removeAllViews();
-                            Singleton.getInstance().setGalleryImages(new ArrayList<GalleryImage>());
-
-                            if (response.isSuccessful()) {
-                                loadPosts();
-                                postEditText.setText("");
-                                singleton.setPhotos(new String[0]);
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<Post> call, Throwable t) {
-                            uploadDialog.dismiss();
-                        }
-                    });
-                }
-
-                }
-
-        });
-    }
 
 
     private void loadUser() {
@@ -435,7 +271,7 @@ public class MainActivity extends AppCompatActivity {
                     final User user = response.body();
                     Singleton.getInstance().setCurrentUserID(user.getId());
                     if(user.getEmail().equals("guest@ezn.pl")){
-                        createPostCard.setVisibility(View.GONE);
+                        //createPostCard.setVisibility(View.GONE);
                     }else {
                         Picasso.get().load(user.getPhoto()).into(avatar);
                     }
@@ -462,9 +298,9 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.navigation_home:
                         home.setVisibility(View.VISIBLE);
                         plans.setVisibility(View.GONE);
-                        noticesLayout.setVisibility(View.GONE);
+                      //  noticesLayout.setVisibility(View.GONE);
                         notifications.setVisibility(View.GONE);
-                        createPostCard.setVisibility(View.VISIBLE);
+                       // createPostCard.setVisibility(View.VISIBLE);
                         title.setText("Home");
                         spinnerClass.setVisibility(View.GONE);
                         spinnerTypes.setVisibility(View.GONE);
@@ -474,9 +310,9 @@ public class MainActivity extends AppCompatActivity {
                     case  R.id.navigation_plans:
                         home.setVisibility(View.GONE);
                         plans.setVisibility(View.VISIBLE);
-                        noticesLayout.setVisibility(View.GONE);
+                        //noticesLayout.setVisibility(View.GONE);
                         notifications.setVisibility(View.GONE);
-                        createPostCard.setVisibility(View.GONE);
+                       // createPostCard.setVisibility(View.GONE);
                         spinnerClass.setVisibility(View.VISIBLE);
                         spinnerTypes.setVisibility(View.VISIBLE);
                         title.setVisibility(View.GONE);
@@ -484,9 +320,9 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.navigation_notifications:
                         home.setVisibility(View.GONE);
                         plans.setVisibility(View.GONE);
-                        noticesLayout.setVisibility(View.GONE);
+                       // noticesLayout.setVisibility(View.GONE);
                         notifications.setVisibility(View.VISIBLE);
-                        createPostCard.setVisibility(View.GONE);
+                        //createPostCard.setVisibility(View.GONE);
                         spinnerClass.setVisibility(View.GONE);
                         spinnerTypes.setVisibility(View.GONE);
                         title.setVisibility(View.VISIBLE);
@@ -496,9 +332,9 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.notice:
                         home.setVisibility(View.GONE);
                         plans.setVisibility(View.GONE);
-                        noticesLayout.setVisibility(View.VISIBLE);
+                       // noticesLayout.setVisibility(View.VISIBLE);
                         notifications.setVisibility(View.GONE);
-                        createPostCard.setVisibility(View.GONE);
+                        //createPostCard.setVisibility(View.GONE);
                         spinnerClass.setVisibility(View.GONE);
                         spinnerTypes.setVisibility(View.GONE);
                         title.setVisibility(View.VISIBLE);
@@ -513,42 +349,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void loadEmoji(){
-
-        final EmojiPopup emojiPopup = EmojiPopup.Builder.fromRootView(drawerLayout).build(postEditText);
-
-        emojiBtm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if(emojiPopup.isShowing()){
-                    emojiPopup.dismiss();
-                }else {
-                    emojiPopup.toggle();
-                }
-            }
-        });
-
-
-    }
-
-    private void refreshPosts(){
-
-        refreshLayout.setColorSchemeColors(
-                getResources().getColor(R.color.colorPrimary),
-                getResources().getColor(R.color.colorPrimaryDark),
-                getResources().getColor(R.color.colorAccent),
-                getResources().getColor(R.color.colorPrimaryDark));
-
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-
-                loadPosts();
-            }
-        });
-
-    }
 
     public static void initImageLoader(Context context) {
 
