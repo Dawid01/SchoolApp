@@ -2,26 +2,20 @@ package com.szczepaniak.dawid.appezn.Activities;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatDelegate;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -29,10 +23,8 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -40,35 +32,19 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.squareup.picasso.Picasso;
 import com.szczepaniak.dawid.appezn.AccountDrawer;
 import com.szczepaniak.dawid.appezn.ApiService;
-import com.szczepaniak.dawid.appezn.GalleryImage;
-import com.szczepaniak.dawid.appezn.LessonPlanSystem;
-import com.szczepaniak.dawid.appezn.Models.Post;
 import com.szczepaniak.dawid.appezn.Models.User;
 import com.szczepaniak.dawid.appezn.NoticeEzn.NoticeAdapter;
 import com.szczepaniak.dawid.appezn.NoticeEzn.NoticeApiService;
 import com.szczepaniak.dawid.appezn.NoticeEzn.NoticePost;
-import com.szczepaniak.dawid.appezn.NoticeEzn.NoticePostList;
 import com.szczepaniak.dawid.appezn.NoticeEzn.NoticeRetroClient;
-import com.szczepaniak.dawid.appezn.PopUpGallery;
 import com.szczepaniak.dawid.appezn.PostLoader;
 import com.szczepaniak.dawid.appezn.R;
 import com.szczepaniak.dawid.appezn.RetroClient;
 import com.szczepaniak.dawid.appezn.Singleton;
 import com.szczepaniak.dawid.appezn.ViewPager.PageAdapter;
-import com.szczepaniak.dawid.appezn.ViewPager.ViewPage;
-import com.vanniktech.emoji.EmojiEditText;
 import com.vanniktech.emoji.EmojiManager;
-import com.vanniktech.emoji.EmojiPopup;
 import com.vanniktech.emoji.twitter.TwitterEmojiProvider;
-
-import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
-
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -80,31 +56,14 @@ public class MainActivity extends AppCompatActivity {
     private ImageView avatar;
     private ApiService api;
     private BottomNavigationView bottonMenu;
-    private View home;
-    private View plans;
-    private View notifications;
     private DrawerLayout drawerLayout;
     private TextView title;
     private Spinner spinnerClass;
     private Spinner spinnerTypes;
-
-
-   // private ConstraintLayout noticesLayout;
-
     private Singleton singleton;
-    //private RecyclerView lessonsView;
-    //private RecyclerView noticeRecyclerView;
-    private LessonPlanSystem lessonPlanSystem;
-   // private Spinner weekSpinner;
-   // private ImageView next;
-   // private ImageView back;
-    private PostLoader postLoader;
-    private NotificationManager mNotificationManager;
-    private static final String KEY_TEXT_REPLY = "key_text_reply";
     private ViewPager pager;
 
 
-    public static final String NOTIFICATION_CHANNEL_ID = "channel_id";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,38 +73,65 @@ public class MainActivity extends AppCompatActivity {
             setTheme(R.style.LightTheme);
         }
         super.onCreate(savedInstanceState);
+        singleton = Singleton.getInstance();
+        singleton.setMainActivity(MainActivity.this);
+
         EmojiManager.install(new TwitterEmojiProvider());
         setContentView(R.layout.activity_main);
         api = RetroClient.getApiService();
         drawer = findViewById(R.id.nav_view);
         avatar = findViewById(R.id.avatar);
         bottonMenu = findViewById(R.id.bottomMenu);
-        home = findViewById(R.id.Posts);
-        plans = findViewById(R.id.Plans);
-        notifications = findViewById(R.id.Notifications);
         drawerLayout = findViewById(R.id.drawer_layout);
-        title = findViewById(R.id.Title);
+        title = findViewById(R.id.title);
         spinnerClass = findViewById(R.id.class_spinner);
+        singleton.setSpinnerClass(spinnerClass);
         spinnerTypes = findViewById(R.id.type_spinner);
-
-
-//        lessonsView = findViewById(R.id.lessons_view);
-        TabLayout days = findViewById(R.id.week_days);
-//        weekSpinner = findViewById(R.id.spinner_weeks);
-//        noticesLayout = findViewById(R.id.notices_view);
-//        next = findViewById(R.id.week_next);
-//        back = findViewById(R.id.week_back);
-       // lessonPlanSystem = new LessonPlanSystem(lessonsView, days, spinnerClass, spinnerTypes, next, back, weekSpinner, this);
+        singleton.setSpinnerTypes(spinnerTypes);
         new AccountDrawer(drawer, MainActivity.this, this);
-
-        singleton = Singleton.getInstance();
-        singleton.setMainActivity(MainActivity.this);
-
-
         loadUser();
 
         pager = findViewById(R.id.pager);
+        pager.setOffscreenPageLimit(4);
         pager.setAdapter(new PageAdapter(MainActivity.this));
+
+        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+
+                switch (i){
+                    case 0:
+                        changeToPosts();
+                        bottonMenu.setSelectedItemId(R.id.navigation_home);
+                        break;
+                    case 1:
+                        changeToNotice();
+                        bottonMenu.setSelectedItemId(R.id.notice);
+                        break;
+                    case 2:
+                        changeToPlans();
+                        bottonMenu.setSelectedItemId(R.id.navigation_plans);
+                        break;
+                    case 3:
+                        changeToNotifications();
+                        bottonMenu.setSelectedItemId(R.id.navigation_notifications);
+                        break;
+                }
+
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
+
         buttonMenuListner();
         logo = findViewById(R.id.logo);
         logo.setOnClickListener(new View.OnClickListener() {
@@ -195,7 +181,6 @@ public class MainActivity extends AppCompatActivity {
 
         initImageLoader(MainActivity.this);
     }
-        //new PopUpGallery(galleryBtm, drawerLayout, MainActivity.this, selectedImages);
 
 
 
@@ -296,57 +281,61 @@ public class MainActivity extends AppCompatActivity {
                 switch (id){
 
                     case R.id.navigation_home:
-                        home.setVisibility(View.VISIBLE);
-                        plans.setVisibility(View.GONE);
-                      //  noticesLayout.setVisibility(View.GONE);
-                        notifications.setVisibility(View.GONE);
-                       // createPostCard.setVisibility(View.VISIBLE);
-                        title.setText("Home");
-                        spinnerClass.setVisibility(View.GONE);
-                        spinnerTypes.setVisibility(View.GONE);
-                        title.setVisibility(View.VISIBLE);
-                        title.setOnClickListener(null);
-                        break;
-                    case  R.id.navigation_plans:
-                        home.setVisibility(View.GONE);
-                        plans.setVisibility(View.VISIBLE);
-                        //noticesLayout.setVisibility(View.GONE);
-                        notifications.setVisibility(View.GONE);
-                       // createPostCard.setVisibility(View.GONE);
-                        spinnerClass.setVisibility(View.VISIBLE);
-                        spinnerTypes.setVisibility(View.VISIBLE);
-                        title.setVisibility(View.GONE);
-                        break;
-                    case R.id.navigation_notifications:
-                        home.setVisibility(View.GONE);
-                        plans.setVisibility(View.GONE);
-                       // noticesLayout.setVisibility(View.GONE);
-                        notifications.setVisibility(View.VISIBLE);
-                        //createPostCard.setVisibility(View.GONE);
-                        spinnerClass.setVisibility(View.GONE);
-                        spinnerTypes.setVisibility(View.GONE);
-                        title.setVisibility(View.VISIBLE);
-                        title.setText("Notifications");
-                        title.setOnClickListener(null);
+                        changeToPosts();
+                        pager.setCurrentItem(0);
                         break;
                     case R.id.notice:
-                        home.setVisibility(View.GONE);
-                        plans.setVisibility(View.GONE);
-                       // noticesLayout.setVisibility(View.VISIBLE);
-                        notifications.setVisibility(View.GONE);
-                        //createPostCard.setVisibility(View.GONE);
-                        spinnerClass.setVisibility(View.GONE);
-                        spinnerTypes.setVisibility(View.GONE);
-                        title.setVisibility(View.VISIBLE);
-                        title.setText("Notices");
-                        title.setOnClickListener(null);
-                        loadNotices();
+                        changeToNotice();
+                        pager.setCurrentItem(1);
                         break;
+                    case  R.id.navigation_plans:
+                        changeToPlans();
+                        pager.setCurrentItem(2);
+                        break;
+                    case R.id.navigation_notifications:
+                        changeToNotifications();
+                        pager.setCurrentItem(3);
+                        break;
+
                 }
 
                 return false;
             }
         });
+    }
+
+
+    void changeToPosts(){
+        title.setText("Home");
+        spinnerClass.setVisibility(View.GONE);
+        spinnerTypes.setVisibility(View.GONE);
+        title.setVisibility(View.VISIBLE);
+        title.setOnClickListener(null);
+    }
+
+    void changeToNotice(){
+        spinnerClass.setVisibility(View.GONE);
+        spinnerTypes.setVisibility(View.GONE);
+        title.setVisibility(View.VISIBLE);
+        title.setText("Notices");
+        title.setOnClickListener(null);
+        pager.setCurrentItem(1);
+    }
+
+    void changeToPlans(){
+        spinnerClass.setVisibility(View.VISIBLE);
+        spinnerTypes.setVisibility(View.VISIBLE);
+        title.setVisibility(View.GONE);
+        pager.setCurrentItem(2);
+    }
+
+    void changeToNotifications(){
+        spinnerClass.setVisibility(View.GONE);
+        spinnerTypes.setVisibility(View.GONE);
+        title.setVisibility(View.VISIBLE);
+        title.setText("Notifications");
+        title.setOnClickListener(null);
+        pager.setCurrentItem(3);
     }
 
 

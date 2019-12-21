@@ -1,6 +1,7 @@
 package com.szczepaniak.dawid.appezn;
 
 import android.app.Activity;
+import android.widget.Spinner;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.szczepaniak.dawid.appezn.Models.Comment;
@@ -24,6 +25,9 @@ public class Singleton {
     private ImageLoader imageLoader;
 
     private String[] photos;
+
+    private Spinner spinnerClass;
+    private Spinner spinnerTypes;
 
     private Activity mainActivity;
 
@@ -102,5 +106,21 @@ public class Singleton {
 
     public void setGalleryImages(List<GalleryImage> galleryImages) {
         this.galleryImages = galleryImages;
+    }
+
+    public Spinner getSpinnerClass() {
+        return spinnerClass;
+    }
+
+    public void setSpinnerClass(Spinner spinnerClass) {
+        this.spinnerClass = spinnerClass;
+    }
+
+    public Spinner getSpinnerTypes() {
+        return spinnerTypes;
+    }
+
+    public void setSpinnerTypes(Spinner spinnerTypes) {
+        this.spinnerTypes = spinnerTypes;
     }
 }
