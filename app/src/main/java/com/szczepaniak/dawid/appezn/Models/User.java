@@ -13,7 +13,7 @@ public class User {
     @Expose
     private String name;
 
-    @SerializedName("suname")
+    @SerializedName("surname")
     @Expose
     private String surname;
 
