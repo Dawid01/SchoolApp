@@ -9,9 +9,13 @@ public class NoticePost {
     @Expose
     private Long id;
 
-    @SerializedName("slug")
+    @SerializedName("title")
     @Expose
-    private String slug;
+    private NoticeTitle title;
+
+    @SerializedName("content")
+    @Expose
+    private NoticeContent content;
 
     @SerializedName("date")
     @Expose
@@ -29,12 +33,12 @@ public class NoticePost {
         this.id = id;
     }
 
-    public String getSlug() {
-        return slug;
+    public NoticeTitle getTitle() {
+        return title;
     }
 
-    public void setSlug(String slug) {
-        this.slug = slug;
+    public void setTitle(NoticeTitle title) {
+        this.title = title;
     }
 
     public String getDate() {
@@ -43,5 +47,13 @@ public class NoticePost {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public NoticeContent getContent() {
+        return content;
+    }
+
+    public void setContent(NoticeContent content) {
+        this.content = content;
     }
 }

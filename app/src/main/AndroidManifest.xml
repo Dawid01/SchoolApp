@@ -3,6 +3,7 @@
     package="com.szczepaniak.dawid.appezn">
 
     <application
+        android:debuggable="true"
         android:name=".Activities.MyApplication"
         android:allowBackup="true"
         android:hardwareAccelerated="false"

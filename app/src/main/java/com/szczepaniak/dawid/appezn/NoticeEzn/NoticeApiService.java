@@ -10,6 +10,7 @@ public interface NoticeApiService {
 
 //    @GET("posts")
 //    Call<NoticePostList> getNoticePosts();
-        @GET("posts")
-        Call<List<NoticePost>> getNoticePosts();
+      @GET("posts")
+      Call<List<NoticePost>> getNoticePosts();
+
 }

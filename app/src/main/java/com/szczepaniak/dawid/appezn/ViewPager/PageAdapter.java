@@ -29,6 +29,7 @@ public class PageAdapter extends PagerAdapter {
                 new PostPage(context, layout);
                 break;
             case R.layout.notice_page:
+                new PageNotice(context, layout);
                 break;
             case R.layout.plans_page:
                 new PagePlans(context, layout);

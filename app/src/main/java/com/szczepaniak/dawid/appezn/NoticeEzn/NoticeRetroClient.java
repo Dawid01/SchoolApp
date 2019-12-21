@@ -1,11 +1,5 @@
 package com.szczepaniak.dawid.appezn.NoticeEzn;
 
-import com.szczepaniak.dawid.appezn.AddCookiesInterceptor;
-import com.szczepaniak.dawid.appezn.ApiService;
-import com.szczepaniak.dawid.appezn.ReceivedCookiesInterceptor;
-
-import java.util.concurrent.TimeUnit;
-
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
