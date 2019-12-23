@@ -63,14 +63,8 @@ public class NoticeLoader {
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
 
                 if (!isLoading) {
-//                    if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == rowsArrayList.size() - 1) {
-//                        loadMore();
-//                        isLoading = true;
-//                    }
-
                     if (!recyclerView.canScrollVertically(1)) {
                         loadMore();
                         isLoading = true;
@@ -86,8 +80,6 @@ public class NoticeLoader {
 
         rowsArrayList.add(null);
         noticeAdapter.notifyItemInserted(rowsArrayList.size() - 1);
-        // recyclerViewAdapter.notifyDataSetChanged();
-
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override

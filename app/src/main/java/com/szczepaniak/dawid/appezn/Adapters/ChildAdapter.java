@@ -11,8 +11,10 @@ import android.widget.TextView;
 
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.szczepaniak.dawid.appezn.Activities.MyApplication;
@@ -25,7 +27,7 @@ import com.szczepaniak.dawid.appezn.Singleton;
 
 import java.util.List;
 
-class ChildAdapter extends AGVRecyclerViewAdapter<ViewHolder> {
+public class ChildAdapter extends AGVRecyclerViewAdapter<ViewHolder> {
     private final List<ItemImage> items;
     private final String[] photosList;
     private int mDisplay = 0;
@@ -84,12 +86,10 @@ class ViewHolder extends RecyclerView.ViewHolder {
 
     public void bind(final List<ItemImage> item, int position, int mDisplay, int mTotal) {
         final Singleton singleton = Singleton.getInstance();
-        ImageLoader imageLoader = singleton.getImageLoader();
-        ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(MyApplication.getAppContext()));
         if(mImageView != null) {
             //ImageLoader.getInstance().displayImage(String.valueOf(item.get(position).getImagePath()), mImageView);
-            Glide.with(MyApplication.getAppContext()).load(item.get(position).getImagePath()).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE)).override(mImageView.getWidth()).into(mImageView);
-
+            //Glide.with(MyApplication.getAppContext()).load(item.get(position).getImagePath()).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE)).override(mImageView.getWidth()).into(mImageView);
+            Glide.with(MyApplication.getAppContext()).load(item.get(position).getImagePath()).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.AUTOMATIC)).into(mImageView);
 
             if (mTotal > mDisplay) {
                 if (position == mDisplay - 1) {
