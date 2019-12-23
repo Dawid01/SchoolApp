@@ -184,65 +184,6 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    void loadNotices(){
-
-        //noticeRecyclerView = findViewById(R.id.recicle_view_notices);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
-       // noticeRecyclerView.setLayoutManager(layoutManager);
-        NoticeApiService napi = NoticeRetroClient.getApiService();
-
-        Call<List<NoticePost>> noticePostListCall = napi.getNoticePosts();
-
-        noticePostListCall.enqueue(new Callback<List<NoticePost>>() {
-            @Override
-            public void onResponse(Call<List<NoticePost>> call, Response<List<NoticePost>> response) {
-
-                if(response.isSuccessful()){
-
-                    List<NoticePost> noticePostList = response.body();
-
-                    NoticeAdapter noticeAdapter = new NoticeAdapter(noticePostList, MainActivity.this);
-                    // recyclerView.setHasFixedSize(true);
-                  //  noticeRecyclcontexterView.setItemViewCacheSize(500);
-                  //  noticeRecyclerView.setNestedScrollingEnabled(false);
-                   // noticeRecyclerView.setAdapter(noticeAdapter);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<NoticePost>> call, Throwable t) {
-
-            }
-        });
-
-//        noticePostListCall.enqueue(new Callback<NoticePostList>() {
-//            @Override
-//            public void onResponse(Call<NoticePostList> call, Response<NoticePostList> response) {
-//
-//                if(response.isSuccessful()){
-//
-//                    NoticePostList noticePostList = response.body();
-//
-//                    NoticeAdapter noticeAdapter = new NoticeAdapter(noticePostList.getNoticePosts(), MainActivity.this);
-//                    // recyclerView.setHasFixedSize(true);
-//                    noticeRecyclerView.setItemViewCacheSize(500);
-//                    noticeRecyclerView.setNestedScrollingEnabled(false);
-//                    noticeRecyclerView.setAdapter(noticeAdapter);
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<NoticePostList> call, Throwable t) {
-//
-//            }
-//        });
-
-
-    }
-
-
-
-
     private void loadUser() {
 
         retrofit2.Call<User> userCall = api.getCurrentUser();

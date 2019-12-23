@@ -12,6 +12,7 @@
     app:layout_constraintTop_toTopOf="parent">
 
     <LinearLayout
+        android:id="@+id/layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -85,6 +86,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="1.0" />
         </android.support.constraint.ConstraintLayout>
+
 
     </LinearLayout>
 

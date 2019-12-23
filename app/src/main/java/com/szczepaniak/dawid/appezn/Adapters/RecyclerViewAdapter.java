@@ -75,8 +75,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         } else if (viewHolder instanceof LoadingViewHolder) {
             showLoadingView((LoadingViewHolder) viewHolder, position);
         }
-
-
     }
 
 
@@ -143,7 +141,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     private void showLoadingView(LoadingViewHolder viewHolder, int position) {
-        //ProgressBar would be displayed
 
     }
 

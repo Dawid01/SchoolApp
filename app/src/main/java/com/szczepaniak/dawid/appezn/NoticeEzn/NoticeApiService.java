@@ -4,13 +4,11 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
-import retrofit2.http.POST;
+import retrofit2.http.Query;
 
 public interface NoticeApiService {
 
-//    @GET("posts")
-//    Call<NoticePostList> getNoticePosts();
       @GET("posts")
-      Call<List<NoticePost>> getNoticePosts();
+      Call<List<NoticePost>> getNoticePosts(@Query("page") int page);
 
 }

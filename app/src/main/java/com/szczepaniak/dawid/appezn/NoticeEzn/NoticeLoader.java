@@ -1,4 +1,4 @@
-package com.szczepaniak.dawid.appezn;
+package com.szczepaniak.dawid.appezn.NoticeEzn;
 
 import android.content.Context;
 import android.os.Handler;
@@ -8,28 +8,25 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
 
-import com.szczepaniak.dawid.appezn.Adapters.RecyclerViewAdapter;
-import com.szczepaniak.dawid.appezn.Models.Post;
-import com.szczepaniak.dawid.appezn.Models.PostList;
-
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class PostLoader {
+public class NoticeLoader {
 
     private RecyclerView recyclerView;
-    private RecyclerViewAdapter recyclerViewAdapter;
-    private int page = 0;
-    private ArrayList<Post> rowsArrayList;
-    private boolean isLoading;
-    private ApiService api;
+    private NoticeAdapter noticeAdapter;
+    private int page = 1;
+    private ArrayList<NoticePost> rowsArrayList;
+    private boolean isLoading = false;
+    private NoticeApiService api;
     private Context context;
     private SwipeRefreshLayout refreshLayout;
 
-    public PostLoader(RecyclerView recyclerView, ApiService api, SwipeRefreshLayout refreshLayout, Context context) {
+    public NoticeLoader(RecyclerView recyclerView, NoticeApiService api, SwipeRefreshLayout refreshLayout, Context context) {
         this.recyclerView = recyclerView;
         this.api = api;
         this.refreshLayout = refreshLayout;
@@ -47,12 +44,12 @@ public class PostLoader {
 
     private void initAdapter() {
 
-        recyclerViewAdapter = new RecyclerViewAdapter(rowsArrayList, context);
-        recyclerViewAdapter.setHasStableIds(true);
-       // recyclerView.setHasFixedSize(true);
+        noticeAdapter = new NoticeAdapter(rowsArrayList, context);
+        noticeAdapter.setHasStableIds(true);
+        recyclerView.setHasFixedSize(true);
         recyclerView.setItemViewCacheSize(500);
         recyclerView.setNestedScrollingEnabled(false);
-        recyclerView.setAdapter(recyclerViewAdapter);
+        recyclerView.setAdapter(noticeAdapter);
     }
 
     private void initScrollListener() {
@@ -88,8 +85,8 @@ public class PostLoader {
     private void loadMore() {
 
         rowsArrayList.add(null);
-        recyclerViewAdapter.notifyItemInserted(rowsArrayList.size() - 1);
-       // recyclerViewAdapter.notifyDataSetChanged();
+        noticeAdapter.notifyItemInserted(rowsArrayList.size() - 1);
+        // recyclerViewAdapter.notifyDataSetChanged();
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -97,10 +94,9 @@ public class PostLoader {
             public void run() {
                 rowsArrayList.remove(rowsArrayList.size() - 1);
                 int scrollPosition = rowsArrayList.size();
-                recyclerViewAdapter.notifyItemRemoved(scrollPosition);
+                noticeAdapter.notifyItemRemoved(scrollPosition);
                 page++;
                 setPostList(page);
-
 
             }
         }, 2000);
@@ -110,41 +106,39 @@ public class PostLoader {
 
 
     private void setPostList(int page){
-        retrofit2.Call<PostList> allPosts = api.getAllPosts(page, 10,"id,desc");
 
 
-        allPosts.enqueue(new Callback<PostList>() {
+        retrofit2.Call<List<NoticePost>> getNotices = api.getNoticePosts(page);
+
+        getNotices.enqueue(new Callback<List<NoticePost>>() {
             @Override
-            public void onResponse(Call<PostList> call, Response<PostList> response) {
+            public void onResponse(Call<List<NoticePost>> call, Response<List<NoticePost>> response) {
 
                 if(response.isSuccessful()){
 
-                    ArrayList<Post> posts = (ArrayList<Post>) response.body().getPostList();
-                    if(posts.size() == 0){
+                    List<NoticePost> noticePostList = response.body();
+                    if(noticePostList.size() == 0){
                         isLoading = false;
                         Toast.makeText(context, "No more posts!",Toast.LENGTH_SHORT).show();
                     }else {
-                        for (Post post : posts) {
+                        for (NoticePost post : noticePostList) {
                             rowsArrayList.add(post);
                         }
-                        recyclerViewAdapter.notifyDataSetChanged();
+                        noticeAdapter.notifyDataSetChanged();
                         isLoading = false;
                         refreshLayout.setRefreshing(false);
                     }
+
                 }
             }
 
             @Override
-            public void onFailure(Call<PostList> call, Throwable t) {
-                recyclerViewAdapter.notifyDataSetChanged();
-                isLoading = false;
+            public void onFailure(Call<List<NoticePost>> call, Throwable t) {
 
             }
         });
 
+
     }
 
-    public RecyclerViewAdapter getRecyclerViewAdapter() {
-        return recyclerViewAdapter;
-    }
 }
