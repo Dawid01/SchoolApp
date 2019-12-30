@@ -45,15 +45,19 @@
 
                 <Spinner
                     android:id="@+id/spinner_weeks"
-                    android:layout_width="200dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:popupBackground="?attr/backgroundMenu"
+                    android:popupElevation="0dp" />
 
                 <ImageView
                     android:id="@+id/week_back"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:backgroundTint="@color/cardview_shadow_end_color"
+                    android:foregroundTintMode="src_in"
                     app:srcCompat="@mipmap/right" />
 
             </LinearLayout>

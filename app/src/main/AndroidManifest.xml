@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/LightTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Activities.SettingsActivity" />
+        <activity android:name=".Activities.SettingsActivity"/>
         <activity android:name=".Activities.BinaryGame" />
         <activity android:name=".Activities.CommentsActivity" />
         <activity android:name=".Activities.PhotosViewerActivity" />

@@ -4,6 +4,7 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/background"
     android:fitsSystemWindows="true">
 
     <!-- Layout to contain contents of main body of screen (drawer will slide over this) -->
@@ -11,19 +12,20 @@
         android:id="@+id/content_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/background">
+        android:background="?attr/background">
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="?attr/background">
 
             <LinearLayout
                 android:id="@+id/upMenu"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="1dp"
-                android:background="@android:color/background_light"
+                android:background="?attr/backgroundMenu"
                 android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -31,34 +33,22 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0">
 
-                <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/avatar"
                     android:layout_width="75dp"
                     android:layout_height="50dp"
+                    android:background="?attr/backgroundMenu"
                     android:padding="5dp"
                     android:src="@mipmap/test_avatar"
                     app:civ_border_color="@color/colorPrimary"
                     app:civ_border_width="2dp" />
-
-                <Spinner
-                    android:id="@+id/class_spinner"
-                    android:layout_width="60dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:visibility="gone" />
-
-                <Spinner
-                    android:id="@+id/type_spinner"
-                    android:layout_width="60dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/title"
                     android:layout_width="150dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:background="?attr/backgroundMenu"
                     android:paddingTop="6dp"
                     android:text="Home"
                     android:textAlignment="center"
@@ -66,11 +56,30 @@
                     android:textStyle="bold"
                     android:visibility="visible" />
 
+                <Spinner
+                    android:id="@+id/class_spinner"
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:popupBackground="?attr/backgroundMenu"
+                    android:popupElevation="0dp"
+                    android:visibility="gone" />
+
+                <Spinner
+                    android:id="@+id/type_spinner"
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:popupBackground="?attr/backgroundMenu"
+                    android:popupElevation="0dp"
+                    android:visibility="gone" />
+
                 <ImageView
                     android:id="@+id/logo"
                     android:layout_width="25dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:background="?attr/backgroundMenu"
                     android:paddingStart="10dp"
                     android:paddingLeft="10dp"
                     android:paddingTop="14dp"
@@ -96,6 +105,7 @@
                     android:id="@+id/pager"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:background="?attr/background"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -108,7 +118,8 @@
                 android:id="@+id/bottomMenu"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:background="@android:color/background_light"
+                android:background="?attr/backgroundMenu"
+                app:itemTextColor="@color/colorAccent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
@@ -125,10 +136,11 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@android:color/white"
+        android:background="?attr/backgroundLogin"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/header_layout"
         app:itemIconTint="@color/colorPrimary"
+        app:itemTextColor="?android:attr/textColor"
         app:menu="@menu/lefttnavigation" />
 
     <android.support.design.widget.NavigationView

@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="8dp"
+    app:cardBackgroundColor="?attr/backgroundMenu"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
@@ -49,6 +50,7 @@
                 android:layout_marginBottom="8dp"
                 android:text="Name Surname"
                 android:textAlignment="viewStart"
+                android:textColor="@color/colorPrimary"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -76,6 +78,7 @@
                 android:layout_marginBottom="8dp"
                 android:text="On the other hand, we denounce with righteous indignation and dislike men who are so beguiled and demoralized by the charms of pleasure of the moment, so blinded by desire, that they cannot foresee the pain and trouble that are bound to ensue; and equal blame belongs to those who fail in their duty through weakness of will, which is the same as saying through shrinking from toil and pain. These cases are perfectly simple and easy to distinguish. In a free hour, when our power of choice is untrammelled and when nothing prevents our being able to do what we like best, every pleasure is to be welcomed and every pain avoided. But in certain circumstances and owing to the claims of duty or the obligations of business it will frequently occur that pleasures have to be repudiated and annoyances accepted. The wise man therefore always holds in these matters to this principle of selection: he rejects pleasures to secure other greater pleasures, or else he endures pains to avoid worse pains"
                 android:textAlignment="viewStart"
+                android:textColor="?android:attr/textColor"
                 android:textSize="17sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -84,11 +87,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="1.0" />
         </android.support.constraint.ConstraintLayout>
-
-        <ImageView
-            android:id="@+id/photo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
 
         <com.szczepaniak.dawid.appezn.Assymetric.AsymmetricRecyclerView
             android:id="@+id/photo_album"
@@ -99,6 +97,11 @@
             android:overScrollMode="never"
             android:scrollbarSize="0dp"
             app:fastScrollEnabled="false" />
+
+        <ImageView
+            android:id="@+id/photo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 

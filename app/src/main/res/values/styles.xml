@@ -4,16 +4,23 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="background">@color/background</item>
+        <item name="backgroundMenu">@color/backgroundMenu</item>
+        <item name="backgroundLogin">@color/backgroundLogin</item>
+        <item name="android:textColor">@color/textColor</item>
+        <item name="android:textColorHint">@color/hintColor</item>
+
 
     </style>
 
-    <style name="DarkTheme" parent="ThemeOverlay.AppCompat.Dark">
+    <style name="DarkTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="background">@color/background2</item>
-        <item name="android:textColor">#ffffff</item>
-        <item name="android:background">@color/background2</item>
+        <item name="backgroundMenu">@color/backgroundMenu2</item>
+        <item name="backgroundLogin">@color/backgroundLogin2</item>
+        <item name="android:textColor">@color/textColor2</item>
+        <item name="android:textColorHint">@color/hintColor2</item>
 
     </style>
 

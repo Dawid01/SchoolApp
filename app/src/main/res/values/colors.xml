@@ -4,10 +4,22 @@
     <color name="colorPrimaryDark">#00817f</color>
     <color name="colorAccent">#14b1ae</color>
     <color name="background">#dadada</color>
+    <color name="backgroundMenu">#ffffff</color>
+    <color name="backgroundLogin">#ffffff</color>
+    <color name="textColor">#4B4A4A</color>
+    <color name="hintColor">#808080</color>
+
 
     <color name="colorPrimary2">#424242</color>
     <color name="colorPrimaryDark2">#1b1b1b</color>
     <color name="colorAccent2">#6d6d6d</color>
     <color name="background2">#121212</color>
+    <color name="backgroundMenu2">#292929</color>
+    <color name="backgroundLogin2">#121212</color>
+    <color name="textColor2">#ffffff</color>
+    <color name="hintColor2">#A2A2A2</color>
+
+
+    <color name="textDetal">#FF494949</color>
 
 </resources>

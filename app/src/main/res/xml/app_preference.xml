@@ -4,7 +4,7 @@
         <SwitchPreference
             android:defaultValue="false"
             android:key="theme"
-            android:title="@string/pref_theme" />
+            android:title="@string/pref_theme"/>
 
     </PreferenceCategory>
 

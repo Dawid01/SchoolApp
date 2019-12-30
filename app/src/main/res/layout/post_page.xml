@@ -30,7 +30,8 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginTop="5dp"
                     android:layout_marginRight="5dp"
-                    android:visibility="visible">
+                    android:visibility="visible"
+                    app:cardBackgroundColor="?attr/backgroundMenu">
 
                     <android.support.constraint.ConstraintLayout
                         android:layout_width="match_parent"
@@ -149,10 +150,12 @@
                                 android:layout_marginTop="10dp"
                                 android:layout_marginEnd="5dp"
                                 android:layout_marginBottom="8dp"
+                                android:backgroundTint="@color/textColor"
                                 android:ems="10"
                                 android:hint="Write your post"
                                 android:imeOptions="actionSend"
                                 android:inputType="textMultiLine"
+                                android:textColor="?android:attr/textColor"
                                 app:emojiSize="15sp"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"

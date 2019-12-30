@@ -1,12 +1,9 @@
 package com.szczepaniak.dawid.appezn.Activities;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Build;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -17,7 +14,10 @@ import android.preference.RingtonePreference;
 import android.preference.SwitchPreference;
 import android.support.v7.app.AppCompatDelegate;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.szczepaniak.dawid.appezn.AppCompatPreferenceActivity;
 import com.szczepaniak.dawid.appezn.R;
@@ -48,6 +48,13 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 
             SwitchPreference themeSwitch = (SwitchPreference) findPreference("theme");
 
+            if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES){
+
+                themeSwitch.setChecked(true);
+            }else {
+                themeSwitch.setChecked(false);
+            }
+
             themeSwitch.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -55,7 +62,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                         RestartApp();
                     }else {
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                         RestartApp();
                     }
                     return false;
@@ -67,6 +74,18 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             Intent i = new Intent(activity.getApplicationContext(), SettingsActivity.class);
             startActivity(i);
             activity.finish();
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            View view = super.onCreateView(inflater, container, savedInstanceState);
+
+            if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES){
+                view.setBackgroundColor(getResources().getColor(R.color.backgroundMenu2));
+            }else {
+                view.setBackgroundColor(getResources().getColor(R.color.backgroundMenu));
+            }
+            return view;
         }
     }
 
