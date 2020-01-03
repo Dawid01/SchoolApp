@@ -73,6 +73,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         public void RestartApp(){
             Intent i = new Intent(activity.getApplicationContext(), SettingsActivity.class);
             startActivity(i);
+            activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             activity.finish();
         }
 

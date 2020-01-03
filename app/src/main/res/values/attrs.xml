@@ -2,4 +2,5 @@
 <resources>
     <attr name="backgroundMenu" format="reference" />
     <attr name="backgroundLogin" format="reference" />
+    <attr name="refreshColor" format="reference" />
 </resources>

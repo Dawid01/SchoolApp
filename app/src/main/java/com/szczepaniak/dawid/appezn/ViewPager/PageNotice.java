@@ -1,8 +1,11 @@
 package com.szczepaniak.dawid.appezn.ViewPager;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.support.annotation.ColorInt;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.View;
 
 import com.szczepaniak.dawid.appezn.NoticeEzn.NoticeLoader;
@@ -33,6 +36,12 @@ public class PageNotice {
                 context.getResources().getColor(R.color.colorPrimaryDark),
                 context.getResources().getColor(R.color.colorAccent),
                 context.getResources().getColor(R.color.colorPrimaryDark));
+
+        TypedValue typedValue = new TypedValue();
+        Resources.Theme theme = context.getTheme();
+        theme.resolveAttribute(R.attr.refreshColor, typedValue, true);
+        @ColorInt int color = typedValue.data;
+        refreshLayout.setProgressBackgroundColorSchemeColor(color);
 
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override

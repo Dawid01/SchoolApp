@@ -61,6 +61,7 @@
                     android:layout_width="60dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:backgroundTint="?android:attr/textColor"
                     android:popupBackground="?attr/backgroundMenu"
                     android:popupElevation="0dp"
                     android:visibility="gone" />
@@ -70,6 +71,7 @@
                     android:layout_width="60dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:backgroundTint="?android:attr/textColor"
                     android:popupBackground="?attr/backgroundMenu"
                     android:popupElevation="0dp"
                     android:visibility="gone" />
@@ -119,6 +121,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:background="?attr/backgroundMenu"
+                app:itemIconTint="@drawable/selector_bottombar_text"
                 app:itemTextColor="@color/colorAccent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

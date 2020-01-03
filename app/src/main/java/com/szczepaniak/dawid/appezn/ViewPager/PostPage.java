@@ -3,12 +3,15 @@ package com.szczepaniak.dawid.appezn.ViewPager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.support.annotation.ColorInt;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -244,6 +247,12 @@ public class PostPage {
                 context.getResources().getColor(R.color.colorPrimaryDark),
                 context.getResources().getColor(R.color.colorAccent),
                 context.getResources().getColor(R.color.colorPrimaryDark));
+
+        TypedValue typedValue = new TypedValue();
+        Resources.Theme theme = context.getTheme();
+        theme.resolveAttribute(R.attr.refreshColor, typedValue, true);
+        @ColorInt int color = typedValue.data;
+        refreshLayout.setProgressBackgroundColorSchemeColor(color);
 
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="General">
+    <PreferenceCategory android:title="General"
+        android:textColor="?android:attr/textColor">
         <SwitchPreference
             android:defaultValue="false"
             android:key="theme"
@@ -8,7 +9,8 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/pref_title_notifications">
+    <PreferenceCategory android:title="@string/pref_title_notifications"
+        android:textColor="?android:attr/textColor">
 
         <SwitchPreference
             android:defaultValue="true"
@@ -31,11 +33,12 @@
             android:title="@string/title_vibrate" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/pref_header_about">
+    <PreferenceCategory android:title="@string/pref_header_about"
+        android:textColor="?android:attr/textColor">
 
         <Preference
             android:selectable="false"
-            android:summary="@string/summary_about" />
+            android:summary="@string/summary_about"/>
 
         <Preference
             android:summary="@string/app_version"

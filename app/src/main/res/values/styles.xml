@@ -8,7 +8,8 @@
         <item name="backgroundLogin">@color/backgroundLogin</item>
         <item name="android:textColor">@color/textColor</item>
         <item name="android:textColorHint">@color/hintColor</item>
-
+        <item name="refreshColor">@color/background</item>
+        <item name="android:textColorSecondary">@color/hintColor</item>
 
     </style>
 
@@ -21,6 +22,8 @@
         <item name="backgroundLogin">@color/backgroundLogin2</item>
         <item name="android:textColor">@color/textColor2</item>
         <item name="android:textColorHint">@color/hintColor2</item>
+        <item name="refreshColor">@color/background2</item>
+        <item name="android:textColorSecondary">@color/hintColor2</item>
 
     </style>
 
