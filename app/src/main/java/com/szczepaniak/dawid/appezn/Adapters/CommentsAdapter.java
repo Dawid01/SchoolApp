@@ -61,9 +61,11 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
 
-                User user = response.body();
-                holder.name.setText(user.getName() + " " + user.getSurname());
-                Picasso.get().load(user.getPhoto()).into(holder.avatar);
+                if(response.isSuccessful()) {
+                    User user = response.body();
+                    holder.name.setText(user.getName() + " " + user.getSurname());
+                    Picasso.get().load(user.getPhoto()).into(holder.avatar);
+                }
             }
 
             @Override

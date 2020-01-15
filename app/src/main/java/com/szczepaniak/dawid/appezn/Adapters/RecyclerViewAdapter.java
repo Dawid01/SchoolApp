@@ -3,14 +3,20 @@ package com.szczepaniak.dawid.appezn.Adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -109,6 +115,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         TextView likes;
         TextView dislikes;
         TextView comments;
+        ImageView edit;
+
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -125,6 +133,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             likes = itemView.findViewById(R.id.likes);
             dislikes = itemView.findViewById(R.id.dislikes);
             comments = itemView.findViewById(R.id.comments);
+            edit = itemView.findViewById(R.id.edit_button);
 
         }
 
@@ -165,6 +174,38 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         viewHolder.likeIcon.setColorFilter(context.getResources().getColor(R.color.emoji_gray70));
         viewHolder.dislikeIcon.setColorFilter(context.getResources().getColor(R.color.emoji_gray70));
         viewHolder.commentIcon.setColorFilter(context.getResources().getColor(R.color.emoji_gray70));
+
+        if(user.getId() == Singleton.getInstance().getCurrentUserID()){
+
+            viewHolder.edit.setVisibility(View.VISIBLE);
+            viewHolder.edit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+
+                    Display display = Singleton.getInstance().getMainActivity().getWindowManager().getDefaultDisplay();
+                    Point size = new Point();
+                    display.getSize(size);
+                    int width = size.x;
+                    int height = size.y;
+                    LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    View popupView = inflater.inflate(R.layout.post_edit, null);
+                    final PopupWindow pw = new PopupWindow(popupView, width, height, false);
+                    EditText postEdit = popupView.findViewById(R.id.post_edit_text);
+                    postEdit.setText(post.getContent());
+                    Button edit = popupView.findViewById(R.id.edit);
+
+                    edit.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            pw.dismiss();
+                        }
+                    });
+
+                    pw.showAtLocation(Singleton.getInstance().getMainActivity().findViewById(R.id.recicle_view_posts), Gravity.CENTER, 0, 0);
+                }
+            });
+        }
 
         viewHolder.photo.setOnClickListener(new View.OnClickListener() {
             @Override
