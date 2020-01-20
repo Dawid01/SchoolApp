@@ -122,7 +122,7 @@ public class PostLoader {
                     ArrayList<Post> posts = (ArrayList<Post>) response.body().getPostList();
                     if(posts.size() == 0){
                         isLoading = false;
-                        Toast.makeText(context, "No more posts!",Toast.LENGTH_SHORT).show();
+                       // Toast.makeText(context, "No more posts!",Toast.LENGTH_SHORT).show();
                     }else {
                         for (Post post : posts) {
                             rowsArrayList.add(post);

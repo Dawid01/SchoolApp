@@ -4,13 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="190dp"
-    android:background="@android:color/white">
+    android:background="?attr/backgroundLogin">
 
     <ImageView
         android:id="@+id/banner"
         android:layout_width="0dp"
         android:layout_height="125dp"
         android:background="@mipmap/banner"
+        android:tintMode="add"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

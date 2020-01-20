@@ -1,6 +1,8 @@
 package com.szczepaniak.dawid.appezn.Activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -21,6 +23,7 @@ import android.view.ViewGroup;
 
 import com.szczepaniak.dawid.appezn.AppCompatPreferenceActivity;
 import com.szczepaniak.dawid.appezn.R;
+import com.szczepaniak.dawid.appezn.Singleton;
 
 public class SettingsActivity extends AppCompatPreferenceActivity {
 
@@ -47,6 +50,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             addPreferencesFromResource(R.xml.app_preference);
 
             SwitchPreference themeSwitch = (SwitchPreference) findPreference("theme");
+            final SharedPreferences prefs = Singleton.getInstance().getMainActivity().getSharedPreferences(
+                    "Settings", Context.MODE_PRIVATE);
 
             if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES){
 
@@ -59,9 +64,11 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
                     if((Boolean)newValue) {
+                        prefs.edit().putBoolean("DarkTheme", true).apply();
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                         RestartApp();
                     }else {
+                        prefs.edit().putBoolean("DarkTheme", false).apply();
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                         RestartApp();
                     }

@@ -1,10 +1,14 @@
 package com.szczepaniak.dawid.appezn.Adapters;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.Display;
 import android.view.Gravity;
@@ -14,8 +18,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ImageView;
 
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -23,13 +29,19 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
+import com.davemorrissey.labs.subscaleview.ImageSource;
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.squareup.picasso.Picasso;
 import com.szczepaniak.dawid.appezn.Activities.CommentsActivity;
+import com.szczepaniak.dawid.appezn.Activities.EditPostActivity;
 import com.szczepaniak.dawid.appezn.Activities.PhotosViewerActivity;
 import com.szczepaniak.dawid.appezn.ApiService;
 import com.szczepaniak.dawid.appezn.Assymetric.AsymmetricRecyclerView;
 import com.szczepaniak.dawid.appezn.Assymetric.AsymmetricRecyclerViewAdapter;
 import com.szczepaniak.dawid.appezn.Assymetric.Utils;
+import com.szczepaniak.dawid.appezn.GalleryImage;
 import com.szczepaniak.dawid.appezn.ItemImage;
 import com.szczepaniak.dawid.appezn.Models.Comment;
 import com.szczepaniak.dawid.appezn.Models.Post;
@@ -182,27 +194,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 @Override
                 public void onClick(View v) {
 
-
-                    Display display = Singleton.getInstance().getMainActivity().getWindowManager().getDefaultDisplay();
-                    Point size = new Point();
-                    display.getSize(size);
-                    int width = size.x;
-                    int height = size.y;
-                    LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    View popupView = inflater.inflate(R.layout.post_edit, null);
-                    final PopupWindow pw = new PopupWindow(popupView, width, height, false);
-                    EditText postEdit = popupView.findViewById(R.id.post_edit_text);
-                    postEdit.setText(post.getContent());
-                    Button edit = popupView.findViewById(R.id.edit);
-
-                    edit.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            pw.dismiss();
-                        }
-                    });
-
-                    pw.showAtLocation(Singleton.getInstance().getMainActivity().findViewById(R.id.recicle_view_posts), Gravity.CENTER, 0, 0);
+                    Singleton.getInstance().setPost(post);
+                    context.startActivity(new Intent(context, EditPostActivity.class));
                 }
             });
         }

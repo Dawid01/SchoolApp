@@ -2,9 +2,11 @@ package com.szczepaniak.dawid.appezn;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,6 +34,7 @@ public class AccountDrawer {
     private Singleton singleton;
     private Context context;
     private AppCompatActivity appCompatActivity;
+    private ImageView banner;
 
     public AccountDrawer(NavigationView drawer, final Context context, AppCompatActivity appCompatActivity) {
         this.drawer = drawer;
@@ -41,6 +44,11 @@ public class AccountDrawer {
         info = header.findViewById(R.id.info);
         avatar = header.findViewById(R.id.avatar);
         email = header.findViewById(R.id.email);
+        banner = header.findViewById(R.id.banner);
+        if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES){
+            Drawable drawable = context.getResources().getDrawable(R.drawable.banner_black);
+            banner.setBackground(drawable);
+        }
         api = RetroClient.getApiService();
         singleton = Singleton.getInstance();
         final Context c = context;
