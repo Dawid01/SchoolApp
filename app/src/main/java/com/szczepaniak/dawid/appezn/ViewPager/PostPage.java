@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import com.szczepaniak.dawid.appezn.Activities.CameraActivity;
 import com.szczepaniak.dawid.appezn.ApiService;
 import com.szczepaniak.dawid.appezn.GalleryImage;
+import com.szczepaniak.dawid.appezn.Models.FileUploaded;
 import com.szczepaniak.dawid.appezn.Models.Post;
 import com.szczepaniak.dawid.appezn.PopUpGallery;
 import com.szczepaniak.dawid.appezn.PostLoader;
@@ -30,11 +31,11 @@ import com.vanniktech.emoji.EmojiPopup;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -147,24 +148,22 @@ public class PostPage {
                     }
                 }
 
-                retrofit2.Call<ResponseBody> uploadFilesCall = api.uploadFiles(parts);
-
-                final ProgressDialog uploadDialog = ProgressDialog.show(context, "Loading...",
+                retrofit2.Call<List<FileUploaded>> uploadFilesCall = api.uploadFiles(parts);
+                final ProgressDialog uploadDialog = ProgressDialog.show(context,"Loading...",
                         "Upload post"+ photosInfo, true);
 
 
+
                 if(parts.length != 0) {
-                    uploadFilesCall.enqueue(new Callback<ResponseBody>() {
+                    uploadFilesCall.enqueue(new Callback<List<FileUploaded>>() {
                         @Override
-                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        public void onResponse(Call<List<FileUploaded>> call, Response<List<FileUploaded>> response) {
 
                             if (response.isSuccessful()) {
                                 String[] photos = new String[names.size()];
 
                                 for (int i = 0; i < names.size(); i++) {
-
-                                   //photos[i] = "http://192.168.0.110:8080/downloadFile/" + names.get(i);
-                                   photos[i] = RetroClient.getRootUrl() + "downloadFile/" + names.get(i);
+                                    photos[i] = response.body().get(i).getFileDownloadUri();
                                 }
 
                                 final Post newPost = new Post();
@@ -200,7 +199,7 @@ public class PostPage {
                         }
 
                         @Override
-                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        public void onFailure(Call<List<FileUploaded>> call, Throwable t) {
                             uploadDialog.dismiss();
                         }
                     });

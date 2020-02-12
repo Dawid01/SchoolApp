@@ -10,6 +10,8 @@
         <item name="android:textColorHint">@color/hintColor</item>
         <item name="refreshColor">@color/background</item>
         <item name="android:textColorSecondary">@color/hintColor</item>
+        <item name="android:alertDialogStyle">@style/AppCompatAlertDialogStyle</item>
+
 
     </style>
 
@@ -24,6 +26,7 @@
         <item name="android:textColorHint">@color/hintColor2</item>
         <item name="refreshColor">@color/background2</item>
         <item name="android:textColorSecondary">@color/hintColor2</item>
+        <item name="android:alertDialogStyle">@style/AppCompatAlertDialogStyleDark</item>
 
     </style>
 
@@ -39,6 +42,38 @@
     <style name="WindowsAnimationThemes">
         <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
         <item name="android:windowExitAnimation">@android:anim/fade_out</item>
+    </style>
+
+    <style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColorPrimary">@color/textColor</item>
+        <item name="android:background">@color/backgroundLogin</item>
+        <item name="android:bottomBright">@color/backgroundLogin</item>
+        <item name="android:bottomDark">@color/backgroundLogin</item>
+        <item name="android:bottomMedium">@color/backgroundLogin</item>
+        <item name="android:centerBright">@color/backgroundLogin</item>
+        <item name="android:centerDark">@color/backgroundLogin</item>
+        <item name="android:centerMedium">@color/backgroundLogin</item>
+        <item name="android:fullBright">@color/backgroundLogin</item>
+        <item name="android:fullDark">@color/backgroundLogin</item>
+        <item name="android:topBright">@color/backgroundLogin</item>
+        <item name="android:topDark">@color/backgroundLogin</item>
+    </style>
+
+    <style name="AppCompatAlertDialogStyleDark" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColorPrimary">@color/textColor2</item>
+        <item name="android:background">@color/backgroundLogin2</item>
+        <item name="android:bottomBright">@color/backgroundLogin2</item>
+        <item name="android:bottomDark">@color/backgroundLogin2</item>
+        <item name="android:bottomMedium">@color/backgroundLogin2</item>
+        <item name="android:centerBright">@color/backgroundLogin2</item>
+        <item name="android:centerDark">@color/backgroundLogin2</item>
+        <item name="android:centerMedium">@color/backgroundLogin2</item>
+        <item name="android:fullBright">@color/backgroundLogin2</item>
+        <item name="android:fullDark">@color/backgroundLogin2</item>
+        <item name="android:topBright">@color/backgroundLogin2</item>
+        <item name="android:topDark">@color/backgroundLogin2</item>
     </style>
 
 

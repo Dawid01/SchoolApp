@@ -1,6 +1,7 @@
 package com.szczepaniak.dawid.appezn.Activities;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -40,6 +41,7 @@ public class LoginActivity extends AppCompatActivity {
     private TextInputLayout passwordInputLayout;
     private TextInputEditText passwordText;
     private TextView guest;
+    private TextView signin;
     private Button loginButton;
     ApiService apiService;
     private ProgressDialog pDialog;
@@ -76,6 +78,7 @@ public class LoginActivity extends AppCompatActivity {
         apiService = RetroClient.getApiService();
         singleton = Singleton.getInstance();
         guest = findViewById(R.id.guest);
+        signin = findViewById(R.id.signin);
 
         if (!hasPermissions(this, PERMISSIONS)) {
             ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
@@ -103,6 +106,14 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 login("guest@ezn.pl", "guest", false);
+            }
+        });
+
+        signin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
             }
         });
     }

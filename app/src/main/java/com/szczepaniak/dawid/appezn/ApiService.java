@@ -3,6 +3,8 @@ package com.szczepaniak.dawid.appezn;
 import com.szczepaniak.dawid.appezn.Models.ClassList;
 import com.szczepaniak.dawid.appezn.Models.Comment;
 import com.szczepaniak.dawid.appezn.Models.CommentList;
+import com.szczepaniak.dawid.appezn.Models.FileUploaded;
+import com.szczepaniak.dawid.appezn.Models.FileUploadedList;
 import com.szczepaniak.dawid.appezn.Models.LessonList;
 import com.szczepaniak.dawid.appezn.Models.Period;
 import com.szczepaniak.dawid.appezn.Models.PeriodList;
@@ -50,7 +52,7 @@ public interface  ApiService {
     @GET("posts/{id}")
     Call<Post> getPost(@Path("id") Long id);
 
-    @PUT("posts/{id}")
+    @PUT("posts/update/{id}")
     Call<Post> putPost(@Path("id") Long id, @Body Post post);
 
     @POST("posts")
@@ -87,7 +89,7 @@ public interface  ApiService {
 
     @Multipart
     @POST("uploadMultipleFiles")
-    Call<ResponseBody> uploadFiles(@Part MultipartBody.Part[] files);
+    Call<List<FileUploaded>> uploadFiles(@Part MultipartBody.Part[] files);
 
     @GET("classes")
     Call<ClassList> getClassList(@Query("size") int size);

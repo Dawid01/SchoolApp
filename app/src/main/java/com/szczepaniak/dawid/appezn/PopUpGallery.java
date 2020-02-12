@@ -5,28 +5,21 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.Point;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
@@ -38,11 +31,11 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.squareup.picasso.Picasso;
+import com.szczepaniak.dawid.appezn.Models.FileUploaded;
 import com.szczepaniak.dawid.appezn.Models.User;
 
 import java.io.File;
@@ -55,7 +48,6 @@ import jp.wasabeef.blurry.Blurry;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -282,11 +274,11 @@ public class PopUpGallery extends AppCompatActivity {
                     MultipartBody.Part[] parts = new MultipartBody.Part[1];
                     MultipartBody.Part part = MultipartBody.Part.createFormData("files", file.getName(), fileReqBody);
                     parts[0] = part;
-                    Call<ResponseBody> uploadFilesCall = api.uploadFiles(parts);
+                    Call<List<FileUploaded>> uploadFilesCall = api.uploadFiles(parts);
 
-                    uploadFilesCall.enqueue(new Callback<ResponseBody>() {
+                    uploadFilesCall.enqueue(new Callback<List<FileUploaded>>() {
                         @Override
-                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        public void onResponse(Call<List<FileUploaded>> call, Response<List<FileUploaded>> response) {
 
                             if(response.isSuccessful()){
 
@@ -309,7 +301,7 @@ public class PopUpGallery extends AppCompatActivity {
                         }
 
                         @Override
-                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        public void onFailure(Call<List<FileUploaded>> call, Throwable t) {
 
                         }
                     });
