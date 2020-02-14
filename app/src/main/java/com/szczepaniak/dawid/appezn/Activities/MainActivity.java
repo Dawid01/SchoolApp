@@ -29,9 +29,11 @@ import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.squareup.picasso.Picasso;
 import com.szczepaniak.dawid.appezn.AccountDrawer;
 import com.szczepaniak.dawid.appezn.ApiService;
+import com.szczepaniak.dawid.appezn.CommentUpSlider;
 import com.szczepaniak.dawid.appezn.Models.User;
 import com.szczepaniak.dawid.appezn.NoticeEzn.NoticeAdapter;
 import com.szczepaniak.dawid.appezn.NoticeEzn.NoticeApiService;
@@ -62,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
     private Spinner spinnerTypes;
     private Singleton singleton;
     private ViewPager pager;
+    private CommentUpSlider commentUpSlider;
 
 
 
@@ -180,6 +183,9 @@ public class MainActivity extends AppCompatActivity {
 
 
         initImageLoader(MainActivity.this);
+
+        commentUpSlider = new CommentUpSlider(this);
+
     }
 
 
@@ -292,6 +298,21 @@ public class MainActivity extends AppCompatActivity {
         ImageLoader.getInstance().init(config.build());
     }
 
+
+    @Override
+    public void onBackPressed() {
+
+        SlidingUpPanelLayout sliding = findViewById(R.id.sliding_layout);
+        if(sliding.getPanelState() != SlidingUpPanelLayout.PanelState.HIDDEN){
+            sliding.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+            bottonMenu.setVisibility(View.VISIBLE);
+        }
+
+    }
+
+    public CommentUpSlider getCommentUpSlider() {
+        return commentUpSlider;
+    }
 }
 
 

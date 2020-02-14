@@ -11,8 +11,7 @@
         <item name="refreshColor">@color/background</item>
         <item name="android:textColorSecondary">@color/hintColor</item>
         <item name="android:alertDialogStyle">@style/AppCompatAlertDialogStyle</item>
-
-
+        <item name="android:windowActionBarOverlay">true</item>
     </style>
 
     <style name="DarkTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -27,7 +26,7 @@
         <item name="refreshColor">@color/background2</item>
         <item name="android:textColorSecondary">@color/hintColor2</item>
         <item name="android:alertDialogStyle">@style/AppCompatAlertDialogStyleDark</item>
-
+        <item name="android:windowActionBarOverlay">true</item>
     </style>
 
     <style name="galeryPopup">

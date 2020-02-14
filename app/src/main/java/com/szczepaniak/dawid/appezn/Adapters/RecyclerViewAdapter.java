@@ -36,6 +36,7 @@ import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.squareup.picasso.Picasso;
 import com.szczepaniak.dawid.appezn.Activities.CommentsActivity;
 import com.szczepaniak.dawid.appezn.Activities.EditPostActivity;
+import com.szczepaniak.dawid.appezn.Activities.MainActivity;
 import com.szczepaniak.dawid.appezn.Activities.PhotosViewerActivity;
 import com.szczepaniak.dawid.appezn.ApiService;
 import com.szczepaniak.dawid.appezn.Assymetric.AsymmetricRecyclerView;
@@ -226,9 +227,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                 Singleton.getInstance().setComments(comments);
                 Singleton.getInstance().setPost(post);
-                Activity activity = Singleton.getInstance().getMainActivity();
-                Intent commentsIntent = new Intent(activity, CommentsActivity.class);
-                activity.startActivity(commentsIntent);
+                MainActivity mainActivity = (MainActivity) Singleton.getInstance().getMainActivity();
+                mainActivity.getCommentUpSlider().openPanel();
 
             }
         });

@@ -1,12 +1,9 @@
-package com.szczepaniak.dawid.appezn.Activities;
+package com.szczepaniak.dawid.appezn;
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.app.AppCompatDelegate;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.internal.BottomNavigationMenu;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -15,15 +12,11 @@ import android.widget.Toast;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.squareup.picasso.Picasso;
+import com.szczepaniak.dawid.appezn.Activities.CommentsActivity;
+import com.szczepaniak.dawid.appezn.Activities.MainActivity;
 import com.szczepaniak.dawid.appezn.Adapters.CommentsAdapter;
-import com.szczepaniak.dawid.appezn.ApiService;
 import com.szczepaniak.dawid.appezn.Models.Comment;
-import com.szczepaniak.dawid.appezn.Models.CommentList;
 import com.szczepaniak.dawid.appezn.Models.Post;
-import com.szczepaniak.dawid.appezn.R;
-import com.szczepaniak.dawid.appezn.RetroClient;
-import com.szczepaniak.dawid.appezn.Singleton;
-import com.szczepaniak.dawid.appezn.TextViewEmojiAndMore;
 import com.vanniktech.emoji.EmojiPopup;
 
 import java.util.List;
@@ -31,9 +24,14 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.http.POST;
 
-public class CommentsActivity extends AppCompatActivity {
+public class CommentUpSlider {
+
+    private MainActivity mainActivity;
+    private SlidingUpPanelLayout sliding;
+    private ConstraintLayout slidingLayout;
+    private View menu;
+
 
     private RecyclerView commentsView;
     private List<Comment> comments;
@@ -42,41 +40,46 @@ public class CommentsActivity extends AppCompatActivity {
     private ApiService api;
     private CommentsAdapter commentsAdapter;
     private ImageView emojiBtm;
-    private SlidingUpPanelLayout sliding;
     private TextViewEmojiAndMore postContent;
     private ImageView avatar;
     private TextView userName;
     private TextView data;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES){
-            setTheme(R.style.DarkTheme);
-        }else {
-            setTheme(R.style.LightTheme);
-        }
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_comments);
+    public CommentUpSlider(MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
 
         api = RetroClient.getApiService();
-        commentsView = findViewById(R.id.comments_view);
-        comments = Singleton.getInstance().getComments();
+        commentsView = mainActivity.findViewById(R.id.comments_view);
         commentsView.setHasFixedSize(true);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(mainActivity);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         commentsView.setLayoutManager(layoutManager);
-        commentsAdapter = new CommentsAdapter(comments, this);
-        commentsView.setAdapter(commentsAdapter);
-        send = findViewById(R.id.send);
-        commentText = findViewById(R.id.post_edit_text);
-        emojiBtm = findViewById(R.id.emoji);
+
+        send = mainActivity.findViewById(R.id.send);
+        commentText = mainActivity.findViewById(R.id.post_edit_text);
+        emojiBtm = mainActivity.findViewById(R.id.emoji);
         loadEmoji();
-        sliding = findViewById(R.id.sliding_layout);
+        sliding = mainActivity.findViewById(R.id.sliding_layout);
         sliding.setScrollableView(commentsView);
-        postContent = findViewById(R.id.content);
-        avatar = findViewById(R.id.avatar);
-        userName = findViewById(R.id.name);
-        data = findViewById(R.id.time);
+        slidingLayout = mainActivity.findViewById(R.id.sliding);
+        postContent = mainActivity.findViewById(R.id.contentPost);
+        avatar = mainActivity.findViewById(R.id.avatarPost);
+        userName = mainActivity.findViewById(R.id.name);
+        data = mainActivity.findViewById(R.id.time);
+        menu = mainActivity.findViewById(R.id.bottomMenu);
+        sliding.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+
+    }
+
+    public void openPanel(){
+
+        sliding.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        menu.setVisibility(View.GONE);
+        commentsView.removeAllViews();
+        
+        comments = Singleton.getInstance().getComments();
+        commentsAdapter = new CommentsAdapter(comments, mainActivity);
+        commentsView.setAdapter(commentsAdapter);
 
         Post post = Singleton.getInstance().getPost();
         postContent.setText(post.getContent());
@@ -103,32 +106,34 @@ public class CommentsActivity extends AppCompatActivity {
                     comment.setPost(Singleton.getInstance().getPost());
                     comment.setId(Singleton.getInstance().getCurrentUserID());
                     retrofit2.Call<Comment> commentCall = api.newComment(comment);
-                     commentCall.enqueue(new Callback<Comment>() {
-                            @Override
-                            public void onResponse(Call<Comment> call, Response<Comment> response) {
+                    commentCall.enqueue(new Callback<Comment>() {
+                        @Override
+                        public void onResponse(Call<Comment> call, Response<Comment> response) {
 
-                                if (response.isSuccessful()) {
+                            if (response.isSuccessful()) {
 
-                                    Toast.makeText(CommentsActivity.this, "Comment Send", Toast.LENGTH_SHORT).show();
-                                    comments.add(response.body());
-                                    commentsAdapter.setComments(comments);
-                                    commentsAdapter.notifyItemInserted(comments.size() - 1);
-                                    commentsAdapter.notifyDataSetChanged();
-                                    commentText.setText("");
-                                    commentText.setActivated(false);
-                                }
+                                Toast.makeText(mainActivity, "Comment Send", Toast.LENGTH_SHORT).show();
+                                comments.add(response.body());
+                                commentsAdapter.setComments(comments);
+                                commentsAdapter.notifyItemInserted(comments.size() - 1);
+                                commentsAdapter.notifyDataSetChanged();
+                                commentText.setText("");
+                                commentText.setActivated(false);
                             }
+                        }
 
-                            @Override
-                            public void onFailure(Call<Comment> call, Throwable t) {
+                        @Override
+                        public void onFailure(Call<Comment> call, Throwable t) {
 
-                            }
-                        });
+                        }
+                    });
 
                 }
             }
         });
     }
+
+
 
     private void loadEmoji(){
 
@@ -148,4 +153,5 @@ public class CommentsActivity extends AppCompatActivity {
 
 
     }
+
 }

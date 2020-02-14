@@ -16,7 +16,6 @@ import com.bumptech.glide.Glide;
 import com.szczepaniak.dawid.appezn.ApiService;
 import com.szczepaniak.dawid.appezn.GalleryImage;
 import com.szczepaniak.dawid.appezn.Models.Post;
-import com.szczepaniak.dawid.appezn.Models.User;
 import com.szczepaniak.dawid.appezn.R;
 import com.szczepaniak.dawid.appezn.RetroClient;
 import com.szczepaniak.dawid.appezn.Singleton;
@@ -26,7 +25,6 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.http.POST;
 
 public class EditPostActivity extends AppCompatActivity {
 
