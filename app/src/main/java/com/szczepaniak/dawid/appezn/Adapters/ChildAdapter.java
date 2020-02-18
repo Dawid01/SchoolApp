@@ -17,6 +17,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.squareup.picasso.Picasso;
 import com.szczepaniak.dawid.appezn.Activities.MyApplication;
 import com.szczepaniak.dawid.appezn.Activities.PhotosViewerActivity;
 import com.szczepaniak.dawid.appezn.Assymetric.AGVRecyclerViewAdapter;
@@ -89,7 +90,8 @@ class ViewHolder extends RecyclerView.ViewHolder {
         if(mImageView != null) {
             //ImageLoader.getInstance().displayImage(String.valueOf(item.get(position).getImagePath()), mImageView);
             //Glide.with(MyApplication.getAppContext()).load(item.get(position).getImagePath()).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE)).override(mImageView.getWidth()).into(mImageView);
-            Glide.with(MyApplication.getAppContext()).load(item.get(position).getImagePath()).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.AUTOMATIC)).into(mImageView);
+          //  Glide.with(MyApplication.getAppContext()).load(item.get(position).getImagePath()).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.AUTOMATIC)).into(mImageView);
+            Picasso.get().load(item.get(position).getImagePath()).into(mImageView);
 
             if (mTotal > mDisplay) {
                 if (position == mDisplay - 1) {

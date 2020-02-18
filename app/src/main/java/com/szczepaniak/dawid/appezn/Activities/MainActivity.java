@@ -205,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
                     if(user.getEmail().equals("guest@ezn.pl")){
                         //createPostCard.setVisibility(View.GONE);
                     }else {
-                        Picasso.get().load(user.getPhoto()).into(avatar);
+                        Picasso.get().load(user.getPhoto()).placeholder(R.drawable.avatar).into(avatar);
                     }
                 }
             }

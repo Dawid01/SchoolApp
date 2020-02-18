@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.Toast;
 
 import com.szczepaniak.dawid.appezn.Adapters.RecyclerViewAdapter;
@@ -49,9 +50,11 @@ public class PostLoader {
 
         recyclerViewAdapter = new RecyclerViewAdapter(rowsArrayList, context);
         recyclerViewAdapter.setHasStableIds(true);
-       // recyclerView.setHasFixedSize(true);
-        recyclerView.setItemViewCacheSize(500);
-        recyclerView.setNestedScrollingEnabled(false);
+        //recyclerView.setHasFixedSize(true);
+       // recyclerView.setNestedScrollingEnabled(false);
+        //recyclerView.setItemViewCacheSize(500);
+       // recyclerView.setDrawingCacheEnabled(true);
+        //recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_LOW);
         recyclerView.setAdapter(recyclerViewAdapter);
     }
 
@@ -109,7 +112,7 @@ public class PostLoader {
     }
 
 
-    private void setPostList(int page){
+    private void setPostList(final int page){
         retrofit2.Call<PostList> allPosts = api.getAllPosts(page, 10,"id,desc");
 
 
@@ -127,7 +130,8 @@ public class PostLoader {
                         for (Post post : posts) {
                             rowsArrayList.add(post);
                         }
-                        recyclerViewAdapter.notifyDataSetChanged();
+                        //recyclerViewAdapter.notifyDataSetChanged();
+                        recyclerViewAdapter.notifyItemRangeInserted(page * 10,rowsArrayList.size());
                         isLoading = false;
                         refreshLayout.setRefreshing(false);
                     }

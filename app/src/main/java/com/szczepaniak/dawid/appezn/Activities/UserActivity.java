@@ -48,7 +48,7 @@ public class UserActivity extends AppCompatActivity {
 
                 if(response.isSuccessful()){
                     user = response.body();
-                    Picasso.get().load(response.body().getPhoto()).into(avatar);
+                    Picasso.get().load(response.body().getPhoto()).placeholder(R.drawable.avatar).into(avatar);
                     popUpGallery = new PopUpGallery(avatar, rootView,UserActivity.this);
                     popUpGallery.setOneSelectGallery(true, avatar, user);
                 }

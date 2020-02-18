@@ -61,7 +61,7 @@ public class CommentsActivity extends AppCompatActivity {
         api = RetroClient.getApiService();
         commentsView = findViewById(R.id.comments_view);
         comments = Singleton.getInstance().getComments();
-        commentsView.setHasFixedSize(true);
+        //commentsView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         commentsView.setLayoutManager(layoutManager);
@@ -113,7 +113,7 @@ public class CommentsActivity extends AppCompatActivity {
                                     comments.add(response.body());
                                     commentsAdapter.setComments(comments);
                                     commentsAdapter.notifyItemInserted(comments.size() - 1);
-                                    commentsAdapter.notifyDataSetChanged();
+                                    //commentsAdapter.notifyDataSetChanged();
                                     commentText.setText("");
                                     commentText.setActivated(false);
                                 }

@@ -183,6 +183,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
         }
         viewHolder.content.setText(post.getContent());
+        if(post.getContent().equals("")){
+            viewHolder.content.setTextSize(0);
+        }
         viewHolder.date.setText(post.getDateTime());
         viewHolder.likeIcon.setColorFilter(context.getResources().getColor(R.color.emoji_gray70));
         viewHolder.dislikeIcon.setColorFilter(context.getResources().getColor(R.color.emoji_gray70));
@@ -339,7 +342,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         if(post.getPhotos() != null) {
             if (post.getPhotos().length == 1) {
-                Glide.with(context).load(post.getPhotos()[0]).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE)).override(viewHolder.photo.getWidth()).into(viewHolder.photo);
+                Glide.with(context).load(post.getPhotos()[0]).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.AUTOMATIC)).override(viewHolder.photo.getWidth()).into(viewHolder.photo);
+               // Picasso.get().load(post.getPhotos()[0]).fit().into(viewHolder.photo);
 
             }else if(post.getPhotos().length > 1){
 
@@ -400,6 +404,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
 
                 ChildAdapter adapter = new ChildAdapter(photos,6, postImages.size(),photoTable);
+                adapter.setHasStableIds(true);
+                album.setHasFixedSize(true);
+                album.setNestedScrollingEnabled(false);
+                album.setItemViewCacheSize(20);
+                album.setDrawingCacheEnabled(true);
+                album.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
                 album.setAdapter(new AsymmetricRecyclerViewAdapter(context, album, adapter));
 
 

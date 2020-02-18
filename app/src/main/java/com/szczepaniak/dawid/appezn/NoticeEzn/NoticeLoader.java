@@ -48,7 +48,7 @@ public class NoticeLoader {
         noticeAdapter.setHasStableIds(true);
         recyclerView.setHasFixedSize(true);
         recyclerView.setItemViewCacheSize(500);
-        recyclerView.setNestedScrollingEnabled(false);
+        //recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setAdapter(noticeAdapter);
     }
 
@@ -106,6 +106,8 @@ public class NoticeLoader {
             @Override
             public void onResponse(Call<List<NoticePost>> call, Response<List<NoticePost>> response) {
 
+                int index = rowsArrayList.size();
+
                 if(response.isSuccessful()){
 
                     List<NoticePost> noticePostList = response.body();
@@ -116,7 +118,7 @@ public class NoticeLoader {
                         for (NoticePost post : noticePostList) {
                             rowsArrayList.add(post);
                         }
-                        noticeAdapter.notifyDataSetChanged();
+                        noticeAdapter.notifyItemRangeInserted(index, rowsArrayList.size());
                         isLoading = false;
                         refreshLayout.setRefreshing(false);
                     }

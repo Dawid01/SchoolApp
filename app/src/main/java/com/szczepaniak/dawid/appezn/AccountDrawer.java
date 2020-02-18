@@ -97,7 +97,7 @@ public class AccountDrawer {
                     info.setText(user.getName() + " " + user.getSurname());
                     email.setText(user.getEmail());
                     //Glide.with(context).load(user.getPhoto()).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE)).into(avatar);
-                    Picasso.get().load(user.getPhoto()).into(avatar);
+                    Picasso.get().load(user.getPhoto()).placeholder(R.drawable.avatar).into(avatar);
 
                     if(user.getEmail().equals("guest@ezn.pl")){
                         info.setVisibility(View.GONE);

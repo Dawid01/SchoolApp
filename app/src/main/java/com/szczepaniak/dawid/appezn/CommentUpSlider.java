@@ -76,7 +76,7 @@ public class CommentUpSlider {
         sliding.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
         menu.setVisibility(View.GONE);
         commentsView.removeAllViews();
-        
+
         comments = Singleton.getInstance().getComments();
         commentsAdapter = new CommentsAdapter(comments, mainActivity);
         commentsView.setAdapter(commentsAdapter);
