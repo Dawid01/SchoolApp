@@ -46,9 +46,9 @@ public class NoticeLoader {
 
         noticeAdapter = new NoticeAdapter(rowsArrayList, context);
         noticeAdapter.setHasStableIds(true);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setItemViewCacheSize(500);
-        //recyclerView.setNestedScrollingEnabled(false);
+        //recyclerView.setHasFixedSize(true);
+        recyclerView.setItemViewCacheSize(5000);
+//        recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setAdapter(noticeAdapter);
     }
 
@@ -76,10 +76,12 @@ public class NoticeLoader {
 
     }
 
+
     private void loadMore() {
 
         rowsArrayList.add(null);
         noticeAdapter.notifyItemInserted(rowsArrayList.size() - 1);
+
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
@@ -89,6 +91,7 @@ public class NoticeLoader {
                 noticeAdapter.notifyItemRemoved(scrollPosition);
                 page++;
                 setPostList(page);
+
 
             }
         }, 2000);

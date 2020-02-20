@@ -181,6 +181,11 @@ public class NoticeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 }
 
                 ChildAdapter adapter = new ChildAdapter(photos, 6, postImages.size(), photoTable);
+                album.setHasFixedSize(true);
+                album.setNestedScrollingEnabled(false);
+                album.setItemViewCacheSize(20);
+                album.setDrawingCacheEnabled(true);
+                album.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
                 album.setAdapter(new AsymmetricRecyclerViewAdapter(context, album, adapter));
             }
 

@@ -58,23 +58,25 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Call<String> createAccount = api.createAccount(className.getText().toString(), name.getText().toString(), surname.getText().toString(), email.getText().toString());
+                User user = new User();
+                user.setName(name.getText().toString());
+                user.setSurname(surname.getText().toString());
+                user.setEmail(email.getText().toString());
+                user.setPermissions(0);
+                Call<String> createAccount = api.createAccount(user, className.getText().toString());
 
                 createAccount.enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
 
-                        if(response.isSuccessful()){
 
-                            Toast.makeText(RegisterActivity.this, "Done. Wait for confirm email!", Toast.LENGTH_SHORT).show();
-                            //finish();
-                        }
+                        Toast.makeText(RegisterActivity.this, response.body(), Toast.LENGTH_SHORT).show();
+
                     }
 
                     @Override
                     public void onFailure(Call<String> call, Throwable t) {
                         Toast.makeText(RegisterActivity.this, ":(", Toast.LENGTH_SHORT).show();
-                        //finish();
 
                     }
                 });

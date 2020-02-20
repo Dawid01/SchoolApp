@@ -112,7 +112,7 @@ public interface  ApiService {
     Call<ReplacementList> getReplecements(@Path("week") String week, @Path("day") String day, @Path("className") String className);
 
 
-    @GET("user/create/{className}/{name}/{surname}/{email}")
-    Call<String> createAccount(@Path("className") String className, @Path("name") String name, @Path("surname") String surname, @Path("email") String email);
+    @POST("register/{className}")
+    Call<String> createAccount(@Body User user, @Path("className") String className);
 
 }
