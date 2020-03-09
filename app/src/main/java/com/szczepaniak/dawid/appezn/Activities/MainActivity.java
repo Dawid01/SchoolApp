@@ -3,9 +3,11 @@ package com.szczepaniak.dawid.appezn.Activities;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.net.ConnectivityManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.NotificationCompat;
@@ -44,6 +46,8 @@ import com.szczepaniak.dawid.appezn.R;
 import com.szczepaniak.dawid.appezn.RetroClient;
 import com.szczepaniak.dawid.appezn.Singleton;
 import com.szczepaniak.dawid.appezn.ViewPager.PageAdapter;
+import com.treebo.internetavailabilitychecker.InternetAvailabilityChecker;
+import com.treebo.internetavailabilitychecker.InternetConnectivityListener;
 import com.vanniktech.emoji.EmojiManager;
 import com.vanniktech.emoji.twitter.TwitterEmojiProvider;
 import java.util.List;
@@ -51,7 +55,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements InternetConnectivityListener{
 
     private NavigationView drawer;
     private ImageView logo;
@@ -65,7 +69,8 @@ public class MainActivity extends AppCompatActivity {
     private Singleton singleton;
     private ViewPager pager;
     private CommentUpSlider commentUpSlider;
-
+    private ConstraintLayout networkConection;
+    private InternetAvailabilityChecker internetAvailabilityChecker;
 
 
     @Override
@@ -91,8 +96,18 @@ public class MainActivity extends AppCompatActivity {
         singleton.setSpinnerClass(spinnerClass);
         spinnerTypes = findViewById(R.id.type_spinner);
         singleton.setSpinnerTypes(spinnerTypes);
+        networkConection = findViewById(R.id.network_comunicator);
         new AccountDrawer(drawer, MainActivity.this, this);
         loadUser();
+
+        InternetAvailabilityChecker.init(this);
+        internetAvailabilityChecker = InternetAvailabilityChecker.getInstance();
+        internetAvailabilityChecker.addInternetConnectivityListener(this);
+//
+//        ConnectivityManager cm = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+//        boolean isMetered = cm.isActiveNetworkMetered();
+//
+
 
         pager = findViewById(R.id.pager);
         pager.setOffscreenPageLimit(4);
@@ -189,6 +204,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onInternetConnectivityChanged(boolean isConnected) {
+
+        if(isConnected){
+
+            networkConection.setVisibility(View.GONE);
+        }else {
+
+            networkConection.setVisibility(View.VISIBLE);
+        }
+    }
 
     private void loadUser() {
 
@@ -264,7 +290,7 @@ public class MainActivity extends AppCompatActivity {
         spinnerClass.setVisibility(View.GONE);
         spinnerTypes.setVisibility(View.GONE);
         title.setVisibility(View.VISIBLE);
-        title.setText("Notices");
+        title.setText("Ogłoszenia");
         title.setOnClickListener(null);
         pager.setCurrentItem(1);
     }
@@ -280,7 +306,7 @@ public class MainActivity extends AppCompatActivity {
         spinnerClass.setVisibility(View.GONE);
         spinnerTypes.setVisibility(View.GONE);
         title.setVisibility(View.VISIBLE);
-        title.setText("Notifications");
+        title.setText("Powiadomienia");
         title.setOnClickListener(null);
         pager.setCurrentItem(3);
     }

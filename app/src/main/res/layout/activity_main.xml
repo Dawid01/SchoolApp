@@ -34,7 +34,6 @@
                     android:id="@+id/upMenu"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:layout_marginTop="1dp"
                     android:background="?attr/backgroundMenu"
                     android:orientation="horizontal"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -120,9 +119,38 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"></android.support.v4.view.ViewPager>
+                        app:layout_constraintTop_toTopOf="parent">
+
+                    </android.support.v4.view.ViewPager>
 
 
+                </android.support.constraint.ConstraintLayout>
+
+                <android.support.constraint.ConstraintLayout
+                    android:id="@+id/network_comunicator"
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:layout_marginTop="1dp"
+                    android:background="#FF0000"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@+id/containerBox"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/upMenu"
+                    app:layout_constraintVertical_bias="0.0">
+
+                    <TextView
+                        android:id="@+id/textView5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="1dp"
+                        android:text="Brak połączenia z siecią"
+                        android:textColor="@color/emoji_white"
+                        android:textSize="12sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
                 </android.support.constraint.ConstraintLayout>
 
                 <android.support.design.widget.BottomNavigationView

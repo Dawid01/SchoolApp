@@ -164,5 +164,6 @@
     <orderEntry type="library" name="Gradle: de.hdodenhof:circleimageview:2.1.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.borjabravo:readmoretextview:2.1.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: jp.wasabeef:blurry:2.0.3@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.treebo:internetavailabilitychecker:1.0.4@aar" level="project" />
   </component>
 </module>

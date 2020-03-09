@@ -4,18 +4,18 @@
     <item
         android:id="@+id/Account"
         android:icon="@mipmap/baseline_person_black_24dp"
-        android:title="Account" />
+        android:title="Konto" />
     <item
         android:id="@+id/Games"
         android:icon="@mipmap/baseline_videogame_asset_black_36dp"
-        android:title="Games" />
+        android:title="Gry" />
     <item
         android:id="@+id/Settings"
         android:icon="@mipmap/baseline_settings_black_24dp"
-        android:title="Settings" />
+        android:title="Ustawienia" />
     <item
         android:id="@+id/logout"
         android:icon="@mipmap/baseline_power_settings_new_black_24dp"
-        android:title="Logout" />
+        android:title="Wyloguj się" />
 
 </menu>

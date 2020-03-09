@@ -49,6 +49,8 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.10.2'
     implementation 'com.sothree.slidinguppanel:library:3.4.0'
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
+    implementation 'com.treebo:internetavailabilitychecker:1.0.4'
+
 
 
 }

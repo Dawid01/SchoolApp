@@ -15,7 +15,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="110dp"
         android:background="@color/colorPrimary"
-        android:text="Sign in"
+        android:text="gotowe"
         android:textColor="@android:color/background_light"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -44,7 +44,7 @@
         android:layout_marginTop="15dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:text="back to login"
+        android:text="wróc do logowania"
         android:textColor="@color/colorPrimary"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -75,7 +75,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="?android:attr/textColor"
-            android:hint="name"
+            android:hint="imie"
             android:inputType="text"
             android:textColor="?android:attr/textColor" />
 
@@ -103,7 +103,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="?android:attr/textColor"
-            android:hint="surname"
+            android:hint="nazwisko"
             android:inputType="text"
             android:textColor="?android:attr/textColor" />
 
@@ -159,7 +159,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="?android:attr/textColor"
-            android:hint="class name"
+            android:hint="nazwa klasy"
             android:inputType="text"
             android:textColor="?android:attr/textColor" />
 

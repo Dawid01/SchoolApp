@@ -123,14 +123,14 @@ public class LoginActivity extends AppCompatActivity {
         emailInputLayout.setErrorEnabled(false);
         passwordInputLayout.setErrorEnabled(false);
         if (email.equals("")) {
-            emailInputLayout.setError("You need to enter a email");
+            emailInputLayout.setError("Musisz wpisać email!");
         } else if (password.equals("")) {
-            passwordInputLayout.setError("You need to enter a password");
+            passwordInputLayout.setError("Musisz wpisać hasło!");
 
         } else {
 
             pDialog = new ProgressDialog(LoginActivity.this);
-            pDialog.setMessage("Login...");
+            pDialog.setMessage("Logowanie...");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(false);
             pDialog.show();
