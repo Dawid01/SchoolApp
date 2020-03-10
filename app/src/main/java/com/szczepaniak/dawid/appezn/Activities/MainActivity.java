@@ -103,10 +103,6 @@ public class MainActivity extends AppCompatActivity implements InternetConnectiv
         InternetAvailabilityChecker.init(this);
         internetAvailabilityChecker = InternetAvailabilityChecker.getInstance();
         internetAvailabilityChecker.addInternetConnectivityListener(this);
-//
-//        ConnectivityManager cm = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
-//        boolean isMetered = cm.isActiveNetworkMetered();
-//
 
 
         pager = findViewById(R.id.pager);

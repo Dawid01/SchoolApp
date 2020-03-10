@@ -77,6 +77,11 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
 
     }
 
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
     @Override public int getItemCount() {
         return comments.size();
     }

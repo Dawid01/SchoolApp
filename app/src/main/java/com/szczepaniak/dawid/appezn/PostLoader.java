@@ -52,7 +52,7 @@ public class PostLoader {
         recyclerViewAdapter.setHasStableIds(true);
         //recyclerView.setHasFixedSize(true);
        // recyclerView.setNestedScrollingEnabled(false);
-        //recyclerView.setItemViewCacheSize(500);
+        recyclerView.setItemViewCacheSize(500);
        // recyclerView.setDrawingCacheEnabled(true);
         //recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_LOW);
         recyclerView.setAdapter(recyclerViewAdapter);

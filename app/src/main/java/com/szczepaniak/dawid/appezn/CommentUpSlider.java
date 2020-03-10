@@ -79,6 +79,8 @@ public class CommentUpSlider {
 
         comments = Singleton.getInstance().getComments();
         commentsAdapter = new CommentsAdapter(comments, mainActivity);
+        commentsAdapter.setHasStableIds(true);
+        commentsView.setItemViewCacheSize(500);
         commentsView.setAdapter(commentsAdapter);
 
         Post post = Singleton.getInstance().getPost();
