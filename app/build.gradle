@@ -52,5 +52,4 @@ dependencies {
     implementation 'com.treebo:internetavailabilitychecker:1.0.4'
 
 
-
 }

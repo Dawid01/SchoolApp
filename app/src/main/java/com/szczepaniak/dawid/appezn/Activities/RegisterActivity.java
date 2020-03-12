@@ -1,12 +1,15 @@
 package com.szczepaniak.dawid.appezn.Activities;
 
+import android.app.ProgressDialog;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatDelegate;
+import android.text.Html;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +36,9 @@ public class RegisterActivity extends AppCompatActivity {
     private TextInputLayout nameLayout;
     private TextInputLayout surnameLayout;
     private TextInputLayout classNameLayout;
+    private CheckBox privacyPolicy;
+    private String privacyPolicyURL = "http://ezn.edu.pl/";
+    private ProgressDialog pDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +60,8 @@ public class RegisterActivity extends AppCompatActivity {
         nameLayout = findViewById(R.id.name);
         surnameLayout = findViewById(R.id.surname);
         classNameLayout = findViewById(R.id.class_input);
+        privacyPolicy = findViewById(R.id.privacy_policy);
+        privacyPolicy.setText(Html.fromHtml("Rejestrując się potwierdzasz nasze zasady <a color=\"#14b1ae\"; href= " + privacyPolicyURL + ">polityki prywatności </a>"));
         api = RetroClient.getApiService();
 
         back.setOnClickListener(new View.OnClickListener() {
@@ -98,8 +106,6 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
 
-
-
         create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -139,28 +145,40 @@ public class RegisterActivity extends AppCompatActivity {
 
 
                 if(canSend) {
-                    User user = new User();
-                    user.setName(name.getText().toString());
-                    user.setSurname(surname.getText().toString());
-                    user.setEmail(email.getText().toString());
-                    user.setPermissions(0);
-                    Call<String> createAccount = api.createAccount(user, className.getText().toString());
 
-                    createAccount.enqueue(new Callback<String>() {
-                        @Override
-                        public void onResponse(Call<String> call, Response<String> response) {
+                    if (privacyPolicy.isChecked()) {
+                        User user = new User();
+                        user.setName(name.getText().toString());
+                        user.setSurname(surname.getText().toString());
+                        user.setEmail(email.getText().toString());
+                        user.setPermissions(0);
+                        Call<String> createAccount = api.createAccount(user, className.getText().toString());
+
+                        pDialog = new ProgressDialog(RegisterActivity.this);
+                        pDialog.setMessage("Wysyłanie prośby o założenie konta...");
+                        pDialog.setIndeterminate(false);
+                        pDialog.setCancelable(false);
+                        pDialog.show();
+
+                        createAccount.enqueue(new Callback<String>() {
+                            @Override
+                            public void onResponse(Call<String> call, Response<String> response) {
 
 
-                            Toast.makeText(RegisterActivity.this, response.body(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(RegisterActivity.this, response.body(), Toast.LENGTH_SHORT).show();
+                                pDialog.dismiss();
+                            }
 
-                        }
+                            @Override
+                            public void onFailure(Call<String> call, Throwable t) {
+                                Toast.makeText(RegisterActivity.this, ":(", Toast.LENGTH_SHORT).show();
+                                pDialog.dismiss();
 
-                        @Override
-                        public void onFailure(Call<String> call, Throwable t) {
-                            Toast.makeText(RegisterActivity.this, ":(", Toast.LENGTH_SHORT).show();
-
-                        }
-                    });
+                            }
+                        });
+                    }else {
+                        Toast.makeText(RegisterActivity.this, "Musisz zaakceptować politykę prywatności", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });

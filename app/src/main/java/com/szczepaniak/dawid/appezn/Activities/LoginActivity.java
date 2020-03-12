@@ -28,7 +28,10 @@ import com.szczepaniak.dawid.appezn.R;
 import com.szczepaniak.dawid.appezn.RetroClient;
 import com.szczepaniak.dawid.appezn.Singleton;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.HashSet;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -54,7 +57,6 @@ public class LoginActivity extends AppCompatActivity {
 
         SharedPreferences prefs = this.getSharedPreferences(
                 "Settings", Context.MODE_PRIVATE);
-
         if(prefs.getBoolean("DarkTheme", false)){
 
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
@@ -70,12 +72,12 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        apiService = RetroClient.getApiService();
         emailInputLayout = findViewById(R.id.email);
         emailText = findViewById(R.id.email_text);
         passwordInputLayout = findViewById(R.id.password);
         passwordText = findViewById(R.id.password_text);
         loginButton = findViewById(R.id.login_button);
-        apiService = RetroClient.getApiService();
         singleton = Singleton.getInstance();
         guest = findViewById(R.id.guest);
         signin = findViewById(R.id.signin);
@@ -88,7 +90,7 @@ public class LoginActivity extends AppCompatActivity {
         if(cookies.size() != 0){
 
             SharedPreferences sharedPreferences = LoginActivity.this.getSharedPreferences("email",Context.MODE_PRIVATE);
-            login(sharedPreferences.getString("email", "null"), "null", true);
+            login(Objects.requireNonNull(sharedPreferences.getString("email", "null")), "null", true);
         }
 
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -140,18 +142,43 @@ public class LoginActivity extends AppCompatActivity {
 
             userCall.enqueue(new Callback<User>() {
                 @Override
-                public void onResponse(Call<User> call, Response<User> response) {
+                public void onResponse(@NotNull Call<User> call, @NotNull Response<User> response) {
                     pDialog.dismiss();
                     if (response.isSuccessful()) {
                         if(save) {
                             SharedPreferences sharedPreferences = LoginActivity.this.getSharedPreferences("email", Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putString("email", email).commit();
+                            editor.putString("email", email).apply();
                         }
-                        singleton.setCurrentUser(response.body());
-                        Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
-                        startActivity(mainIntent);
-                        finish();
+
+                        Call<User> currentUser = apiService.getCurrentUser();
+
+                        currentUser.enqueue(new Callback<User>() {
+                            @Override
+                            public void onResponse(@NotNull Call<User> call, @NotNull Response<User> response) {
+
+                                if(response.isSuccessful()){
+                                    assert response.body() != null;
+                                    singleton.setCurrentUser(response.body());
+                                    if(response.body().isPassworChanged()) {
+                                        Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
+                                        startActivity(mainIntent);
+                                        finish();
+                                    }else {
+                                        Intent mainIntent = new Intent(LoginActivity.this, FirstLoginActivity.class);
+                                        startActivity(mainIntent);
+                                        finish();
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<User> call, Throwable t) {
+
+                            }
+                        });
+
+
                     }
                 }
 

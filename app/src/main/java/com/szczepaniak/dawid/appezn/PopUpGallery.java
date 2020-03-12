@@ -163,7 +163,7 @@ public class PopUpGallery extends AppCompatActivity {
                             img.setScaleType(ImageView.ScaleType.FIT_CENTER);
                             img.setLayoutParams(new GridView.LayoutParams(200, 200));
                             Glide.with(activity).load(galleryImage.getUrl())
-                                    .placeholder(R.mipmap.baseline_add_photo_alternate_white_36dp).centerCrop()
+                                    .placeholder(R.mipmap.photo).centerCrop()
                                     .into(img);
                             selectedGrid.addView(img);
 
@@ -258,7 +258,7 @@ public class PopUpGallery extends AppCompatActivity {
                         } else {
                             selectedImgs.remove(selectedImgs.indexOf(galleryImage));
                             Glide.with(activity).load(galleryImage.getUrl())
-                                    .placeholder(R.mipmap.baseline_add_photo_alternate_white_36dp).centerCrop()
+                                    .placeholder(R.mipmap.photo).centerCrop()
                                     .into((ImageView) view);
                             galleryImage.setUsed(false);
 
@@ -369,7 +369,7 @@ public class PopUpGallery extends AppCompatActivity {
             }
 
             Glide.with(context).load(images.get(position).getUrl())
-                    .placeholder(R.mipmap.baseline_add_photo_alternate_white_36dp).centerCrop()
+                    .placeholder(R.mipmap.photo).centerCrop()
                     .into(picturesView);
 
             if(Arrays.asList(selectedImgs).contains((int)position)){

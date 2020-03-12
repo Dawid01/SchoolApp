@@ -37,6 +37,10 @@ public interface  ApiService {
     @PUT("users/{id}")
     Call<User> putUser(@Path("id") Long id, @Body User user);
 
+
+    @PUT("users/passwordUpdate/{userId}")
+    Call<User> changePassword(@Path("userId") Long id, @Body User user);
+
     @GET("users")
     Call<User> loginUser(@Header("Authorization") String authHeader);
 

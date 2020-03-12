@@ -34,6 +34,12 @@ public class User {
     @Expose
     private String photo;
 
+
+    @SerializedName("passworChanged")
+    @Expose
+    private boolean passworChanged = false;
+
+
     public Long getId() {
         return id;
     }
@@ -90,4 +96,11 @@ public class User {
         this.photo = photo;
     }
 
+    public boolean isPassworChanged() {
+        return passworChanged;
+    }
+
+    public void setPassworChanged(boolean passworChanged) {
+        this.passworChanged = passworChanged;
+    }
 }
