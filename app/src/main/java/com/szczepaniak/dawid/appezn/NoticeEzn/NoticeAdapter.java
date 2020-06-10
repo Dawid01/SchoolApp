@@ -114,7 +114,12 @@ public class NoticeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         ArrayList<String> images = pullLinks(post.getContent().getRendered());
 
-        holder.content.setText(Html.fromHtml(post.getContent().getRendered(), imageGetter, null));
+        String content = post.getContent().getRendered();
+        int commentSymbol = content.indexOf("#");
+        if (-1 != commentSymbol) {
+            content = content.substring(0, commentSymbol);
+        }
+        holder.content.setText(Html.fromHtml(content, imageGetter, null));
         holder.content.setMovementMethod(LinkMovementMethod.getInstance());
 
         if(images.size() != 0){

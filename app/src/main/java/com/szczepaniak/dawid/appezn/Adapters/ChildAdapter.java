@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -88,10 +89,11 @@ class ViewHolder extends RecyclerView.ViewHolder {
     public void bind(final List<ItemImage> item, int position, int mDisplay, int mTotal) {
         final Singleton singleton = Singleton.getInstance();
         if(mImageView != null) {
-            //ImageLoader.getInstance().displayImage(String.valueOf(item.get(position).getImagePath()), mImageView);
-            //Glide.with(MyApplication.getAppContext()).load(item.get(position).getImagePath()).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE)).override(mImageView.getWidth()).into(mImageView);
-          //  Glide.with(MyApplication.getAppContext()).load(item.get(position).getImagePath()).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.AUTOMATIC)).into(mImageView);
-            Picasso.get().load(item.get(position).getImagePath()).into(mImageView);
+
+            RequestOptions reqOptions = new RequestOptions()
+                    .fitCenter()
+                    .override(256, 100);
+            Glide.with(MyApplication.getAppContext()).load(item.get(position).getImagePath()).apply(reqOptions).centerCrop().into(mImageView);
 
             if (mTotal > mDisplay) {
                 if (position == mDisplay - 1) {

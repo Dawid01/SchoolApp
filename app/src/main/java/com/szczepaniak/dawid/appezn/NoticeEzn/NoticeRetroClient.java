@@ -22,12 +22,6 @@ public class NoticeRetroClient {
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();
-//
-//        return new Retrofit.Builder()
-//                .baseUrl(ROOT_URL)
-//                .client(okHttpClient.build())
-//                .addConverterFactory(GsonConverterFactory.create())
-//                .build();
     }
 
 

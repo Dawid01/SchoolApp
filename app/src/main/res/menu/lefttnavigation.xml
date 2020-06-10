@@ -10,6 +10,10 @@
         android:icon="@mipmap/baseline_videogame_asset_black_36dp"
         android:title="Gry" />
     <item
+        android:id="@+id/Models"
+        android:icon="@mipmap/models"
+        android:title="Modele 3D" />
+    <item
         android:id="@+id/Settings"
         android:icon="@mipmap/baseline_settings_black_24dp"
         android:title="Ustawienia" />

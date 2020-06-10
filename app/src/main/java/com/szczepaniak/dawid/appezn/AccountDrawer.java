@@ -3,6 +3,7 @@ package com.szczepaniak.dawid.appezn;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +18,7 @@ import com.squareup.picasso.Picasso;
 import com.szczepaniak.dawid.appezn.Activities.BinaryGame;
 import com.szczepaniak.dawid.appezn.Activities.LoginActivity;
 import com.szczepaniak.dawid.appezn.Activities.MainActivity;
+import com.szczepaniak.dawid.appezn.Activities.ModelAR;
 import com.szczepaniak.dawid.appezn.Activities.SettingsActivity;
 import com.szczepaniak.dawid.appezn.Activities.UserActivity;
 import com.szczepaniak.dawid.appezn.Models.User;
@@ -67,6 +69,15 @@ public class AccountDrawer {
                     case R.id.Games:
                         Intent binaryGame = new Intent(c, BinaryGame.class);
                         c.startActivity(binaryGame);
+                        break;
+                    case R.id.Models:
+                        Intent modelAR = new Intent(c, ModelAR.class);
+                        c.startActivity(modelAR);
+                       // Intent sceneViewerIntent = new Intent(Intent.ACTION_VIEW);
+//                        String modelName = "Avocado";
+//                        sceneViewerIntent.setData(Uri.parse("https://arvr.google.com/scene-viewer/1.0?file=https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/" + modelName +"/glTF/"+ modelName +".gltf"));
+//                        sceneViewerIntent.setPackage("com.google.android.googlequicksearchbox");
+//                        c.startActivity(sceneViewerIntent);
                         break;
                     case  R.id.Settings:
                         c.startActivity(new Intent(c, SettingsActivity.class));

@@ -79,7 +79,27 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == VIEW_TYPE_ITEM) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.post, parent, false);
-            return new ItemViewHolder(view);
+            ItemViewHolder viewHolder = new ItemViewHolder(view);
+
+            viewHolder.likeIcon.setColorFilter(context.getResources().getColor(R.color.emoji_gray70));
+            viewHolder.dislikeIcon.setColorFilter(context.getResources().getColor(R.color.emoji_gray70));
+            viewHolder.commentIcon.setColorFilter(context.getResources().getColor(R.color.emoji_gray70));
+
+            AsymmetricRecyclerView album = viewHolder.photoAlbum;
+            album.setNestedScrollingEnabled(true);
+            album.setRequestedColumnCount(3);
+            album.setRequestedHorizontalSpacing(Utils.dpToPx(context, 1));
+            album.addItemDecoration(new SpacesItemDecoration(context.getResources().getDimensionPixelSize(R.dimen.asymetric_grid_offset)));
+
+
+            album.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    return false;
+                }
+            });
+
+            return viewHolder;
         } else {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_loading, parent, false);
             return new LoadingViewHolder(view);
@@ -187,9 +207,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             viewHolder.content.setTextSize(0);
         }
         viewHolder.date.setText(post.getDateTime());
-        viewHolder.likeIcon.setColorFilter(context.getResources().getColor(R.color.emoji_gray70));
-        viewHolder.dislikeIcon.setColorFilter(context.getResources().getColor(R.color.emoji_gray70));
-        viewHolder.commentIcon.setColorFilter(context.getResources().getColor(R.color.emoji_gray70));
 
         if(user.getId() == Singleton.getInstance().getCurrentUserID()){
 
@@ -326,18 +343,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
 
         AsymmetricRecyclerView album = viewHolder.photoAlbum;
-        album.setNestedScrollingEnabled(true);
-        album.setRequestedColumnCount(3);
-        album.setRequestedHorizontalSpacing(Utils.dpToPx(context, 1));
-        album.addItemDecoration(new SpacesItemDecoration(context.getResources().getDimensionPixelSize(R.dimen.asymetric_grid_offset)));
-
-
-        album.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return false;
-            }
-        });
 
         if(post.getPhotos() != null) {
             if (post.getPhotos().length == 1) {
@@ -406,7 +411,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 adapter.setHasStableIds(true);
                 album.setHasFixedSize(true);
                 album.setNestedScrollingEnabled(false);
-                album.setItemViewCacheSize(20);
+                album.setItemViewCacheSize(500);
                 album.setDrawingCacheEnabled(true);
                 album.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
                 album.setAdapter(new AsymmetricRecyclerViewAdapter(context, album, adapter));
