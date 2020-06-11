@@ -71,7 +71,9 @@ public class NoticeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         if (viewType == VIEW_TYPE_ITEM) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.notice_post, parent, false);
-            return new NoticeAdapter.ViewHolder(view);
+            ViewHolder viewHolder = new NoticeAdapter.ViewHolder(view);
+            viewHolder.setIsRecyclable(true);
+            return viewHolder;
         } else {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_loading, parent, false);
             return new NoticeAdapter.LoadingViewHolder(view);

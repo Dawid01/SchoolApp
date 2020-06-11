@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -46,9 +47,10 @@ public class NoticeLoader {
 
         noticeAdapter = new NoticeAdapter(rowsArrayList, context);
         noticeAdapter.setHasStableIds(true);
-        //recyclerView.setHasFixedSize(true);
-        recyclerView.setItemViewCacheSize(5000);
-//        recyclerView.setNestedScrollingEnabled(false);
+        recyclerView.setItemViewCacheSize(20);
+        recyclerView.setDrawingCacheEnabled(true);
+        recyclerView.setNestedScrollingEnabled(false);
+        recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         recyclerView.setAdapter(noticeAdapter);
     }
 

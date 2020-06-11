@@ -50,9 +50,9 @@ public class PostLoader {
 
         recyclerViewAdapter = new RecyclerViewAdapter(rowsArrayList, context);
         recyclerViewAdapter.setHasStableIds(true);
-        recyclerView.setItemViewCacheSize(500);
+        recyclerView.setItemViewCacheSize(20);
         recyclerView.setDrawingCacheEnabled(true);
-
+        recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         recyclerView.setAdapter(recyclerViewAdapter);
     }

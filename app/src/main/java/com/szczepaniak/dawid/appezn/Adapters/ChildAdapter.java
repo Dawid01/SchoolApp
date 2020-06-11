@@ -27,6 +27,8 @@ import com.szczepaniak.dawid.appezn.ItemImage;
 import com.szczepaniak.dawid.appezn.R;
 import com.szczepaniak.dawid.appezn.Singleton;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 public class ChildAdapter extends AGVRecyclerViewAdapter<ViewHolder> {
@@ -44,9 +46,12 @@ public class ChildAdapter extends AGVRecyclerViewAdapter<ViewHolder> {
     }
 
 
+    @NotNull
     @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Log.d("RecyclerViewActivity", "onCreateView");
-        return new ViewHolder(parent, viewType,items, photosList);
+        ViewHolder viewHolder = new ViewHolder(parent, viewType,items, photosList);
+        viewHolder.setIsRecyclable(true);
+        return viewHolder;
     }
 
     @Override public void onBindViewHolder(ViewHolder holder, int position) {
@@ -92,8 +97,8 @@ class ViewHolder extends RecyclerView.ViewHolder {
 
             RequestOptions reqOptions = new RequestOptions()
                     .fitCenter()
-                    .override(256, 100);
-            Glide.with(MyApplication.getAppContext()).load(item.get(position).getImagePath()).apply(reqOptions).centerCrop().into(mImageView);
+                    .override(mImageView.getMeasuredWidth(), mImageView.getMeasuredHeight());
+            Glide.with(MyApplication.getAppContext()).asBitmap().load(item.get(position).getImagePath()).apply(reqOptions).centerCrop().into(mImageView);
 
             if (mTotal > mDisplay) {
                 if (position == mDisplay - 1) {
@@ -108,6 +113,7 @@ class ViewHolder extends RecyclerView.ViewHolder {
             }
         }
 
+        assert mImageView != null;
         mImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

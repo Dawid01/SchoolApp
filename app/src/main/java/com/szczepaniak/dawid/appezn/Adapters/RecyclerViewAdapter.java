@@ -1,5 +1,6 @@
 package com.szczepaniak.dawid.appezn.Adapters;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -10,6 +11,7 @@ import android.graphics.Point;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -63,17 +65,20 @@ import retrofit2.Response;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final int VIEW_TYPE_ITEM = 0;
-    private final int VIEW_TYPE_LOADING = 1;
     private Context context;
     public List<Post> posts;
+    long currentUserID;
 
 
     public RecyclerViewAdapter(List<Post> posts, Context context) {
         this.posts = posts;
         this.context = context;
+        currentUserID = Singleton.getInstance().getCurrentUserID();
+
     }
 
 
+    @SuppressLint("ClickableViewAccessibility")
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -81,6 +86,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.post, parent, false);
             ItemViewHolder viewHolder = new ItemViewHolder(view);
 
+            viewHolder.setIsRecyclable(true);
             viewHolder.likeIcon.setColorFilter(context.getResources().getColor(R.color.emoji_gray70));
             viewHolder.dislikeIcon.setColorFilter(context.getResources().getColor(R.color.emoji_gray70));
             viewHolder.commentIcon.setColorFilter(context.getResources().getColor(R.color.emoji_gray70));
@@ -108,12 +114,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
-
+        long startTime = System.currentTimeMillis();
         if (viewHolder instanceof ItemViewHolder) {
             populateItemRows((ItemViewHolder) viewHolder, position);
         } else if (viewHolder instanceof LoadingViewHolder) {
             showLoadingView((LoadingViewHolder) viewHolder, position);
         }
+        Log.i("LAG", "bindView time: " + (System.currentTimeMillis() - startTime));
+
     }
 
 
@@ -124,6 +132,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public int getItemViewType(int position) {
+        int VIEW_TYPE_LOADING = 1;
         return posts.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
     }
 
@@ -133,7 +142,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         return position;
     }
 
-    private class ItemViewHolder extends RecyclerView.ViewHolder {
+    private static class ItemViewHolder extends RecyclerView.ViewHolder {
 
         TextView name;
         TextView date;
@@ -186,10 +195,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     }
 
+    @SuppressLint("SetTextI18n")
     private void populateItemRows(final ItemViewHolder viewHolder, int position) {
 
-        final Post post = posts.get(position);
-        final User user = post.getUser();
+        Post post = posts.get(position);
+        User user = post.getUser();
         if(user != null) {
             viewHolder.name.setText(user.getName() + " " + user.getSurname());
             Picasso.get().load(user.getPhoto()).into(viewHolder.avatar);
@@ -208,7 +218,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
         viewHolder.date.setText(post.getDateTime());
 
-        if(user.getId() == Singleton.getInstance().getCurrentUserID()){
+        assert user != null;
+        if(user.getId() == currentUserID){
 
             viewHolder.edit.setVisibility(View.VISIBLE);
             viewHolder.edit.setOnClickListener(new View.OnClickListener() {
@@ -431,6 +442,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         retrofit2.Call<Post> postCall = api.getPost(post.getId());
 
         postCall.enqueue(new Callback<Post>() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onResponse(Call<Post> call, Response<Post> response) {
 
@@ -447,6 +459,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                     Post post = response.body();
 
+                    assert post != null;
                     final List<PostReaction> postReactions = post.getPostReactions();
 
 
