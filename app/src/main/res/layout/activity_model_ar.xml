@@ -7,7 +7,23 @@
     android:layout_height="match_parent"
     tools:context=".Activities.ModelAR">
 
-    <include layout="@layout/ar_fragment" />
-    <include layout="@layout/ar_models" />
+    <fragment
+        android:id="@+id/arFragment"
+        android:name="com.google.ar.sceneform.ux.ArFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background" />
+
+    <ProgressBar
+        android:id="@+id/progress"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_anchor="@+id/arFragment"
+        app:layout_anchorGravity="center" />
+
+    <include
+        layout="@layout/ar_models"
+        android:elevation="2dp" />
 
 </android.support.design.widget.CoordinatorLayout>

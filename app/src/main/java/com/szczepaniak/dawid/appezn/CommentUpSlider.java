@@ -1,5 +1,6 @@
 package com.szczepaniak.dawid.appezn;
 
+import android.annotation.SuppressLint;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.internal.BottomNavigationMenu;
 import android.support.v7.widget.LinearLayoutManager;
@@ -71,6 +72,7 @@ public class CommentUpSlider {
 
     }
 
+    @SuppressLint("SetTextI18n")
     public void openPanel(){
 
         sliding.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);

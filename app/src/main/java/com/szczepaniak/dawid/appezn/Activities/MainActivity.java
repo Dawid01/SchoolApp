@@ -70,7 +70,6 @@ public class MainActivity extends AppCompatActivity implements InternetConnectiv
     private ViewPager pager;
     private CommentUpSlider commentUpSlider;
     private ConstraintLayout networkConection;
-    private InternetAvailabilityChecker internetAvailabilityChecker;
 
 
     @Override
@@ -101,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements InternetConnectiv
         loadUser();
 
         InternetAvailabilityChecker.init(this);
-        internetAvailabilityChecker = InternetAvailabilityChecker.getInstance();
+        InternetAvailabilityChecker internetAvailabilityChecker = InternetAvailabilityChecker.getInstance();
         internetAvailabilityChecker.addInternetConnectivityListener(this);
 
 

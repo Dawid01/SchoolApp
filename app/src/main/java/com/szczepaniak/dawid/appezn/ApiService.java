@@ -5,6 +5,7 @@ import com.szczepaniak.dawid.appezn.Models.Comment;
 import com.szczepaniak.dawid.appezn.Models.CommentList;
 import com.szczepaniak.dawid.appezn.Models.FileUploaded;
 import com.szczepaniak.dawid.appezn.Models.LessonList;
+import com.szczepaniak.dawid.appezn.Models.ModelARList;
 import com.szczepaniak.dawid.appezn.Models.PeriodList;
 import com.szczepaniak.dawid.appezn.Models.Post;
 import com.szczepaniak.dawid.appezn.Models.PostList;
@@ -118,5 +119,8 @@ public interface  ApiService {
 
     @POST("register/{className}")
     Call<String> createAccount(@Body User user, @Path("className") String className);
+
+    @GET("models3d")
+    Call<ModelARList> getModelsAR(@Query("size") int size);
 
 }

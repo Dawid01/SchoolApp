@@ -124,79 +124,67 @@ public class NoticeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         holder.content.setText(Html.fromHtml(content, imageGetter, null));
         holder.content.setMovementMethod(LinkMovementMethod.getInstance());
 
-        if(images.size() != 0){
+        List<ItemImage> postImages = new ArrayList<>();
 
-            if(images.size() == 1){
-
-                Glide.with(context).load(images.get(0)).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.AUTOMATIC)).into(holder.photo);
-
-            }else {
-
-                List<ItemImage> postImages = new ArrayList<>();
-                boolean isCol2Avail = false;
-
-                for (int i = 0; i < images.size(); i++) {
-                    String url = images.get(i);
-                    ItemImage postImage = new ItemImage(i, url, url);
-                    int colSpan = 1;
-                    if (i == 0) {
-                        colSpan = 2;
-                    }
-
-                    int rowSpan = colSpan;
-                    if (colSpan == 2 && !isCol2Avail)
-                        isCol2Avail = true;
-                    else if (colSpan == 2 && isCol2Avail)
-                        colSpan = 1;
-
-
-                    if (images.size() == 2) {
-                        colSpan = 3;
-                        rowSpan = 2;
-
-                    } else if (images.size() == 4) {
-
-                        if (i == 0) {
-                            colSpan = 3;
-                            rowSpan = 2;
-                        }
-                    } else if (images.size() == 5) {
-
-                        if (i == 3) {
-                            colSpan = 2;
-                            rowSpan = 1;
-                        }
-                    }
-
-                    postImage.setColumnSpan(colSpan);
-                    postImage.setRowSpan(rowSpan);
-                    postImage.setPosition(i);
-                    postImages.add(postImage);
-
-                }
-
-                List<ItemImage> photos = new ArrayList<>();
-                String[] photoTable = new String[postImages.size()];
-
-                for (int i = 0; i < postImages.size(); i++) {
-
-                    if (i <= 5) {
-                        photos.add(postImages.get(i));
-                    }
-                    photoTable[i] = postImages.get(i).getImagePath();
-
-                }
-
-                ChildAdapter adapter = new ChildAdapter(photos, 6, postImages.size(), photoTable);
-                album.setHasFixedSize(true);
-                album.setNestedScrollingEnabled(false);
-                album.setItemViewCacheSize(20);
-                album.setDrawingCacheEnabled(true);
-                album.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
-                album.setAdapter(new AsymmetricRecyclerViewAdapter(context, album, adapter));
+        for (int i = 0; i < images.size(); i++) {
+            String url = images.get(i);
+            ItemImage postImage = new ItemImage(i, url, url);
+            int colSpan = 1;
+            if (i == 0) {
+                colSpan = 2;
             }
 
+            int rowSpan = colSpan;
+
+            if(images.size() == 1){
+                colSpan = 3;
+                rowSpan = 3;
+            }
+
+            if (images.size() == 2) {
+                colSpan = 3;
+                rowSpan = 2;
+
+            } else if (images.size() == 4) {
+
+                if (i == 0) {
+                    colSpan = 3;
+                    rowSpan = 2;
+                }
+            } else if (images.size() == 5) {
+
+                if (i == 3) {
+                    colSpan = 2;
+                    rowSpan = 1;
+                }
+            }
+
+            postImage.setColumnSpan(colSpan);
+            postImage.setRowSpan(rowSpan);
+            postImage.setPosition(i);
+            postImages.add(postImage);
+
         }
+
+        List<ItemImage> photos = new ArrayList<>();
+        String[] photoTable = new String[postImages.size()];
+
+        for (int i = 0; i < postImages.size(); i++) {
+
+            if (i <= 5) {
+                photos.add(postImages.get(i));
+            }
+            photoTable[i] = postImages.get(i).getImagePath();
+
+        }
+
+        ChildAdapter adapter = new ChildAdapter(photos, 6, postImages.size(), photoTable);
+        album.setHasFixedSize(true);
+        album.setNestedScrollingEnabled(false);
+        album.setItemViewCacheSize(20);
+        album.setDrawingCacheEnabled(true);
+        album.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+        album.setAdapter(new AsymmetricRecyclerViewAdapter(context, album, adapter));
 
 
     }
@@ -225,7 +213,6 @@ public class NoticeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
          public TextView content;
          public LinearLayout layout;
          public AsymmetricRecyclerView album;
-         public ImageView photo;
 
 
         public ViewHolder(View itemView) {
@@ -235,7 +222,6 @@ public class NoticeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             content = itemView.findViewById(R.id.content);
             layout = itemView.findViewById(R.id.layout);
             album = itemView.findViewById(R.id.photo_album);
-            photo = itemView.findViewById(R.id.photo);
 
         }
     }

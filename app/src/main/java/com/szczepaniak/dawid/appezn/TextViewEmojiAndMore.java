@@ -51,8 +51,8 @@ public class TextViewEmojiAndMore extends EmojiTextView {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, com.borjabravo.readmoretextview.R.styleable.ReadMoreTextView);
         this.trimLength = typedArray.getInt(com.borjabravo.readmoretextview.R.styleable.ReadMoreTextView_trimLength, DEFAULT_TRIM_LENGTH);
 
-        this.trimCollapsedText = "more";
-        this.trimExpandedText = " less";
+        this.trimCollapsedText = "więcej";
+        this.trimExpandedText = " mniej";
         this.trimLines = typedArray.getInt(com.borjabravo.readmoretextview.R.styleable.ReadMoreTextView_trimLines, DEFAULT_TRIM_LINES);
         this.colorClickableText = typedArray.getColor(com.borjabravo.readmoretextview.R.styleable.ReadMoreTextView_colorClickableText,
                 ContextCompat.getColor(context, com.borjabravo.readmoretextview.R.color.colorPrimary));

@@ -1,44 +1,54 @@
 package com.szczepaniak.dawid.appezn.Activities;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatDelegate;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.ar.core.Anchor;
 import com.google.ar.sceneform.AnchorNode;
-import com.google.ar.sceneform.Node;
 import com.google.ar.sceneform.assets.RenderableSource;
-import com.google.ar.sceneform.math.Vector3;
-import com.google.ar.sceneform.rendering.Color;
 import com.google.ar.sceneform.rendering.ModelRenderable;
-import com.google.ar.sceneform.rendering.PlaneRenderer;
-import com.google.ar.sceneform.rendering.RenderableDefinition;
-import com.google.ar.sceneform.rendering.ResourceManager;
-import com.google.ar.sceneform.rendering.Texture;
 import com.google.ar.sceneform.ux.ArFragment;
 import com.google.ar.sceneform.ux.TransformableNode;
+import com.szczepaniak.dawid.appezn.ApiService;
+import com.szczepaniak.dawid.appezn.Models.ModelARList;
 import com.szczepaniak.dawid.appezn.R;
+import com.szczepaniak.dawid.appezn.RetroClient;
 
-import java.io.File;
-import java.io.InputStream;
-import java.util.concurrent.CompletableFuture;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ModelAR extends AppCompatActivity {
 
     private ArFragment arFragment;
-    private String ASSET_3D = "http://192.168.0.110:8080/downloadFile/kidbright.glb";
+    private String ASSET_3D = null;
     private int anchorCount = 0;
+    public AnchorNode anchorNode;
+    public TransformableNode transformableNode;
+    private ImageView clear;
+    private ProgressBar progressBar;
+    private BottomSheetBehavior bottomSheetBehavior;
+    private List<com.szczepaniak.dawid.appezn.Models.ModelAR> models = new ArrayList<>();
+    private ApiService api;
+    private LinearLayout modelsLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,26 +69,24 @@ public class ModelAR extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_model_ar);
 
-        ConstraintLayout llBottomSheet = (ConstraintLayout) findViewById(R.id.models_sheet);
-        BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(llBottomSheet);
-        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-//        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-//        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
-        bottomSheetBehavior.setPeekHeight(250);
-        bottomSheetBehavior.setHideable(false);
+        progressBar = findViewById(R.id.progress);
+        progressBar.setVisibility(View.GONE);
 
-        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+        clear = findViewById(R.id.clear_button);
+        api = RetroClient.getApiService();
+        modelsLayout = findViewById(R.id.models);
+
+        clear.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+            public void onClick(View v) {
 
-            }
-
-            @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-
+                removeAnchorNode(anchorNode);
+                anchorCount = 0;
             }
         });
+
+        loadModelsList();
 
         arFragment = (ArFragment) getSupportFragmentManager().findFragmentById(R.id.arFragment);
 
@@ -88,35 +96,108 @@ public class ModelAR extends AppCompatActivity {
                 placeModel(hitResult.createAnchor());
                 anchorCount = 1;
             }
+
         });
+
+        Objects.requireNonNull(arFragment.getView()).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(bottomSheetBehavior != null) {
+                    if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+                        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                    }
+                }
+            }
+        });
+    }
+
+
+    private void loadModelsList(){
+
+        retrofit2.Call<ModelARList> modelARListCall = api.getModelsAR(20);
+
+        modelARListCall.enqueue(new Callback<ModelARList>() {
+            @Override
+            public void onResponse(Call<ModelARList> call, Response<ModelARList> response) {
+
+                if(response.isSuccessful()){
+
+                    assert response.body() != null;
+                    models = response.body().getModelsAR();
+                    ConstraintLayout llBottomSheet = (ConstraintLayout) findViewById(R.id.models_sheet);
+                    bottomSheetBehavior = BottomSheetBehavior.from(llBottomSheet);
+                    bottomSheetBehavior.setPeekHeight(250);
+                    bottomSheetBehavior.setHideable(false);
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                    com.szczepaniak.dawid.appezn.Models.ModelAR modelAR = models.get(0);
+                    ASSET_3D = modelAR.getModelURL();
+                    final TextView name = findViewById(R.id.name);
+                    name.setText(modelAR.getName());
+
+
+                    for(com.szczepaniak.dawid.appezn.Models.ModelAR model : models){
+
+                        LayoutInflater layoutInflater = LayoutInflater.from(ModelAR.this);
+                        View view = layoutInflater.inflate(R.layout.ar_model_image, modelsLayout, false);
+                        ImageView img = view.findViewById(R.id.image);
+                        Glide.with(ModelAR.this).load(model.getImageURL()).centerCrop().into(img);
+                        modelsLayout.addView(view);
+
+                        view.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                ASSET_3D = model.getModelURL();
+                                name.setText(model.getName());
+
+                            }
+                        });
+
+                    }
+
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ModelARList> call, Throwable t) {
+
+            }
+        });
+
     }
 
     private void placeModel(Anchor anchor) {
 
-        ModelRenderable
-                .builder()
-                .setSource(this,
-                        RenderableSource
-                        .builder().setSource(this, Uri.parse(ASSET_3D), RenderableSource.SourceType.GLB)
-                        .setScale(0.2f)
-                        .setRecenterMode(RenderableSource.RecenterMode.ROOT)
-                        .build()
-                )
-                .setRegistryId(ASSET_3D)
-                .build()
-                .thenAccept(modelRenderable -> addNodeToScene(modelRenderable, anchor))
-                .exceptionally(throwable -> {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setMessage(throwable.getMessage()).show();
-                    return null;
-                });
+        if(ASSET_3D != null) {
+            progressBar.setVisibility(View.VISIBLE);
+            ModelRenderable
+                    .builder()
+                    .setSource(this,
+                            RenderableSource
+                                    .builder().setSource(this, Uri.parse(ASSET_3D), RenderableSource.SourceType.GLB)
+                                    .setScale(0.1f)
+                                    .setRecenterMode(RenderableSource.RecenterMode.ROOT)
+                                    .build()
+
+                    )
+                    .setRegistryId(ASSET_3D)
+                    .build()
+                    .thenAccept(modelRenderable -> addNodeToScene(modelRenderable, anchor))
+                    .exceptionally(throwable -> {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        builder.setMessage(throwable.getMessage()).show();
+                        return null;
+                    });
+        }
     }
 
     private void addNodeToScene(ModelRenderable modelRenderable, Anchor anchor) {
 
         AnchorNode anchorNode = new AnchorNode(anchor);
         arFragment.getArSceneView().getScene().onAddChild(anchorNode);
-        arFragment.getArSceneView().getPlaneRenderer().getMaterial().thenAccept(material -> material.setFloat3(PlaneRenderer.MATERIAL_COLOR, new Color(20, 177, 174)) );
+       // arFragment.getArSceneView().getPlaneRenderer().getMaterial().thenAccept(material -> material.setFloat3(PlaneRenderer.MATERIAL_COLOR, new Color(20, 177, 174)) );
         TransformableNode node = new TransformableNode(arFragment.getTransformationSystem());
         node.getScaleController().setMaxScale(7);
         node.getScaleController().setMinScale(0.5f);
@@ -125,6 +206,19 @@ public class ModelAR extends AppCompatActivity {
         node.setRenderable(modelRenderable);
         node.select();
 
+        this.anchorNode = anchorNode;
+        this.transformableNode = node;
+        progressBar.setVisibility(View.GONE);
+
+    }
+
+    private void removeAnchorNode(AnchorNode nodeToremove) {
+        if (nodeToremove != null) {
+            arFragment.getArSceneView().getScene().removeChild(nodeToremove);
+            nodeToremove.getAnchor().detach();
+            nodeToremove.setParent(null);
+        } else {
+        }
     }
 
 }

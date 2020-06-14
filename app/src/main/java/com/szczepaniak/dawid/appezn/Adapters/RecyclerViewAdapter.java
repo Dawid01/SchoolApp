@@ -55,6 +55,8 @@ import com.szczepaniak.dawid.appezn.RetroClient;
 import com.szczepaniak.dawid.appezn.Singleton;
 import com.szczepaniak.dawid.appezn.SpacesItemDecoration;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -354,84 +356,68 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
 
         AsymmetricRecyclerView album = viewHolder.photoAlbum;
-
-        if(post.getPhotos() != null) {
-            if (post.getPhotos().length == 1) {
-                Glide.with(context).load(post.getPhotos()[0]).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.AUTOMATIC)).override(viewHolder.photo.getWidth()).into(viewHolder.photo);
-               // Picasso.get().load(post.getPhotos()[0]).fit().into(viewHolder.photo);
-
-            }else if(post.getPhotos().length > 1){
-
-                List<ItemImage> postImages = new ArrayList<>();
-                boolean isCol2Avail = false;
-
-                for(int i = 0; i < post.getPhotos().length; i++){
-                    String url = post.getPhotos()[i];
-                    ItemImage postImage = new ItemImage(i,url, url);
-                    int colSpan = 1;
-                    if(i == 0){
-                        colSpan = 2;
-                    }
-
-                    int rowSpan = colSpan;
-                    if(colSpan == 2 && !isCol2Avail)
-                        isCol2Avail = true;
-                    else if(colSpan == 2 && isCol2Avail)
-                        colSpan = 1;
-
-
-                    if(post.getPhotos().length == 2){
-                        colSpan = 3;
-                        rowSpan = 2;
-
-                    }else if(post.getPhotos().length == 4){
-
-                        if(i == 0){
-                            colSpan = 3;
-                            rowSpan = 2;
-                        }
-                    }else if(post.getPhotos().length == 5){
-
-                        if(i == 3){
-                            colSpan = 2;
-                            rowSpan = 1;
-                        }
-                    }
-
-                    postImage.setColumnSpan(colSpan);
-                    postImage.setRowSpan(rowSpan);
-                    postImage.setPosition(i);
-                    postImages.add(postImage);
-
-                }
-
-                List<ItemImage> photos = new ArrayList<>();
-                String[] photoTable = new String[postImages.size()];
-
-                for(int i = 0; i < postImages.size(); i++){
-
-                    if(i <= 5) {
-                        photos.add(postImages.get(i));
-                    }
-                    photoTable[i] = postImages.get(i).getImagePath();
-
-                }
-
-
-                ChildAdapter adapter = new ChildAdapter(photos,6, postImages.size(),photoTable);
-                adapter.setHasStableIds(true);
-                album.setHasFixedSize(true);
-                album.setNestedScrollingEnabled(false);
-                album.setItemViewCacheSize(500);
-                album.setDrawingCacheEnabled(true);
-                album.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
-                album.setAdapter(new AsymmetricRecyclerViewAdapter(context, album, adapter));
-
-
+        List<ItemImage> postImages = new ArrayList<>();
+        for(int i = 0; i < post.getPhotos().length; i++){
+            String url = post.getPhotos()[i];
+            ItemImage postImage = new ItemImage(i,url, url);
+            int colSpan = 1;
+            if(i == 0){
+                colSpan = 2;
             }
+
+            int rowSpan = colSpan;
+
+            if(post.getPhotos().length == 1){
+                colSpan = 3;
+                rowSpan = 3;
+            }
+
+            if(post.getPhotos().length == 2){
+                colSpan = 3;
+                rowSpan = 2;
+
+            }else if(post.getPhotos().length == 4){
+
+                if(i == 0){
+                    colSpan = 3;
+                    rowSpan = 2;
+                }
+            }else if(post.getPhotos().length == 5){
+
+                if(i == 3){
+                    colSpan = 2;
+                    rowSpan = 1;
+                }
+            }
+
+            postImage.setColumnSpan(colSpan);
+            postImage.setRowSpan(rowSpan);
+            postImage.setPosition(i);
+            postImages.add(postImage);
+
+        }
+
+        List<ItemImage> photos = new ArrayList<>();
+        String[] photoTable = new String[postImages.size()];
+
+        for(int i = 0; i < postImages.size(); i++){
+
+            if(i <= 5) {
+                photos.add(postImages.get(i));
+            }
+            photoTable[i] = postImages.get(i).getImagePath();
+
         }
 
 
+        ChildAdapter adapter = new ChildAdapter(photos,6, postImages.size(),photoTable);
+        adapter.setHasStableIds(true);
+        album.setHasFixedSize(true);
+        album.setNestedScrollingEnabled(false);
+        album.setItemViewCacheSize(500);
+        album.setDrawingCacheEnabled(true);
+        album.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+        album.setAdapter(new AsymmetricRecyclerViewAdapter(context, album, adapter));
 
     }
 
@@ -489,12 +475,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     viewHolder.likes.setText(likes + " likes");
                     viewHolder.dislikes.setText(dislikes + " dislikes");
 
-
                 }
             }
 
             @Override
-            public void onFailure(Call<Post> call, Throwable t) {
+            public void onFailure(@NotNull Call<Post> call, @NotNull Throwable t) {
 
             }
         });
