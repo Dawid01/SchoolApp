@@ -1,8 +1,10 @@
 package com.szczepaniak.dawid.appezn.Activities;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.app.AlertDialog;
@@ -10,7 +12,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatDelegate;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -18,10 +22,12 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.ar.core.Anchor;
+import com.google.ar.core.Session;
 import com.google.ar.sceneform.AnchorNode;
 import com.google.ar.sceneform.assets.RenderableSource;
 import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.ux.ArFragment;
+import com.google.ar.sceneform.ux.BaseArFragment;
 import com.google.ar.sceneform.ux.TransformableNode;
 import com.szczepaniak.dawid.appezn.ApiService;
 import com.szczepaniak.dawid.appezn.Models.ModelARList;
@@ -49,6 +55,8 @@ public class ModelAR extends AppCompatActivity {
     private List<com.szczepaniak.dawid.appezn.Models.ModelAR> models = new ArrayList<>();
     private ApiService api;
     private LinearLayout modelsLayout;
+    private View modelsSheet;
+    private ConstraintLayout llBottomSheet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +85,28 @@ public class ModelAR extends AppCompatActivity {
         api = RetroClient.getApiService();
         modelsLayout = findViewById(R.id.models);
 
+        llBottomSheet = (ConstraintLayout) findViewById(R.id.models_sheet);
+        bottomSheetBehavior = BottomSheetBehavior.from(llBottomSheet);
+        bottomSheetBehavior.setPeekHeight(250);
+        bottomSheetBehavior.setHideable(true);
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+
+        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View view, int i) {
+
+                if(progressBar.getVisibility() == View.VISIBLE){
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View view, float v) {
+
+            }
+        });
+
+
         clear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,6 +120,8 @@ public class ModelAR extends AppCompatActivity {
 
         arFragment = (ArFragment) getSupportFragmentManager().findFragmentById(R.id.arFragment);
 
+
+
         assert arFragment != null;
         arFragment.setOnTapArPlaneListener((hitResult, plane, motionEvent) -> {
             if(anchorCount == 0) {
@@ -99,17 +131,6 @@ public class ModelAR extends AppCompatActivity {
 
         });
 
-        Objects.requireNonNull(arFragment.getView()).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if(bottomSheetBehavior != null) {
-                    if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
-                        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                    }
-                }
-            }
-        });
     }
 
 
@@ -118,6 +139,7 @@ public class ModelAR extends AppCompatActivity {
         retrofit2.Call<ModelARList> modelARListCall = api.getModelsAR(20);
 
         modelARListCall.enqueue(new Callback<ModelARList>() {
+            @SuppressLint("CutPasteId")
             @Override
             public void onResponse(Call<ModelARList> call, Response<ModelARList> response) {
 
@@ -125,15 +147,12 @@ public class ModelAR extends AppCompatActivity {
 
                     assert response.body() != null;
                     models = response.body().getModelsAR();
-                    ConstraintLayout llBottomSheet = (ConstraintLayout) findViewById(R.id.models_sheet);
-                    bottomSheetBehavior = BottomSheetBehavior.from(llBottomSheet);
-                    bottomSheetBehavior.setPeekHeight(250);
-                    bottomSheetBehavior.setHideable(false);
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                     com.szczepaniak.dawid.appezn.Models.ModelAR modelAR = models.get(0);
                     ASSET_3D = modelAR.getModelURL();
                     final TextView name = findViewById(R.id.name);
                     name.setText(modelAR.getName());
+
+                    modelsSheet = findViewById(R.id.models_sheet);
 
 
                     for(com.szczepaniak.dawid.appezn.Models.ModelAR model : models){
@@ -141,8 +160,13 @@ public class ModelAR extends AppCompatActivity {
                         LayoutInflater layoutInflater = LayoutInflater.from(ModelAR.this);
                         View view = layoutInflater.inflate(R.layout.ar_model_image, modelsLayout, false);
                         ImageView img = view.findViewById(R.id.image);
+                        ImageView select = view.findViewById(R.id.select);
                         Glide.with(ModelAR.this).load(model.getImageURL()).centerCrop().into(img);
                         modelsLayout.addView(view);
+
+                        if(models.indexOf(model) == 0){
+                            select.setVisibility(View.VISIBLE);
+                        }
 
                         view.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -151,6 +175,11 @@ public class ModelAR extends AppCompatActivity {
                                 ASSET_3D = model.getModelURL();
                                 name.setText(model.getName());
 
+                                for(int i = 1; i < modelsLayout.getChildCount(); i++){
+
+                                    modelsLayout.getChildAt(i).findViewById(R.id.select).setVisibility(View.GONE);
+                                }
+                                select.setVisibility(View.VISIBLE);
                             }
                         });
 
@@ -169,6 +198,7 @@ public class ModelAR extends AppCompatActivity {
     }
 
     private void placeModel(Anchor anchor) {
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
         if(ASSET_3D != null) {
             progressBar.setVisibility(View.VISIBLE);
@@ -209,6 +239,8 @@ public class ModelAR extends AppCompatActivity {
         this.anchorNode = anchorNode;
         this.transformableNode = node;
         progressBar.setVisibility(View.GONE);
+        llBottomSheet.invalidate();
+
 
     }
 
