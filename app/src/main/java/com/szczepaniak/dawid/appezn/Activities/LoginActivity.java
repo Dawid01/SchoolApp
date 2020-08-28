@@ -178,7 +178,22 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         });
 
+                    }else {
 
+                        switch (response.code()){
+                            case 401:
+                                Toast.makeText(LoginActivity.this, "Email lub hasło jest niepoprawne", Toast.LENGTH_LONG).show();
+                                break;
+                            case 404:
+                                Toast.makeText(LoginActivity.this, "404 error", Toast.LENGTH_LONG).show();
+                                break;
+                            case 500:
+                                Toast.makeText(LoginActivity.this, "Server nie odpowiada :(", Toast.LENGTH_LONG).show();
+                                break;
+                            default:
+                                Toast.makeText(LoginActivity.this, "Nieznany błąd", Toast.LENGTH_LONG).show();
+                                break;
+                        }
                     }
                 }
 
@@ -186,7 +201,7 @@ public class LoginActivity extends AppCompatActivity {
                 public void onFailure(Call<User> call, Throwable t) {
                     pDialog.dismiss();
                     Log.e("login", "ERROR", t);
-                    Toast.makeText(LoginActivity.this, "Login error", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Brak połaczenia", Toast.LENGTH_SHORT).show();
                 }
             });
         }

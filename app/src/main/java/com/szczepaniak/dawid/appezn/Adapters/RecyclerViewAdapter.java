@@ -357,44 +357,46 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         AsymmetricRecyclerView album = viewHolder.photoAlbum;
         List<ItemImage> postImages = new ArrayList<>();
-        for(int i = 0; i < post.getPhotos().length; i++){
-            String url = post.getPhotos()[i];
-            ItemImage postImage = new ItemImage(i,url, url);
-            int colSpan = 1;
-            if(i == 0){
-                colSpan = 2;
-            }
+        if(post.getPhotos() != null) {
+            for (int i = 0; i < post.getPhotos().length; i++) {
+                String url = post.getPhotos()[i];
+                ItemImage postImage = new ItemImage(i, url, url);
+                int colSpan = 1;
+                if (i == 0) {
+                    colSpan = 2;
+                }
 
-            int rowSpan = colSpan;
+                int rowSpan = colSpan;
 
-            if(post.getPhotos().length == 1){
-                colSpan = 3;
-                rowSpan = 3;
-            }
+                if (post.getPhotos().length == 1) {
+                    colSpan = 3;
+                    rowSpan = 3;
+                }
 
-            if(post.getPhotos().length == 2){
-                colSpan = 3;
-                rowSpan = 2;
-
-            }else if(post.getPhotos().length == 4){
-
-                if(i == 0){
+                if (post.getPhotos().length == 2) {
                     colSpan = 3;
                     rowSpan = 2;
-                }
-            }else if(post.getPhotos().length == 5){
 
-                if(i == 3){
-                    colSpan = 2;
-                    rowSpan = 1;
+                } else if (post.getPhotos().length == 4) {
+
+                    if (i == 0) {
+                        colSpan = 3;
+                        rowSpan = 2;
+                    }
+                } else if (post.getPhotos().length == 5) {
+
+                    if (i == 3) {
+                        colSpan = 2;
+                        rowSpan = 1;
+                    }
                 }
+
+                postImage.setColumnSpan(colSpan);
+                postImage.setRowSpan(rowSpan);
+                postImage.setPosition(i);
+                postImages.add(postImage);
+
             }
-
-            postImage.setColumnSpan(colSpan);
-            postImage.setRowSpan(rowSpan);
-            postImage.setPosition(i);
-            postImages.add(postImage);
-
         }
 
         List<ItemImage> photos = new ArrayList<>();
