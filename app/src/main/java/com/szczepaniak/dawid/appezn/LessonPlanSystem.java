@@ -103,6 +103,7 @@ public class LessonPlanSystem {
         spinnerWeeks.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                lessonsView.removeAllViews();
                 loadLessons();
             }
 
@@ -131,6 +132,7 @@ public class LessonPlanSystem {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
 
+                lessonsView.removeAllViews();
                 dayOfWeek = tab.getPosition() + 1;
                 switch (tab.getPosition()){
 
@@ -216,6 +218,7 @@ public class LessonPlanSystem {
                             @Override
                             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                                 editor.putString("Class", spinner.getSelectedItem().toString());
+                                lessonsView.removeAllViews();
                                 loadLessons();
                             }
 

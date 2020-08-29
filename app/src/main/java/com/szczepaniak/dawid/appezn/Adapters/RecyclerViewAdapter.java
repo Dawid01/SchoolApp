@@ -304,53 +304,28 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         viewHolder.likeIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                likeReaction(viewHolder, user, api, post);
+            }
+        });
 
-            PostReaction postReaction = new PostReaction(1, user.getId());
-            retrofit2.Call<PostReaction> reactionCall = api.addReaction(postReaction, post.getId());
-
-            reactionCall.enqueue(new Callback<PostReaction>() {
-                @Override
-                public void onResponse(Call<PostReaction> call, Response<PostReaction> response) {
-
-                    if(response.isSuccessful()){
-
-                        updatePostReactions(post, viewHolder);
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<PostReaction> call, Throwable t) {
-                    updatePostReactions(post, viewHolder);
-                }
-            });
-
-
+        viewHolder.likes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                likeReaction(viewHolder, user, api, post);
             }
         });
 
         viewHolder.dislikeIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dislikeReaction(viewHolder, user, api, post);
+            }
+        });
 
-                PostReaction postReaction = new PostReaction(0, user.getId());
-                retrofit2.Call<PostReaction> reactionCall = api.addReaction(postReaction, post.getId());
-
-                reactionCall.enqueue(new Callback<PostReaction>() {
-                    @Override
-                    public void onResponse(Call<PostReaction> call, Response<PostReaction> response) {
-
-                        if(response.isSuccessful()){
-                            updatePostReactions(post, viewHolder);
-                       }
-                    }
-
-                    @Override
-                    public void onFailure(Call<PostReaction> call, Throwable t) {
-                        updatePostReactions(post, viewHolder);
-
-                    }
-                });
-
+        viewHolder.dislikes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dislikeReaction(viewHolder, user, api, post);
             }
         });
 
@@ -424,7 +399,74 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
 
-    private void updatePostReactions(Post post, final ItemViewHolder viewHolder){
+    private void  likeReaction(ItemViewHolder viewHolder, User user, ApiService api, Post post){
+
+        PostReaction postReaction = new PostReaction(1, user.getId());
+        retrofit2.Call<PostReaction> reactionCall = api.addReaction(postReaction, post.getId());
+        int iconColor = context.getResources().getColor(R.color.emoji_gray70);
+        int textColor = context.getResources().getColor(R.color.emoji_white);
+        int color = context.getResources().getColor(R.color.colorPrimary);
+
+        if(viewHolder.likes.getCurrentTextColor() == textColor){
+            viewHolder.likes.setTextColor(color);
+            viewHolder.likeIcon.setColorFilter(color);
+        }else {
+            viewHolder.likes.setTextColor(textColor);
+            viewHolder.likeIcon.setColorFilter(iconColor);
+        }
+
+        reactionCall.enqueue(new Callback<PostReaction>() {
+            @Override
+            public void onResponse(Call<PostReaction> call, Response<PostReaction> response) {
+                updatePostReactions(post, viewHolder);
+
+            }
+
+            @Override
+            public void onFailure(Call<PostReaction> call, Throwable t) {
+                updatePostReactions(post, viewHolder);
+            }
+        });
+    }
+
+
+    private void  dislikeReaction(ItemViewHolder viewHolder, User user, ApiService api, Post post){
+
+        PostReaction postReaction = new PostReaction(0, user.getId());
+        retrofit2.Call<PostReaction> reactionCall = api.addReaction(postReaction, post.getId());
+        int iconColor = context.getResources().getColor(R.color.emoji_gray70);
+        int textColor = context.getResources().getColor(R.color.emoji_white);
+        int color = context.getResources().getColor(R.color.colorPrimary);
+
+        if(viewHolder.dislikes.getCurrentTextColor() == textColor){
+            viewHolder.dislikes.setTextColor(color);
+            viewHolder.dislikeIcon.setColorFilter(color);
+        }else {
+            viewHolder.dislikes.setTextColor(textColor);
+            viewHolder.dislikeIcon.setColorFilter(iconColor);
+        }
+
+        reactionCall.enqueue(new Callback<PostReaction>() {
+            @Override
+            public void onResponse(Call<PostReaction> call, Response<PostReaction> response) {
+
+                updatePostReactions(post, viewHolder);
+
+            }
+
+            @Override
+            public void onFailure(Call<PostReaction> call, Throwable t) {
+                updatePostReactions(post, viewHolder);
+
+            }
+        });
+    }
+
+
+
+        private void updatePostReactions(Post post, final ItemViewHolder viewHolder){
+
+        Log.i("REACTIONS", "update reaction");
 
         ApiService api = RetroClient.getApiService();
         retrofit2.Call<Post> postCall = api.getPost(post.getId());
@@ -436,11 +478,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                 if(response.isSuccessful()){
 
-                    int c = context.getResources().getColor(R.color.emoji_gray70);
-                    viewHolder.dislikes.setTextColor(c);
-                    viewHolder.dislikeIcon.setColorFilter(c);
-                    viewHolder.likes.setTextColor(c);
-                    viewHolder.likeIcon.setColorFilter(c);
+                    int iconColor = context.getResources().getColor(R.color.emoji_gray70);
+                    int textColor = context.getResources().getColor(R.color.emoji_white);
+                    viewHolder.dislikes.setTextColor(textColor);
+                    viewHolder.dislikeIcon.setColorFilter(iconColor);
+                    viewHolder.likes.setTextColor(textColor);
+                    viewHolder.likeIcon.setColorFilter(iconColor);
 
                     int likes = 0;
                     int dislikes = 0;
@@ -472,6 +515,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                             }
 
                         }
+
                     }
 
                     viewHolder.likes.setText(likes + " likes");
