@@ -32,7 +32,7 @@ import retrofit2.Response;
 public class SplashScreen extends AppCompatActivity {
 
 
-    private final int SPLASH_DISPLAY_LENGTH = 2000;
+    private final int SPLASH_DISPLAY_LENGTH = 1000;
     private ApiService apiService;
     private Singleton singleton;
 
@@ -82,9 +82,7 @@ public class SplashScreen extends AppCompatActivity {
             SharedPreferences sharedPreferences = SplashScreen.this.getSharedPreferences("email",Context.MODE_PRIVATE);
             login(Objects.requireNonNull(sharedPreferences.getString("email", "null")), "null");
         }else {
-            Intent mainIntent = new Intent(SplashScreen.this, LoginActivity.class);
-            startActivity(mainIntent);
-            finish();
+            goToLoginActivity();
         }
     }
 
@@ -94,6 +92,15 @@ public class SplashScreen extends AppCompatActivity {
         String base = email + ":" + password;
         String authHeader = "Basic " + Base64.encodeToString(base.getBytes(), Base64.NO_WRAP);
         Call<User> userCall = apiService.loginUser(authHeader);
+
+        new Handler().postDelayed(new Runnable(){
+            @Override
+            public void run() {
+
+                goToLoginActivity();
+
+            }
+        },  2 * SPLASH_DISPLAY_LENGTH);
 
         userCall.enqueue(new Callback<User>() {
             @Override
@@ -131,9 +138,7 @@ public class SplashScreen extends AppCompatActivity {
 
                         @Override
                         public void onFailure(Call<User> call, Throwable t) {
-                            Intent mainIntent = new Intent(SplashScreen.this, LoginActivity.class);
-                            startActivity(mainIntent);
-                            finish();
+                            goToLoginActivity();
                         }
                     });
 
@@ -142,11 +147,14 @@ public class SplashScreen extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-                Log.e("login", "ERROR", t);
-                Intent mainIntent = new Intent(SplashScreen.this, LoginActivity.class);
-                startActivity(mainIntent);
-                finish();
+                goToLoginActivity();
             }
         });
+    }
+
+    private void goToLoginActivity(){
+        Intent mainIntent = new Intent(SplashScreen.this, LoginActivity.class);
+        startActivity(mainIntent);
+        finish();
     }
 }

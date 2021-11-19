@@ -9,8 +9,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetroClient {
 
     //private static final String ROOT_URL = "http://35.232.24.163:8080/";
-    private static final String ROOT_URL = "http://35.194.43.188:8080/";
-    //private static final String ROOT_URL = "http://192.168.0.110:8080/";
+    //private static final String ROOT_URL = "http://35.194.43.188:8080/";
+    private static final String ROOT_URL = "http://192.168.0.191:8080/";
+
 
 
         private static Retrofit getRetrofitInstance() {

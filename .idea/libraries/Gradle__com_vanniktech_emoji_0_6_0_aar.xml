@@ -3,6 +3,7 @@
     <CLASSES>
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/30c45471180b8a34a7e95a2632c456eb/emoji-0.6.0/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/30c45471180b8a34a7e95a2632c456eb/emoji-0.6.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/30c45471180b8a34a7e95a2632c456eb/emoji-0.6.0/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.vanniktech/emoji/0.6.0/ee2c6314039f00403b2cf7be684d9cef462a49ac/emoji-0.6.0-javadoc.jar!/" />
